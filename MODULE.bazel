@@ -1,0 +1,24 @@
+module(
+    name = "finger_tracking",
+    version = "0.0.1",
+    compatibility_level = 1,
+)
+
+bazel_dep(name = "rules_cc", version = "0.1.0")
+bazel_dep(name = "protobuf", version = "29.2")
+
+bazel_dep(name = "rules_python", version = "1.0.0", dev_dependency = True)
+
+python = use_extension("@rules_python//python/extensions:python.bzl", "python", dev_dependency = True)
+python.toolchain(
+    is_default = True,
+    python_version = "3.12",
+)
+
+pip = use_extension("@rules_python//python/extensions:pip.bzl", "pip")
+pip.parse(
+    hub_name = "pypi",
+    python_version = "3.12",
+    requirements_lock = "requirements_lock.txt",
+)
+use_repo(pip, "pypi")
