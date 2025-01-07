@@ -1,0 +1,35 @@
+syntax = "proto3";
+
+package finger_tracking.proto;
+
+
+message Point{
+  int32 x = 1;
+  int32 y = 2;
+}
+
+message KeyboardCorners {
+  Point topLeft = 1;
+  Point topRight = 2;
+  Point bottomRight = 3;
+  Point bottomLeft = 4;
+}
+
+message Hand {
+  Point thumb = 1;
+  Point index = 2;
+  Point middle = 3;
+  Point ring = 4;
+  Point pinky = 5;
+}
+
+message Frame {
+  int32 timestamp = 1;
+  Hand leftHand = 2;
+  Hand rightHand = 3;
+}
+
+message FingerLandmarks {
+  KeyboardCorners keyboardCorners = 1;
+  repeated Frame frames = 2;
+}

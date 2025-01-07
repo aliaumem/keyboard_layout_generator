@@ -1,0 +1,10 @@
+from enum import Enum
+
+import cv2 as cv
+
+
+class Rotation(Enum):
+    ROTATE_90_CLOCKWISE = cv.ROTATE_90_CLOCKWISE
+    ROTATE_90_COUNTERCLOCKWISE = cv.ROTATE_90_COUNTERCLOCKWISE
+    ROTATE_180 = cv.ROTATE_180
+    ROTATE_IDENTITY = 4
