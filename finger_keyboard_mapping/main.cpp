@@ -1,8 +1,8 @@
 #include "finger_keyboard_mapping/frame.hpp"
 #include "finger_keyboard_mapping/from_proto.hpp"
+#include "finger_keyboard_mapping/finger_to_key_mapping.hpp"
 
 #include <fstream>
-#include "finger_keyboard_mapping/finger_to_key_mapping.hpp"
 
 int main(int argc, char const* argv[]) {
 
@@ -14,8 +14,6 @@ int main(int argc, char const* argv[]) {
     auto frames  = finger_tracking::cast(landmarks.frames());
 
     mapFingersToKeys(frames, corners);
-
-    std::cout << landmarks.DebugString() << std::endl;
 
     return 0;
 }

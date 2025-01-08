@@ -63,3 +63,14 @@ py_binary(
         ":finger_tracking_results",
     ],
 )
+
+py_binary(
+    name = "print_kb",
+    srcs = ["print_kb.py"],
+    main = "print_kb.py",
+    deps = [
+        "//finger_keyboard_mapping:keyboard_shape_py_proto",
+        requirement("opencv-python"),
+        requirement("numpy"),
+    ],
+)
