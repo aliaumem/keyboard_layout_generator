@@ -82,8 +82,14 @@ class FingerLandmarksRunner:
 
     @property
     def width(self) -> int:
-        return int(self.cap.get(cv.CAP_PROP_FRAME_WIDTH))
+        if self.rotation in (Rotation.ROTATE_IDENTITY, Rotation.ROTATE_180):
+            return int(self.cap.get(cv.CAP_PROP_FRAME_WIDTH))
+        else:
+            return int(self.cap.get(cv.CAP_PROP_FRAME_HEIGHT))
 
     @property
     def height(self) -> int:
-        return int(self.cap.get(cv.CAP_PROP_FRAME_HEIGHT))
+        if self.rotation in (Rotation.ROTATE_IDENTITY, Rotation.ROTATE_180):
+            return int(self.cap.get(cv.CAP_PROP_FRAME_HEIGHT))
+        else:
+            return int(self.cap.get(cv.CAP_PROP_FRAME_WIDTH))

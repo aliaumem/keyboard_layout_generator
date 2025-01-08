@@ -12,7 +12,6 @@ if __name__ == '__main__':
                                    rotation=Rotation.ROTATE_90_COUNTERCLOCKWISE)
     runner.run()
 
-    resolution = (runner.width, runner.height)
     result = Results()
     result.set_corners(top_left=runner.keyboard_rec.points[0],
                        top_right=runner.keyboard_rec.points[1],
@@ -20,8 +19,8 @@ if __name__ == '__main__':
                        bottom_left=runner.keyboard_rec.points[3])
     result.fps = runner.fps
 
-    to_point = lambda landmark: Point(x=int(landmark.x * resolution[0]),
-                                      y=int(landmark.y * resolution[1]))
+    to_point = lambda landmark: Point(x=int(landmark.x * runner.width),
+                                      y=int(landmark.y * runner.height))
 
     for i, detection_result in enumerate(runner.landmarks):
         left_hand: Hand | None = None
