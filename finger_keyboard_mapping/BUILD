@@ -3,6 +3,8 @@ load("@protobuf//bazel:proto_library.bzl", "proto_library")
 load("@protobuf//bazel:py_proto_library.bzl", "py_proto_library")
 load("@rules_cc//cc:defs.bzl", "cc_binary", "cc_library")
 
+package(default_visibility = ["__subpackages__"])
+
 cc_binary(
     name = "finger_keyboard_mapping",
     srcs = ["main.cpp"],

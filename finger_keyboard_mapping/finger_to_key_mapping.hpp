@@ -26,12 +26,15 @@ public:
     KeyboardShape(KeyboardShape&&)      = default;
     KeyboardShape(KeyboardShape const&) = delete;
 
+    Rectangle aabb() const;
+
     [[nodiscard]] std::span<KeyInSpace const> keys() const { return m_keys; }
+    std::optional<FingerDesc>                 closestFinger(Key key, BothHands const& hands);
 
     static KeyboardShape defaultShape();
 };
 
-void mapFingersToKeys(std::vector<Frame> frames, Corners const& corners);
+void mapFingersToKeys(std::vector<Frame> frames);
 } // namespace finger_tracking
 
 #endif // FINGER_TO_KEY_MAPPING_HPP

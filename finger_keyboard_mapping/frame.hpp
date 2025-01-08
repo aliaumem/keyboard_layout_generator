@@ -9,8 +9,7 @@
 namespace finger_tracking {
 struct Frame {
     std::chrono::milliseconds timestamp = {};
-    std::optional<Hand>       leftHand;
-    std::optional<Hand>       rightHand;
+    BothHands                 hands     = {};
 };
 } // namespace finger_tracking
 

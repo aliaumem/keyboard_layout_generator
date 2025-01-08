@@ -3,6 +3,7 @@
 #include "finger_keyboard_mapping/finger_to_key_mapping.hpp"
 
 #include <fstream>
+#include <finger_keyboard_mapping/keyboard_shape.pb.h>
 
 int main(int argc, char const* argv[]) {
 
@@ -13,7 +14,11 @@ int main(int argc, char const* argv[]) {
     auto corners = finger_tracking::cast(landmarks.keyboardcorners());
     auto frames  = finger_tracking::cast(landmarks.frames());
 
-    mapFingersToKeys(frames, corners);
+    mapFingersToKeys(frames);
+
+    finger_tracking::Rectangle rect = finger_tracking::KeyboardShape::defaultShape().aabb();
+    std::cout << rect.topLeft.x << ", " << rect.topLeft.y << "  " << rect.size.width << ", "
+              << rect.size.height << std::endl;
 
     return 0;
 }

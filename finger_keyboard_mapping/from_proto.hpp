@@ -36,9 +36,12 @@ inline std::vector<Frame> cast(google::protobuf::RepeatedPtrField<proto::Frame> 
     for (auto const& frame : frames) {
         auto timestamp = std::chrono::milliseconds{frame.timestamp()};
         result.emplace_back(
-            timestamp,
-            frame.has_lefthand() ? cast(frame.lefthand()) : static_cast<optHand>(std::nullopt),
-            frame.has_righthand() ? cast(frame.righthand()) : static_cast<optHand>(std::nullopt));
+            timestamp, BothHands{
+                           .left  = frame.has_lefthand() ? cast(frame.lefthand())
+                                                         : static_cast<optHand>(std::nullopt),
+                           .right = frame.has_righthand() ? cast(frame.righthand())
+                                                          : static_cast<optHand>(std::nullopt),
+                       });
     }
     return result;
 }
