@@ -53,25 +53,30 @@ def compute_perspective(file_basename: str):
 
 
 if __name__ == '__main__':
-    file_basename = sys.argv[1].strip("_landmarks.pkl")
-
-    results: Results
-    with open(sys.argv[1], "rb") as infile:
-        results = pickle.load(infile)
+    chunk_count = int(sys.argv[2])
+    file_basename = sys.argv[1].rstrip(".mp4")
 
     persp_matrix = compute_perspective(file_basename)
 
-    landmarks = finger_landmarks_pb2.FingerLandmarks()
-    print(len(results.hands))
-    for hands in results.hands:
-        frame = finger_landmarks_pb2.Frame()
-        frame.timestamp = hands.timestamp
-        if hands.left is not None:
-            frame.leftHand.CopyFrom(to_hand(hands.left, persp_matrix))
-        if hands.right is not None:
-            frame.rightHand.CopyFrom(to_hand(hands.right, persp_matrix))
+    frame_count = 0
 
-        landmarks.frames.append(frame)
+    landmarks = finger_landmarks_pb2.FingerLandmarks()
+
+    for i in range(chunk_count):
+        results: Results
+        with open(f"{file_basename}_{i}_landmarks.pkl", "rb") as infile:
+            results = pickle.load(infile)
+
+        for hands in results.hands:
+            frame = finger_landmarks_pb2.Frame()
+            frame.timestamp = int((1000 * frame_count) / results.fps)
+            if hands.left is not None:
+                frame.leftHand.CopyFrom(to_hand(hands.left, persp_matrix))
+            if hands.right is not None:
+                frame.rightHand.CopyFrom(to_hand(hands.right, persp_matrix))
+            frame_count += 1
+
+            landmarks.frames.append(frame)
 
     with open(file_basename + "_landmarks.binarypb", "wb") as outfile:
         outfile.write(landmarks.SerializeToString())

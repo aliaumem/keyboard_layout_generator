@@ -17,7 +17,6 @@ def populate_results(runner: FingerLandmarksRunner) -> Results:
     for i, detection_result in enumerate(runner.landmarks):
         left_hand: Hand | None = None
         right_hand: Hand | None = None
-        timestamp = int((1000 * i) / result.fps)
 
         for landmarks, handedness in zip(detection_result.hand_landmarks,
                                          detection_result.handedness):
@@ -32,24 +31,34 @@ def populate_results(runner: FingerLandmarksRunner) -> Results:
             else:
                 right_hand = hand
 
-        result.add_hands(BothHands(left=left_hand, right=right_hand, timestamp=timestamp))
+        result.add_hands(BothHands(left=left_hand, right=right_hand))
     return result
 
 
-def run(filename: str, rotation: Rotation):
-    runner = FingerLandmarksRunner(model_path='finger_landmarks/hand_landmarker.task',
-                                   video_path=filename,
-                                   rotation=rotation)
+def run(filename: str, chunk_id: int, chunk_count: int, rotation: Rotation):
+    runner = FingerLandmarksRunner(
+        # model_path='finger_landmarks/hand_landmarker.task',
+        model_path='C:/prog/finger_tracking/finger_landmarks/hand_landmarker.task',
+        video_path=filename,
+        chunk_id=chunk_id,
+        chunk_count=chunk_count,
+        rotation=rotation)
     runner.run()
 
     result: Results = populate_results(runner)
 
-    with open(filename.rstrip(".mp4") + "_landmarks.pkl", "wb") as outfile:
+    with open(filename.rstrip(".mp4") + f"_{chunk_id}_landmarks.pkl", "wb") as outfile:
         pickle.dump(result, outfile)
         outfile.close()
 
 
 if __name__ == '__main__':
-    rotation = parse_rotation(sys.argv[2]) if len(sys.argv) > 2 else Rotation.ROTATE_IDENTITY
+    if len(sys.argv) < 4:
+        print(f"Usage: {sys.argv[0]} filename.mp4 chunk_id chunk_count [rotation]")
+        exit()
 
-    run(sys.argv[1], rotation)
+    chunk_id = int(sys.argv[2])
+    chunk_count = int(sys.argv[3])
+    rotation = parse_rotation(sys.argv[4]) if len(sys.argv) > 4 else Rotation.ROTATE_IDENTITY
+
+    run(sys.argv[1], chunk_id, chunk_count, rotation)

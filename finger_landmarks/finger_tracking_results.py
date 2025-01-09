@@ -3,8 +3,7 @@ from typing import NamedTuple, List
 Point = NamedTuple("Point", [("x", int), ("y", int)])
 Hand = NamedTuple("Hand", [("thumb", Point), ("index", Point), ("middle", Point), ("ring", Point),
                            ("pinky", Point)])
-BothHands = NamedTuple("BothHands",
-                       [("timestamp", int), ("left", Hand | None), ("right", Hand | None)])
+BothHands = NamedTuple("BothHands", [("left", Hand | None), ("right", Hand | None)])
 
 
 class Results:
