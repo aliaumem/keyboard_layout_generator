@@ -2,8 +2,10 @@
 #define FROM_PROTO_HPP
 
 #include "finger_keyboard_mapping/frame.hpp"
+#include "scancode_key_map.hpp"
 
 #include "finger_landmarks/finger_landmarks.pb.h"
+#include "keylogger/keylog.pb.h"
 
 namespace finger_tracking {
 
@@ -44,6 +46,14 @@ inline std::vector<Frame> cast(google::protobuf::RepeatedPtrField<proto::Frame> 
                        });
     }
     return result;
+}
+
+inline KeyEvent toKeyEvent(keylog::proto::KeyEvent const& evt) {
+    return KeyEvent{
+        .timestamp = std::chrono::milliseconds{evt.timestamp_ms()},
+        .isPressed = evt.state() == keylog::proto::Pressed,
+        .code      = KeyCode{evt.scancode(), evt.ise0(), evt.ise1()},
+    };
 }
 } // namespace finger_tracking
 

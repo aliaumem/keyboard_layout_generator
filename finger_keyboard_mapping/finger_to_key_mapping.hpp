@@ -2,25 +2,25 @@
 #define FINGER_TO_KEY_MAPPING_HPP
 
 #include "finger_keyboard_mapping/frame.hpp"
+#include "static_vector.hpp"
+#include "key.hpp"
 
 #include <span>
-#include <vector>
 
 namespace finger_tracking {
-struct Key {
-    std::string_view name;
-};
 
 struct KeyInSpace {
     Key       key;
     Rectangle aabb{};
+
+    bool operator==(Key const& other) const { return key == other; }
 };
 
 class KeyboardShape {
-    std::vector<KeyInSpace> m_keys;
+    static_vector<KeyInSpace, 62> m_keys;
 
 public:
-    explicit KeyboardShape(std::vector<KeyInSpace> keys)
+    explicit KeyboardShape(static_vector<KeyInSpace, 62> keys)
         : m_keys(std::move(keys)) {}
 
     KeyboardShape(KeyboardShape&&)      = default;
@@ -28,8 +28,10 @@ public:
 
     Rectangle aabb() const;
 
-    [[nodiscard]] std::span<KeyInSpace const> keys() const { return m_keys; }
-    std::optional<FingerDesc>                 closestFinger(Key key, BothHands const& hands);
+    [[nodiscard]] std::span<KeyInSpace const> keys() const {
+        return std::span<KeyInSpace const>{m_keys.begin(), m_keys.size()};
+    }
+    std::optional<FingerDesc> closestFinger(Key key, BothHands const& hands);
 
     static KeyboardShape defaultShape();
 };

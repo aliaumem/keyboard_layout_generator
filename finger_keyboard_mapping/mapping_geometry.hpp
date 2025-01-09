@@ -41,6 +41,10 @@ constexpr xpos operator+(xpos lhs, xpos rhs) {
     return xpos{lhs.v + rhs.v};
 }
 
+constexpr ypos operator-(ypos y) {
+    return {-y.v};
+}
+
 consteval ypos operator""_y(unsigned long long y) {
     return ypos{static_cast<int>(y)};
 }

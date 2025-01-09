@@ -3,10 +3,10 @@
 #include <array>
 
 namespace finger_tracking {
+
 KeyboardShape KeyboardShape::defaultShape() {
-    std::vector<KeyInSpace> keys;
+    static_vector<KeyInSpace, 62> keys;
     using namespace geo_literals;
-    keys.reserve(62);
     // First row
     std::array<std::string_view, 13> firstRowNames{
         "²", "&", "é", "\"", "'", "(", "-", "è", "_", "ç", "à", ")", "="};
@@ -16,7 +16,7 @@ KeyboardShape KeyboardShape::defaultShape() {
     keys.emplace_back(Key{"BkSp"}, Rectangle{(247_x, 0_y), (35_w, 18_h)});
 
     // Second row
-    keys.emplace_back(Key{"T"}, Rectangle{(0_x, 19_y), (26_w, 18_h)});
+    keys.emplace_back(Key{"Tab"}, Rectangle{(0_x, 19_y), (26_w, 18_h)});
     std::array<std::string_view, 12> secondRowNames{
         "a", "z", "e", "r", "t", "y", "u", "i", "o", "p", "^", "$"};
     for (int i = 0; i < 12; ++i) {
@@ -24,7 +24,7 @@ KeyboardShape KeyboardShape::defaultShape() {
     }
 
     // Third row
-    keys.emplace_back(Key{"C"}, Rectangle{(0_x, 38_y), (31_w, 18_h)});
+    keys.emplace_back(Key{"CpLk"}, Rectangle{(0_x, 38_y), (31_w, 18_h)});
     std::array<std::string_view, 12> thirdRowNames{
         "q", "s", "d", "f", "g", "h", "j", "k", "l", "m", "ù", "*"};
     for (int i = 0; i < 12; ++i) {
@@ -32,13 +32,13 @@ KeyboardShape KeyboardShape::defaultShape() {
     }
 
     // Fourth row
-    keys.emplace_back(Key{"1"}, Rectangle{(0_x, 57_y), (22_w, 18_h)});
+    keys.emplace_back(Key{"LSft"}, Rectangle{(0_x, 57_y), (22_w, 18_h)});
     std::array<std::string_view, 11> fourthRowNames{
         "<", "w", "x", "c", "v", "b", "n", ",", ";", ":", "!"};
     for (int i = 0; i < 11; ++i) {
         keys.emplace_back(Key{fourthRowNames[i]}, Rectangle{(23_x + i * 19_x, 57_y), (18_w, 18_h)});
     }
-    keys.emplace_back(Key{"2"}, Rectangle{(232_x, 57_y), (51_w, 18_h)});
+    keys.emplace_back(Key{"RSft"}, Rectangle{(232_x, 57_y), (51_w, 18_h)});
 
     // Fifth row
     keys.emplace_back(Key{"LCtl"}, Rectangle{(0_x, 76_y), (22_w, 18_h)});

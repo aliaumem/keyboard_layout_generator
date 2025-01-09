@@ -4,7 +4,6 @@
 #include "finger_keyboard_mapping/mapping_geometry.hpp"
 
 #include <chrono>
-#include <optional>
 
 namespace finger_tracking {
 struct Frame {

@@ -16,5 +16,6 @@ proto_library(
 
 cc_proto_library(
     name = "keylog_cc_proto",
+    visibility = ["//visibility:public"],
     deps = [":keylog_proto"],
 )

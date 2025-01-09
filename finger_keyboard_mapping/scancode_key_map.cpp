@@ -1,0 +1,71 @@
+#include "scancode_key_map.hpp"
+
+finger_tracking::ScancodeKeyMap::ScancodeKeyMap() {
+    auto addPair = [this](KeyCode keycode, Key key) {
+        scancodes.emplace_back(keycode);
+        keys.emplace_back(key);
+    };
+
+    addPair(KeyCode{0x02}, {"&"});
+    addPair(KeyCode{0x03}, {"é"});
+    addPair(KeyCode{0x04}, {"\""});
+    addPair(KeyCode{0x05}, {"'"});
+    addPair(KeyCode{0x06}, {"("});
+    addPair(KeyCode{0x07}, {"-"});
+    addPair(KeyCode{0x08}, {"è"});
+    addPair(KeyCode{0x09}, {"_"});
+    addPair(KeyCode{0x0A}, {"ç"});
+    addPair(KeyCode{0x0B}, {"à"});
+    addPair(KeyCode{0x0C}, {")"});
+    addPair(KeyCode{0x0D}, {"="});
+    addPair(KeyCode{0x0E}, {"BkSp"});
+    addPair(KeyCode{0x0F}, {"Tab"});
+    addPair(KeyCode{0x10}, {"a"});
+    addPair(KeyCode{0x11}, {"z"});
+    addPair(KeyCode{0x12}, {"e"});
+    addPair(KeyCode{0x13}, {"r"});
+    addPair(KeyCode{0x14}, {"t"});
+    addPair(KeyCode{0x15}, {"y"});
+    addPair(KeyCode{0x16}, {"u"});
+    addPair(KeyCode{0x17}, {"i"});
+    addPair(KeyCode{0x18}, {"o"});
+    addPair(KeyCode{0x19}, {"p"});
+    addPair(KeyCode{0x1A}, {"^"});
+    addPair(KeyCode{0x1B}, {"$"});
+    addPair(KeyCode{0x1C}, {"Enter"});
+    addPair(KeyCode{0x1D, false}, {"LCtl"});
+    addPair(KeyCode{0x1D, true}, {"RCtl"});
+    addPair(KeyCode{0x1E}, {"q"});
+    addPair(KeyCode{0x1F}, {"s"});
+    addPair(KeyCode{0x20}, {"d"});
+    addPair(KeyCode{0x21}, {"f"});
+    addPair(KeyCode{0x22}, {"g"});
+    addPair(KeyCode{0x23}, {"h"});
+    addPair(KeyCode{0x24}, {"j"});
+    addPair(KeyCode{0x25}, {"k"});
+    addPair(KeyCode{0x26}, {"l"});
+    addPair(KeyCode{0x27}, {"m"});
+    addPair(KeyCode{0x28}, {"ù"});
+    addPair(KeyCode{0x29}, {"²"});
+    addPair(KeyCode{0x2A}, {"LSft"});
+    addPair(KeyCode{0x2B}, {"*"});
+    addPair(KeyCode{0x2C}, {"w"});
+    addPair(KeyCode{0x2D}, {"x"});
+    addPair(KeyCode{0x2E}, {"c"});
+    addPair(KeyCode{0x2F}, {"v"});
+    addPair(KeyCode{0x30}, {"b"});
+    addPair(KeyCode{0x31}, {"n"});
+    addPair(KeyCode{0x32}, {","});
+    addPair(KeyCode{0x33}, {";"});
+    addPair(KeyCode{0x34}, {":"});
+    addPair(KeyCode{0x35}, {"!"});
+    addPair(KeyCode{0x36}, {"RSft"});
+    addPair(KeyCode{0x38, false}, {"LAlt"});
+    addPair(KeyCode{0x38, true}, {"RAlt"});
+    addPair(KeyCode{0x39}, {"Spc"});
+    addPair(KeyCode{0x3A}, {"CpLk"});
+    addPair(KeyCode{0x56}, {"<"});
+    addPair(KeyCode{0x5B, true}, {"Win"});
+    addPair(KeyCode{0x5C, true}, {"Fn"});
+    addPair(KeyCode{0x5D, true}, {"Menu"});
+}

@@ -14,15 +14,20 @@ cc_binary(
         ":finger_to_key_mapping",
         ":keyboard_shape_cc_proto",
         ":proto_conversion",
+        "//keylogger:keylog_cc_proto",
         "@protobuf//:protobuf_headers",
     ],
 )
 
 cc_library(
     name = "data_types",
+    srcs = ["scancode_key_map.cpp"],
     hdrs = [
         "frame.hpp",
+        "key.hpp",
         "mapping_geometry.hpp",
+        "scancode_key_map.hpp",
+        "static_vector.hpp",
     ],
 )
 

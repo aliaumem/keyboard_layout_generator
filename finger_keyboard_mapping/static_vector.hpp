@@ -1,0 +1,30 @@
+#ifndef STATIC_VECTOR_HPP
+#define STATIC_VECTOR_HPP
+
+#include <array>
+
+namespace finger_tracking {
+template <typename T, size_t N>
+class static_vector {
+    std::array<T, N> m_data;
+    size_t           m_size = 0;
+
+public:
+    using iterator = typename std::array<T, N>::const_iterator;
+
+    template <typename... Args>
+    T& emplace_back(Args&&... args) {
+        m_data[m_size] = T{std::forward<Args>(args)...};
+        return m_data[m_size++];
+    }
+
+    iterator begin() const { return m_data.cbegin(); }
+    iterator end() const { return m_data.cend(); }
+
+    size_t size() const { return m_size; }
+
+    T const& operator[](size_t index) const { return m_data[index]; }
+};
+} // namespace finger_tracking
+
+#endif // STATIC_VECTOR_HPP
