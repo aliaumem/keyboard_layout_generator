@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+package keylog.proto;
+
+message KeyEvent {
+  int64 timestamp = 1;
+  int32 scanCode = 2;
+  bool pressed = 3;
+}
+
+message KeyLog {
+  repeated KeyEvent keyEvents = 1;
+}
