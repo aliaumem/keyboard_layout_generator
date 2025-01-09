@@ -18,13 +18,8 @@ def record_kb_corners(video_path: str, rotation: Rotation):
 
     window_name = "keyboard_corners"
 
-    ret, frame = cap.read()
-
-    if rotation != Rotation.ROTATE_IDENTITY:
-        frame = cv2.rotate(frame, rotation.value)
-
     cv2.namedWindow(window_name)
-    keyboard_rec.record_corners(window_name, frame)
+    keyboard_rec.record_corners(window_name, cap, rotation)
 
     to_point = lambda index: finger_landmarks_pb2.Point(x=keyboard_rec.points[index][0],
                                                         y=keyboard_rec.points[index][1])
