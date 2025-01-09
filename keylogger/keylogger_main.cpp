@@ -32,7 +32,7 @@ void process_kbd_event(unsigned short makeCode, bool isE0, bool isE1, bool isKey
 
     evt->set_state(isKeyUp ? keylog::proto::Released : keylog::proto::Pressed);
     evt->set_scancode(makeCode);
-    evt->set_timestamp(ms.count());
+    evt->set_timestamp_ms(ms.count());
     evt->set_ise0(isE0);
     evt->set_ise1(isE1);
 

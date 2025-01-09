@@ -8,7 +8,7 @@ enum KeyState {
 }
 
 message KeyEvent {
-  int64 timestamp = 1;
+  int64 timestamp_ms = 1;
   int32 scanCode = 2;
   KeyState state = 3;
   bool isE0 = 4;
