@@ -32,26 +32,36 @@ def to_hand(hand: Hand, persp_matrix):
     return result;
 
 
+def compute_perspective(file_basename: str):
+    corners_proto = finger_landmarks_pb2.KeyboardCorners()
+
+    with open(file_basename + "_corners.binarypb", "rb") as corners_f:
+        corners_proto.ParseFromString(corners_f.read())
+
+    from_proto = lambda proto_point: (proto_point.x, proto_point.y)
+
+    corners = np.array(
+        [from_proto(corners_proto.topLeft),
+         from_proto(corners_proto.topRight),
+         from_proto(corners_proto.bottomRight),
+         from_proto(corners_proto.bottomLeft)],
+        dtype="float32")
+
+    kb_corners = np.array([(0, 0), (283, 0), (283, 94), (0, 94)], dtype="float32")
+
+    return cv2.getPerspectiveTransform(corners, kb_corners)
+
+
 if __name__ == '__main__':
+    file_basename = sys.argv[1].strip("_landmarks.pkl")
+
     results: Results
     with open(sys.argv[1], "rb") as infile:
         results = pickle.load(infile)
 
+    persp_matrix = compute_perspective(file_basename)
+
     landmarks = finger_landmarks_pb2.FingerLandmarks()
-
-    corners = np.array(
-        [results.top_left, results.top_right, results.bottom_right, results.bottom_left],
-        dtype="float32")
-    kb_corners = np.array([(0, 0), (283, 0), (283, 94), (0, 94)], dtype="float32")
-    persp_matrix = cv2.getPerspectiveTransform(corners, kb_corners)
-
-    landmarks.keyboardCorners.CopyFrom(finger_landmarks_pb2.KeyboardCorners(
-        topLeft=to_point(Point._make(results.top_left)),
-        topRight=to_point(Point._make(results.top_right)),
-        bottomRight=to_point(Point._make(results.bottom_right)),
-        bottomLeft=to_point(Point._make(results.bottom_left))
-    ))
-
     print(len(results.hands))
     for hands in results.hands:
         frame = finger_landmarks_pb2.Frame()
@@ -63,6 +73,6 @@ if __name__ == '__main__':
 
         landmarks.frames.append(frame)
 
-    with open(sys.argv[2], "wb") as outfile:
+    with open(file_basename + "_landmarks.binarypb", "wb") as outfile:
         outfile.write(landmarks.SerializeToString())
         outfile.close()

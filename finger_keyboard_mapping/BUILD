@@ -1,7 +1,9 @@
 load("@protobuf//bazel:cc_proto_library.bzl", "cc_proto_library")
 load("@protobuf//bazel:proto_library.bzl", "proto_library")
 load("@protobuf//bazel:py_proto_library.bzl", "py_proto_library")
+load("@pypi//:requirements.bzl", "requirement")
 load("@rules_cc//cc:defs.bzl", "cc_binary", "cc_library")
+load("@rules_python//python:py_binary.bzl", "py_binary")
 
 package(default_visibility = ["__subpackages__"])
 
@@ -66,4 +68,16 @@ py_proto_library(
     name = "keyboard_shape_py_proto",
     visibility = ["//visibility:public"],
     deps = [":keyboard_shape_proto"],
+)
+
+py_binary(
+    name = "print_kb",
+    srcs = ["print_kb.py"],
+    main = "print_kb.py",
+    deps = [
+        ":keyboard_shape_py_proto",
+        "//finger_landmarks:finger_landmarks_py_proto",
+        requirement("opencv-python"),
+        requirement("numpy"),
+    ],
 )

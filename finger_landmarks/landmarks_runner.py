@@ -2,7 +2,6 @@ import cv2 as cv
 import mediapipe as mp
 
 from finger_landmarks.draw_landmarks_annotations import draw_landmarks_on_image
-from finger_landmarks.keyboard_shape_recorder import KeyboardShapeRecorder
 from finger_landmarks.rotation_enum import Rotation
 
 BaseOptions = mp.tasks.BaseOptions
@@ -18,7 +17,6 @@ class FingerLandmarksRunner:
     timestamp: int = 0
     fps: float
     rotation: Rotation
-    keyboard_rec = KeyboardShapeRecorder()
     window_name = "hand_detection"
 
     landmarks = list()
@@ -51,9 +49,6 @@ class FingerLandmarksRunner:
 
                 if self.rotation != Rotation.ROTATE_IDENTITY:
                     frame = cv.rotate(frame, self.rotation.value)
-
-                if self.is_first_frame():
-                    self.keyboard_rec.record_corners(self.window_name, frame)
 
                 hand_landmarker_result = self.detect_landmarks(frame, landmarker)
 
