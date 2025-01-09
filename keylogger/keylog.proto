@@ -2,10 +2,17 @@ syntax = "proto3";
 
 package keylog.proto;
 
+enum KeyState {
+  Pressed = 0;
+  Released = 1;
+}
+
 message KeyEvent {
   int64 timestamp = 1;
   int32 scanCode = 2;
-  bool pressed = 3;
+  KeyState state = 3;
+  bool isE0 = 4;
+  bool isE1 = 5;
 }
 
 message KeyLog {
