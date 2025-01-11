@@ -106,21 +106,59 @@ struct FingerDesc {
         Ring,
         Pinky,
     };
+
     Side   side;
     Finger finger;
-    Point  position;
-    bool   operator==(FingerDesc const& other) const = default;
+
+    FingerDesc(Side side, Finger finger)
+        : side(side)
+        , finger(finger) {}
+
+    explicit FingerDesc(int value) {
+        side   = value / 5 == 0 ? Side::Left : Side::Right;
+        finger = [value] {
+            switch (value % 5) {
+            case 0: return Finger::Thumb;
+            case 1: return Finger::Index;
+            case 2: return Finger::Middle;
+            case 3: return Finger::Ring;
+            case 4: return Finger::Pinky;
+            default: return Finger::Thumb;
+            }
+        }();
+    }
+
+    explicit operator int() const {
+        return side == Side::Right ? 5 : 0 + [this] {
+            switch (finger) {
+            case Finger::Thumb: return 0;
+            case Finger::Index: return 1;
+            case Finger::Middle: return 2;
+            case Finger::Ring: return 3;
+            case Finger::Pinky: return 4;
+            default: return 0;
+            }
+        }();
+    }
+
+    bool operator==(FingerDesc const&) const = default;
+};
+
+struct FingerRef {
+    FingerDesc fingerDesc;
+    Point      position;
+    bool       operator==(FingerRef const& other) const = default;
 };
 
 struct BothHands {
     struct iterator {
-        using value_type     = FingerDesc;
-        using reference_type = FingerDesc;
+        using value_type     = FingerRef;
+        using reference_type = FingerRef;
 
         int              index = 0;
         BothHands const* hands;
 
-        FingerDesc operator*() const {
+        FingerRef operator*() const {
             Point position = [this]() {
                 switch (index) {
                 case 0: return hands->left->thumb;
@@ -137,20 +175,7 @@ struct BothHands {
                 }
             }();
 
-            FingerDesc::Finger finger = [this]() {
-                switch (index % 5) {
-                case 0: return FingerDesc::Finger::Thumb;
-                case 1: return FingerDesc::Finger::Index;
-                case 2: return FingerDesc::Finger::Middle;
-                case 3: return FingerDesc::Finger::Ring;
-                case 4: return FingerDesc::Finger::Pinky;
-                default: return FingerDesc::Finger::Thumb;
-                }
-            }();
-
-            FingerDesc::Side side
-                = (index / 5 == 0) ? FingerDesc::Side::Left : FingerDesc::Side::Right;
-            return {side, finger, position};
+            return {FingerDesc{index}, position};
         }
         iterator& operator++() {
             ++index;

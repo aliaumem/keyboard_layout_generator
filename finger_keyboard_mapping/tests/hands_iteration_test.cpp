@@ -44,15 +44,15 @@ SCENARIO("Hands can be iterated on and iterators dereferenced") {
             THEN("We get the fingers in order starting at the thumb") {
                 using enum FingerDesc::Finger;
                 using enum FingerDesc::Side;
-                CHECK(*it == FingerDesc{Left, Thumb, hands.left->thumb});
+                CHECK(*it == FingerRef{{Left, Thumb}, hands.left->thumb});
                 ++it;
-                CHECK(*it == FingerDesc{Left, Index, hands.left->index});
+                CHECK(*it == FingerRef{{Left, Index}, hands.left->index});
                 ++it;
-                CHECK(*it == FingerDesc{Left, Middle, hands.left->middle});
+                CHECK(*it == FingerRef{{Left, Middle}, hands.left->middle});
                 ++it;
-                CHECK(*it == FingerDesc{Left, Ring, hands.left->ring});
+                CHECK(*it == FingerRef{{Left, Ring}, hands.left->ring});
                 ++it;
-                CHECK(*it == FingerDesc{Left, Pinky, hands.left->pinky});
+                CHECK(*it == FingerRef{{Left, Pinky}, hands.left->pinky});
             }
         }
     }
@@ -86,15 +86,15 @@ SCENARIO("Hands can be iterated on and iterators dereferenced") {
             THEN("We get the fingers in order starting at the thumb") {
                 using enum FingerDesc::Finger;
                 using enum FingerDesc::Side;
-                CHECK(*it == FingerDesc{Right, Thumb, hands.right->thumb});
+                CHECK(*it == FingerRef{{Right, Thumb}, hands.right->thumb});
                 ++it;
-                CHECK(*it == FingerDesc{Right, Index, hands.right->index});
+                CHECK(*it == FingerRef{{Right, Index}, hands.right->index});
                 ++it;
-                CHECK(*it == FingerDesc{Right, Middle, hands.right->middle});
+                CHECK(*it == FingerRef{{Right, Middle}, hands.right->middle});
                 ++it;
-                CHECK(*it == FingerDesc{Right, Ring, hands.right->ring});
+                CHECK(*it == FingerRef{{Right, Ring}, hands.right->ring});
                 ++it;
-                CHECK(*it == FingerDesc{Right, Pinky, hands.right->pinky});
+                CHECK(*it == FingerRef{{Right, Pinky}, hands.right->pinky});
             }
         }
     }
@@ -137,25 +137,25 @@ SCENARIO("Hands can be iterated on and iterators dereferenced") {
             THEN("We get the fingers in order starting at the thumb") {
                 using enum FingerDesc::Finger;
                 using enum FingerDesc::Side;
-                CHECK(*it == FingerDesc{Left, Thumb, hands.left->thumb});
+                CHECK(*it == FingerRef{{Left, Thumb}, hands.left->thumb});
                 ++it;
-                CHECK(*it == FingerDesc{Left, Index, hands.left->index});
+                CHECK(*it == FingerRef{{Left, Index}, hands.left->index});
                 ++it;
-                CHECK(*it == FingerDesc{Left, Middle, hands.left->middle});
+                CHECK(*it == FingerRef{{Left, Middle}, hands.left->middle});
                 ++it;
-                CHECK(*it == FingerDesc{Left, Ring, hands.left->ring});
+                CHECK(*it == FingerRef{{Left, Ring}, hands.left->ring});
                 ++it;
-                CHECK(*it == FingerDesc{Left, Pinky, hands.left->pinky});
+                CHECK(*it == FingerRef{{Left, Pinky}, hands.left->pinky});
                 ++it;
-                CHECK(*it == FingerDesc{Right, Thumb, hands.right->thumb});
+                CHECK(*it == FingerRef{{Right, Thumb}, hands.right->thumb});
                 ++it;
-                CHECK(*it == FingerDesc{Right, Index, hands.right->index});
+                CHECK(*it == FingerRef{{Right, Index}, hands.right->index});
                 ++it;
-                CHECK(*it == FingerDesc{Right, Middle, hands.right->middle});
+                CHECK(*it == FingerRef{{Right, Middle}, hands.right->middle});
                 ++it;
-                CHECK(*it == FingerDesc{Right, Ring, hands.right->ring});
+                CHECK(*it == FingerRef{{Right, Ring}, hands.right->ring});
                 ++it;
-                CHECK(*it == FingerDesc{Right, Pinky, hands.right->pinky});
+                CHECK(*it == FingerRef{{Right, Pinky}, hands.right->pinky});
             }
         }
     }

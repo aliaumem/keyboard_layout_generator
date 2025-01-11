@@ -46,10 +46,10 @@ SCENARIO("A keyboard shape can map a finger to a key") {
         THEN("The matching finger is always the same") {
             using enum FingerDesc::Finger;
             using enum FingerDesc::Side;
-            CHECK(kb.closestFinger(keyA, hands) == FingerDesc{Left, Index, (5_x, 5_y)});
-            CHECK(kb.closestFinger(keyB, hands) == FingerDesc{Left, Index, (5_x, 5_y)});
-            CHECK(kb.closestFinger(keyC, hands) == FingerDesc{Left, Index, (5_x, 5_y)});
-            CHECK(kb.closestFinger(keyD, hands) == FingerDesc{Left, Index, (5_x, 5_y)});
+            CHECK(kb.closestFinger(keyA, hands) == FingerRef{{Left, Index}, (5_x, 5_y)});
+            CHECK(kb.closestFinger(keyB, hands) == FingerRef{{Left, Index}, (5_x, 5_y)});
+            CHECK(kb.closestFinger(keyC, hands) == FingerRef{{Left, Index}, (5_x, 5_y)});
+            CHECK(kb.closestFinger(keyD, hands) == FingerRef{{Left, Index}, (5_x, 5_y)});
         }
     }
 
@@ -67,10 +67,10 @@ SCENARIO("A keyboard shape can map a finger to a key") {
         THEN("The matching finger is always the same") {
             using enum FingerDesc::Finger;
             using enum FingerDesc::Side;
-            CHECK(kb.closestFinger(keyA, hands) == FingerDesc{Left, Index, (-3_x, 5_y)});
-            CHECK(kb.closestFinger(keyB, hands) == FingerDesc{Left, Ring, (15_x, 5_y)});
-            CHECK(kb.closestFinger(keyC, hands) == FingerDesc{Left, Index, (-3_x, 5_y)});
-            CHECK(kb.closestFinger(keyD, hands) == FingerDesc{Left, Ring, (15_x, 5_y)});
+            CHECK(kb.closestFinger(keyA, hands) == FingerRef{{Left, Index}, (-3_x, 5_y)});
+            CHECK(kb.closestFinger(keyB, hands) == FingerRef{{Left, Ring}, (15_x, 5_y)});
+            CHECK(kb.closestFinger(keyC, hands) == FingerRef{{Left, Index}, (-3_x, 5_y)});
+            CHECK(kb.closestFinger(keyD, hands) == FingerRef{{Left, Ring}, (15_x, 5_y)});
         }
     }
 
@@ -95,10 +95,10 @@ SCENARIO("A keyboard shape can map a finger to a key") {
         THEN("The matching finger is always the same") {
             using enum FingerDesc::Finger;
             using enum FingerDesc::Side;
-            CHECK(kb.closestFinger(keyA, hands) == FingerDesc{Left, Index, (-3_x, 5_y)});
-            CHECK(kb.closestFinger(keyB, hands) == FingerDesc{Right, Index, (15_x, 5_y)});
-            CHECK(kb.closestFinger(keyC, hands) == FingerDesc{Left, Index, (-3_x, 5_y)});
-            CHECK(kb.closestFinger(keyD, hands) == FingerDesc{Right, Index, (15_x, 5_y)});
+            CHECK(kb.closestFinger(keyA, hands) == FingerRef{{Left, Index}, (-3_x, 5_y)});
+            CHECK(kb.closestFinger(keyB, hands) == FingerRef{{Right, Index}, (15_x, 5_y)});
+            CHECK(kb.closestFinger(keyC, hands) == FingerRef{{Left, Index}, (-3_x, 5_y)});
+            CHECK(kb.closestFinger(keyD, hands) == FingerRef{{Right, Index}, (15_x, 5_y)});
         }
     }
 }

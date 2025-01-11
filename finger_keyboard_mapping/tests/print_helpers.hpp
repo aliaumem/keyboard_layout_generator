@@ -5,7 +5,7 @@
 
 #include <ostream>
 
-std::ostream& operator<<(std::ostream& os, finger_tracking::FingerDesc const& d) {
+std::ostream& operator<<(std::ostream& os, finger_tracking::FingerRef const& d) {
     return os << std::format("{}", d);
 }
 

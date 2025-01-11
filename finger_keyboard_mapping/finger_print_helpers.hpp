@@ -43,7 +43,8 @@ template <>
 struct std::formatter<finger_tracking::FingerRef> : std::formatter<char> {
     template <typename FmtContext>
     auto format(finger_tracking::FingerRef d, FmtContext& ctx) const {
-        return std::format_to(ctx.out(), "{{{}, {}, {}}}", d.fingerDesc.side, d.fingerDesc.finger, d.position);
+        return std::format_to(ctx.out(), "{{{}, {}, {}}}", d.fingerDesc.side, d.fingerDesc.finger,
+                              d.position);
     }
 };
 

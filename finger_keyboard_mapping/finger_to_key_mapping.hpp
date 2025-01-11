@@ -31,7 +31,7 @@ public:
     [[nodiscard]] std::span<KeyInSpace const> keys() const {
         return std::span<KeyInSpace const>{m_keys.begin(), m_keys.size()};
     }
-    std::optional<FingerDesc> closestFinger(Key key, BothHands const& hands);
+    std::optional<FingerRef> closestFinger(Key key, BothHands const& hands);
 
     static KeyboardShape defaultShape();
 };

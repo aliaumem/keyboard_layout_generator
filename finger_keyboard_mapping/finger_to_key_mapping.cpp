@@ -16,7 +16,7 @@ Rectangle KeyboardShape::aabb() const {
     return total;
 }
 
-std::optional<FingerDesc> KeyboardShape::closestFinger(Key key, BothHands const& hands) {
+std::optional<FingerRef> KeyboardShape::closestFinger(Key key, BothHands const& hands) {
     if (hands.size() == 0)
         return std::nullopt;
 
@@ -27,7 +27,7 @@ std::optional<FingerDesc> KeyboardShape::closestFinger(Key key, BothHands const&
         return std::nullopt;
 
     auto fingerIt
-        = std::min_element(hands.begin(), hands.end(), [it](FingerDesc lhs, FingerDesc rhs) {
+        = std::min_element(hands.begin(), hands.end(), [it](FingerRef lhs, FingerRef rhs) {
               return (it->aabb.center() - lhs.position).sqrMagnitude()
                    < (it->aabb.center() - rhs.position).sqrMagnitude();
           });
