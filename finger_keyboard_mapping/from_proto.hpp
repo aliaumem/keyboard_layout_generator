@@ -3,8 +3,10 @@
 
 #include "finger_keyboard_mapping/frame.hpp"
 #include "scancode_key_map.hpp"
+#include "finger_keyboard_mapping/keyboard_timeline.hpp"
 
 #include "finger_landmarks/finger_landmarks.pb.h"
+#include "finger_keyboard_mapping/keyboard_timeline.pb.h"
 #include "keylogger/keylog.pb.h"
 
 namespace finger_tracking {
@@ -54,6 +56,20 @@ inline KeyEvent toKeyEvent(keylog::proto::KeyEvent const& evt) {
         .isPressed = evt.state() == keylog::proto::Pressed,
         .code      = KeyCode{evt.scancode(), evt.ise0(), evt.ise1()},
     };
+}
+
+inline proto::KeyboardTimeline cast(KeyboardTimeline const& timeline) {
+    proto::KeyboardTimeline result;
+    for (auto const& state : timeline) {
+        auto& frame = *result.add_frames();
+        for (auto const& [key, finger] : state.pressedKeys) {
+            auto& pressedKey = *frame.add_pressed_keys();
+            pressedKey.set_key(key.name);
+            pressedKey.set_finger(static_cast<int>(finger));
+        }
+    }
+
+    return result;
 }
 } // namespace finger_tracking
 

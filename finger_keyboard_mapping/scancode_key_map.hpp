@@ -15,7 +15,8 @@ struct KeyCode {
 
     bool operator==(KeyCode const& rhs) const = default;
     bool operator<(KeyCode const other) const {
-        return scancode < other.scancode || isE0 < other.isE0 || isE1 < other.isE1;
+        return scancode < other.scancode || (scancode == other.scancode && isE0 < other.isE0)
+            || (scancode == other.scancode && isE0 == other.isE0 && isE1 < other.isE1);
     }
 };
 

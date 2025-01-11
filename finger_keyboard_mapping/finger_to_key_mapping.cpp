@@ -1,5 +1,8 @@
 #include "finger_to_key_mapping.hpp"
 
+#include "keyboard_timeline.hpp"
+#include "scancode_key_map.hpp"
+
 #include <numeric>
 
 namespace finger_tracking {
@@ -16,7 +19,7 @@ Rectangle KeyboardShape::aabb() const {
     return total;
 }
 
-std::optional<FingerRef> KeyboardShape::closestFinger(Key key, BothHands const& hands) {
+std::optional<FingerRef> KeyboardShape::closestFinger(Key key, BothHands const& hands) const {
     if (hands.size() == 0)
         return std::nullopt;
 
@@ -35,7 +38,30 @@ std::optional<FingerRef> KeyboardShape::closestFinger(Key key, BothHands const& 
     return *fingerIt;
 }
 
-void mapFingersToKeys(std::vector<Frame> frames) {
-    auto kbShape = KeyboardShape::defaultShape();
+KeyboardTimeline mapFingersToKeys(
+    std::vector<Frame> const& frames, std::vector<KeyEvent> const& keyEvents,
+    KeyboardShape const& shape, ScancodeKeyMap const& scancodeKeyMap) {
+    using std::chrono::milliseconds;
+
+    KeyboardTimeline::Builder builder;
+
+    auto prevEvent = keyEvents.begin();
+    for (auto const& frame : frames) {
+        while (prevEvent != keyEvents.end() && prevEvent->timestamp < frame.timestamp) {
+            auto key         = scancodeKeyMap.scanCodeToKey(prevEvent->code);
+            auto maybeFinger = shape.closestFinger(key, frame.hands);
+            if (maybeFinger.has_value()) {
+                if (prevEvent->isPressed)
+                    builder.pressed(key, maybeFinger->fingerDesc);
+                else
+                    builder.released(key);
+            }
+            ++prevEvent;
+        }
+
+        builder.nextFrame();
+    }
+
+    return builder.build();
 }
 } // namespace finger_tracking

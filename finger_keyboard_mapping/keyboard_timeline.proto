@@ -1,0 +1,16 @@
+syntax = "proto3";
+
+package finger_tracking.proto;
+
+message KeyboardTimeline{
+  repeated KeyboardState frames = 1;
+}
+
+message KeyboardState {
+  repeated PressedKey pressed_keys = 1;
+}
+
+message PressedKey{
+  string key = 1;
+  int32 finger = 2;
+}

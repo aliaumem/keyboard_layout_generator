@@ -2,6 +2,7 @@
 #include "finger_keyboard_mapping/from_proto.hpp"
 #include "finger_keyboard_mapping/finger_to_key_mapping.hpp"
 #include "finger_keyboard_mapping/scancode_key_map.hpp"
+#include "finger_keyboard_mapping/finger_print_helpers.hpp"
 
 #include <finger_keyboard_mapping/keyboard_shape.pb.h>
 #include <keylogger/keylog.pb.h>
@@ -10,12 +11,39 @@
 
 using namespace std::string_literals;
 
+void mapForStats(finger_tracking::ScancodeKeyMap const&        scancodeKeyMap,
+                 std::vector<finger_tracking::Frame> const&    frames,
+                 finger_tracking::KeyboardShape const&         shape,
+                 std::vector<finger_tracking::KeyEvent> const& keyEvents) {
+
+    for (auto const& [timestamp, isPressed, code] : keyEvents) {
+        // if (!isPressed)
+        //     continue;
+
+        using std::chrono::milliseconds;
+        auto prevFrame = std::lower_bound(
+            frames.begin(), frames.end(), timestamp,
+            [](finger_tracking::Frame const& frame, milliseconds timestamp) {
+                return frame.timestamp < timestamp;
+            });
+
+        if (prevFrame == frames.end())
+            break;
+
+        auto key         = scancodeKeyMap.scanCodeToKey(code);
+        auto maybeFinger = shape.closestFinger(key, prevFrame->hands);
+
+        std::cout << timestamp << "\t" << (isPressed ? "v " : "^ ") << std::hex << code.scancode
+                  << std::dec << "  " << key.name << "\t"
+                  << (maybeFinger.has_value() ? std::format("{}", *maybeFinger) : "None") << "\n";
+    }
+}
 int main(int argc, char const* argv[]) {
 
     std::string landmarksPath = argv[1];
 
-    std::string keylogPath
-        = landmarksPath.substr(0, landmarksPath.rfind("_landmarks.binarypb")) + "_keylog.binarypb"s;
+    auto        basePath   = landmarksPath.substr(0, landmarksPath.rfind("_landmarks.binarypb"));
+    std::string keylogPath = basePath + "_keylog.binarypb"s;
 
     finger_tracking::proto::FingerLandmarks landmarks;
     {
@@ -33,24 +61,26 @@ int main(int argc, char const* argv[]) {
 
     auto frames = finger_tracking::cast(landmarks.frames());
 
-    mapFingersToKeys(frames);
+    std::cout << "frames: " << frames.back().timestamp << "\tkeys: "
+              << std::chrono::milliseconds(keylog.keyevents().rbegin()->timestamp_ms())
+              << std::endl;
 
     auto shape = finger_tracking::KeyboardShape::defaultShape();
 
-    for (auto const& evt :
-         keylog.keyevents() | std::views::transform(finger_tracking::toKeyEvent)) {
+    auto keyEventsRng = keylog.keyevents() | std::views::transform(finger_tracking::toKeyEvent);
+    std::vector<finger_tracking::KeyEvent> keyEvents{keyEventsRng.begin(), keyEventsRng.end()};
 
-        finger_tracking::Key key = scancodeKeyMap.scanCodeToKey(evt.code);
+    auto timeline = mapFingersToKeys(frames, keyEvents, shape, scancodeKeyMap);
 
-        auto it = std::find(shape.keys().begin(), shape.keys().end(), key);
+    auto protoTimeline = cast(timeline);
+    std::cout << protoTimeline.DebugString();
 
-        using namespace finger_tracking::geo_literals;
-        finger_tracking::Point pt = it != shape.keys().end() ? it->aabb.center() : (-1_x, -1_y);
-
-        std::cout << (evt.isPressed ? 'v' : '^') << ' ' << (evt.code.isE0 ? "E0 " : "")
-                  << (evt.code.isE1 ? "E1 " : "") << std::hex << evt.code.scancode << std::dec
-                  << "\t" << key.name << "\t" << pt.x << ',' << pt.y << std::dec << std::endl;
+    {
+        std::ofstream file{basePath + "_timeline.binarypb", std::ios::binary | std::ios::out};
+        protoTimeline.SerializeToOstream(&file);
     }
+
+    mapForStats(scancodeKeyMap, frames, shape, keyEvents);
 
     return 0;
 }

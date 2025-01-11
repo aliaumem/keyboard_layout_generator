@@ -35,6 +35,7 @@ cc_library(
         "finger_print_helpers.hpp",
         "frame.hpp",
         "key.hpp",
+        "keyboard_timeline.hpp",
         "mapping_geometry.hpp",
         "scancode_key_map.hpp",
         "static_vector.hpp",
@@ -46,6 +47,7 @@ cc_library(
     hdrs = ["from_proto.hpp"],
     deps = [
         ":data_types",
+        ":keyboard_timeline_cc_proto",
         "//finger_landmarks:finger_landmarks_cc_proto",
     ],
 )
@@ -85,12 +87,29 @@ py_proto_library(
     deps = [":keyboard_shape_proto"],
 )
 
+proto_library(
+    name = "keyboard_timeline_proto",
+    srcs = ["keyboard_timeline.proto"],
+)
+
+cc_proto_library(
+    name = "keyboard_timeline_cc_proto",
+    deps = [":keyboard_timeline_proto"],
+)
+
+py_proto_library(
+    name = "keyboard_timeline_py_proto",
+    visibility = ["//visibility:public"],
+    deps = [":keyboard_timeline_proto"],
+)
+
 py_binary(
     name = "print_kb",
     srcs = ["print_kb.py"],
     main = "print_kb.py",
     deps = [
         ":keyboard_shape_py_proto",
+        ":keyboard_timeline_py_proto",
         "//finger_landmarks:finger_landmarks_py_proto",
         requirement("opencv-python"),
         requirement("numpy"),

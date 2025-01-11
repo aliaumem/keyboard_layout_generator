@@ -2,8 +2,9 @@
 #define FINGER_TO_KEY_MAPPING_HPP
 
 #include "finger_keyboard_mapping/frame.hpp"
-#include "static_vector.hpp"
-#include "key.hpp"
+#include "finger_keyboard_mapping/key.hpp"
+#include "finger_keyboard_mapping/keyboard_timeline.hpp"
+#include "finger_keyboard_mapping/scancode_key_map.hpp"
 
 #include <span>
 
@@ -20,23 +21,25 @@ class KeyboardShape {
     static_vector<KeyInSpace, 62> m_keys;
 
 public:
-    explicit KeyboardShape(static_vector<KeyInSpace, 62> keys)
-        : m_keys(std::move(keys)) {}
+    explicit KeyboardShape(static_vector<KeyInSpace, 62> const& keys)
+        : m_keys(keys) {}
 
     KeyboardShape(KeyboardShape&&)      = default;
     KeyboardShape(KeyboardShape const&) = delete;
 
-    Rectangle aabb() const;
+    [[nodiscard]] Rectangle aabb() const;
 
     [[nodiscard]] std::span<KeyInSpace const> keys() const {
-        return std::span<KeyInSpace const>{m_keys.begin(), m_keys.size()};
+        return std::span{m_keys.begin(), m_keys.size()};
     }
-    std::optional<FingerRef> closestFinger(Key key, BothHands const& hands);
+    [[nodiscard]] std::optional<FingerRef> closestFinger(Key key, BothHands const& hands) const;
 
     static KeyboardShape defaultShape();
 };
 
-void mapFingersToKeys(std::vector<Frame> frames);
+KeyboardTimeline mapFingersToKeys(std::vector<Frame> const&    frames,
+                                  std::vector<KeyEvent> const& keyEvents,
+                                  KeyboardShape const& shape, ScancodeKeyMap const& scancodeKeyMap);
 } // namespace finger_tracking
 
 #endif // FINGER_TO_KEY_MAPPING_HPP
