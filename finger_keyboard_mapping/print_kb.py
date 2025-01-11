@@ -47,11 +47,11 @@ def draw_hand(display, hand, scale_factor):
     draw_finger = lambda finger, color: cv.drawMarker(display, (
         finger.x * scale_factor, finger.y * scale_factor), color,
                                                       cv.MARKER_SQUARE, 2)
-    draw_finger(hand.thumb, 240)
-    draw_finger(hand.index, 210)
-    draw_finger(hand.middle, 180)
-    draw_finger(hand.ring, 150)
-    draw_finger(hand.pinky, 120)
+    draw_finger(hand.thumb, (180, 229, 255))
+    draw_finger(hand.index, (201, 101, 201))
+    draw_finger(hand.middle, (0, 204, 255))
+    draw_finger(hand.ring, (48, 255, 48))
+    draw_finger(hand.pinky, (192, 101, 21))
 
 
 def print_kb(proto_path: str, fingers_proto_path: str):
@@ -59,7 +59,7 @@ def print_kb(proto_path: str, fingers_proto_path: str):
     with open(proto_path, "rb") as f:
         shape.ParseFromString(f.read())
 
-    image = np.zeros((240, 600, 1), dtype="uint8")
+    image = np.zeros((240, 600, 3), dtype="uint8")
     scale_factor = 2
 
     for proto_key in shape.keys:
@@ -85,7 +85,7 @@ def print_kb(proto_path: str, fingers_proto_path: str):
 
 
 def print_key(key: Key, image: np.ndarray, scale_factor: float, font=cv.FONT_HERSHEY_PLAIN,
-              font_scale: float = 1, color: Sequence[float] = 70):
+              font_scale: float = 1, color: Sequence[float] = (70, 70, 70)):
     aabb = key.aabb * scale_factor
     cv.rectangle(image, aabb.top_left, aabb.bottom_right, color)
 
