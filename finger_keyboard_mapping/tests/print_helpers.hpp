@@ -1,29 +1,12 @@
 #ifndef PRINT_HELPERS_HPP
 #define PRINT_HELPERS_HPP
 
+#include "finger_keyboard_mapping/finger_print_helpers.hpp"
+
 #include <ostream>
 
-std::ostream& operator<<(std::ostream& os, finger_tracking::Point const& point) {
-    return os << "(" << point.x << ", " << point.y << ")";
-}
-std::ostream& operator<<(std::ostream& os, finger_tracking::FingerDesc::Finger finger) {
-    using enum finger_tracking::FingerDesc::Finger;
-    switch (finger) {
-    case Thumb: os << "Thumb"; break;
-    case Index: os << "Index"; break;
-    case Middle: os << "Middle"; break;
-    case Ring: os << "Ring"; break;
-    case Pinky: os << "Pinky"; break;
-    }
-    return os;
-}
-
-std::ostream& operator<<(std::ostream& os, finger_tracking::FingerDesc::Side side) {
-    return os << (side == finger_tracking::FingerDesc::Side::Left ? "Left" : "Right");
-}
-
 std::ostream& operator<<(std::ostream& os, finger_tracking::FingerDesc const& d) {
-    return os << '{' << d.side << ", " << d.finger << ", " << d.position << '}';
+    return os << std::format("{}", d);
 }
 
 template <typename T>

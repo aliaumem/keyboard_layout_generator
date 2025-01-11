@@ -32,6 +32,7 @@ cc_library(
     name = "data_types",
     srcs = ["scancode_key_map.cpp"],
     hdrs = [
+        "finger_print_helpers.hpp",
         "frame.hpp",
         "key.hpp",
         "mapping_geometry.hpp",
