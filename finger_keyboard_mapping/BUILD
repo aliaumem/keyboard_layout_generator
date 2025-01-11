@@ -19,6 +19,15 @@ cc_binary(
     ],
 )
 
+cc_binary(
+    name = "dump_keyboard_shape",
+    srcs = ["dump_keyboard_shape.cpp"],
+    deps = [
+        ":keyboard_shape_cc_proto",
+        ":keyboard_shape_to_proto",
+    ],
+)
+
 cc_library(
     name = "data_types",
     srcs = ["scancode_key_map.cpp"],
