@@ -1,7 +1,7 @@
 #ifndef KEYBOARD_TIMELINE_HPP
 #define KEYBOARD_TIMELINE_HPP
 
-#include "finger_keyboard_mapping/mapping_geometry.hpp"
+#include "finger_keyboard_mapping/fingers.hpp"
 #include "finger_keyboard_mapping/key.hpp"
 
 #include <variant>
