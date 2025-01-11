@@ -12,6 +12,11 @@ class static_vector {
 public:
     using iterator = typename std::array<T, N>::const_iterator;
 
+    explicit static_vector(std::array<T, N> args)
+        : m_data(std::move(args)) {}
+
+    static_vector() = default;
+
     template <typename... Args>
     T& emplace_back(Args&&... args) {
         m_data[m_size] = T{std::forward<Args>(args)...};

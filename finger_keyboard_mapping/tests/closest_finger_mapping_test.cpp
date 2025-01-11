@@ -14,12 +14,12 @@ SCENARIO("A keyboard shape can map a finger to a key") {
 
     //  layout shape:   | A | B |
     //                  | C | D |
-    KeyboardShape kb{std::vector<KeyInSpace>{
-        {keyA, Rectangle{(0_x, 0_y), (9_w, 9_h)}},
-        {keyB, Rectangle{(10_x, 0_y), (9_w, 9_h)}},
-        {keyC, Rectangle{(0_x, 10_y), (9_w, 9_h)}},
-        {keyD, Rectangle{(10_x, 10_y), (9_w, 9_h)}},
-    }};
+    KeyboardShape kb{static_vector{std::array<KeyInSpace, 62>{
+        KeyInSpace{keyA, Rectangle{(0_x, 0_y), (9_w, 9_h)}},
+        KeyInSpace{keyB, Rectangle{(10_x, 0_y), (9_w, 9_h)}},
+        KeyInSpace{keyC, Rectangle{(0_x, 10_y), (9_w, 9_h)}},
+        KeyInSpace{keyD, Rectangle{(10_x, 10_y), (9_w, 9_h)}},
+    }}};
 
     GIVEN("No hand") {
         BothHands hands{};
