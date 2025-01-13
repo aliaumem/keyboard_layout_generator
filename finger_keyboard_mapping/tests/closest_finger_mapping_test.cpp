@@ -1,8 +1,12 @@
-#include "finger_keyboard_mapping/finger_to_key_mapping.hpp"
+#include "finger_keyboard_mapping/mapping/closest_finger_mapping.hpp"
 #include "print_helpers.hpp"
 #include "catch2/catch_test_macros.hpp"
 
 using namespace finger_tracking;
+
+bool operator==(MaybeFinger const& lhs, std::optional<FingerRef> const& rhs) {
+    return lhs.maybeFinger == rhs;
+}
 
 SCENARIO("A keyboard shape can map a finger to a key") {
     using namespace geo_literals;
@@ -25,10 +29,10 @@ SCENARIO("A keyboard shape can map a finger to a key") {
         BothHands hands{};
 
         THEN("There is no matching finger") {
-            CHECK(kb.closestFinger(keyA, hands) == std::nullopt);
-            CHECK(kb.closestFinger(keyB, hands) == std::nullopt);
-            CHECK(kb.closestFinger(keyC, hands) == std::nullopt);
-            CHECK(kb.closestFinger(keyD, hands) == std::nullopt);
+            CHECK(closestFinger(kb, keyA, hands) == std::nullopt);
+            CHECK(closestFinger(kb, keyB, hands) == std::nullopt);
+            CHECK(closestFinger(kb, keyC, hands) == std::nullopt);
+            CHECK(closestFinger(kb, keyD, hands) == std::nullopt);
         }
     }
 
@@ -46,10 +50,10 @@ SCENARIO("A keyboard shape can map a finger to a key") {
         THEN("The matching finger is always the same") {
             using enum FingerDesc::Finger;
             using enum FingerDesc::Side;
-            CHECK(kb.closestFinger(keyA, hands) == FingerRef{{Left, Index}, (5_x, 5_y)});
-            CHECK(kb.closestFinger(keyB, hands) == FingerRef{{Left, Index}, (5_x, 5_y)});
-            CHECK(kb.closestFinger(keyC, hands) == FingerRef{{Left, Index}, (5_x, 5_y)});
-            CHECK(kb.closestFinger(keyD, hands) == FingerRef{{Left, Index}, (5_x, 5_y)});
+            CHECK(closestFinger(kb, keyA, hands) == FingerRef{{Left, Index}, (5_x, 5_y)});
+            CHECK(closestFinger(kb, keyB, hands) == std::nullopt);
+            CHECK(closestFinger(kb, keyC, hands) == std::nullopt);
+            CHECK(closestFinger(kb, keyD, hands) == std::nullopt);
         }
     }
 
@@ -57,7 +61,7 @@ SCENARIO("A keyboard shape can map a finger to a key") {
         BothHands hands{
             .left = Hand{
                 .thumb  = (100_x, 100_y),
-                .index  = (-3_x, 5_y),
+                .index  = (5_x, 5_y),
                 .middle = (100_x, 100_y),
                 .ring   = (15_x, 5_y),
                 .pinky  = (100_x, 100_y),
@@ -67,10 +71,10 @@ SCENARIO("A keyboard shape can map a finger to a key") {
         THEN("The matching finger is always the same") {
             using enum FingerDesc::Finger;
             using enum FingerDesc::Side;
-            CHECK(kb.closestFinger(keyA, hands) == FingerRef{{Left, Index}, (-3_x, 5_y)});
-            CHECK(kb.closestFinger(keyB, hands) == FingerRef{{Left, Ring}, (15_x, 5_y)});
-            CHECK(kb.closestFinger(keyC, hands) == FingerRef{{Left, Index}, (-3_x, 5_y)});
-            CHECK(kb.closestFinger(keyD, hands) == FingerRef{{Left, Ring}, (15_x, 5_y)});
+            CHECK(closestFinger(kb, keyA, hands) == FingerRef{{Left, Index}, (5_x, 5_y)});
+            CHECK(closestFinger(kb, keyB, hands) == FingerRef{{Left, Ring}, (15_x, 5_y)});
+            CHECK(closestFinger(kb, keyC, hands) == std::nullopt);
+            CHECK(closestFinger(kb, keyD, hands) == std::nullopt);
         }
     }
 
@@ -78,7 +82,7 @@ SCENARIO("A keyboard shape can map a finger to a key") {
         BothHands hands{
             .left = Hand{
                 .thumb  = (100_x, 100_y),
-                .index  = (-3_x, 5_y),
+                .index  = (5_x, 5_y),
                 .middle = (100_x, 100_y),
                 .ring = (100_x, 100_y),
                 .pinky  = (100_x, 100_y),
@@ -95,10 +99,10 @@ SCENARIO("A keyboard shape can map a finger to a key") {
         THEN("The matching finger is always the same") {
             using enum FingerDesc::Finger;
             using enum FingerDesc::Side;
-            CHECK(kb.closestFinger(keyA, hands) == FingerRef{{Left, Index}, (-3_x, 5_y)});
-            CHECK(kb.closestFinger(keyB, hands) == FingerRef{{Right, Index}, (15_x, 5_y)});
-            CHECK(kb.closestFinger(keyC, hands) == FingerRef{{Left, Index}, (-3_x, 5_y)});
-            CHECK(kb.closestFinger(keyD, hands) == FingerRef{{Right, Index}, (15_x, 5_y)});
+            CHECK(closestFinger(kb, keyA, hands) == FingerRef{{Left, Index}, (5_x, 5_y)});
+            CHECK(closestFinger(kb, keyB, hands) == FingerRef{{Right, Index}, (15_x, 5_y)});
+            CHECK(closestFinger(kb, keyC, hands) == std::nullopt);
+            CHECK(closestFinger(kb, keyD, hands) == std::nullopt);
         }
     }
 }

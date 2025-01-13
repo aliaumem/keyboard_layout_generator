@@ -8,13 +8,15 @@ using finger_tracking::Key;
 using finger_tracking::KeyboardState;
 using finger_tracking::KeyboardTimeline;
 
+using namespace std::chrono_literals;
+
 SCENARIO("The timeline represents the state of the keyboard at each frame") {
     KeyboardTimeline::Builder builder;
 
     using enum FingerDesc::Side;
     using enum FingerDesc::Finger;
 
-    builder.pressed(Key{"f"}, FingerDesc{Left, Index}).nextFrame().released(Key{"f"});
+    builder.pressed(Key{"f"}, FingerDesc{Left, Index}).nextFrame(30ms).released(Key{"f"});
 
     KeyboardTimeline timeline = builder.build();
 

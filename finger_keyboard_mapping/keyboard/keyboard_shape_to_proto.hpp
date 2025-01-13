@@ -1,9 +1,9 @@
 #ifndef KEYBOARD_SHAPE_TO_PROTO_HPP
 #define KEYBOARD_SHAPE_TO_PROTO_HPP
 
-#include "finger_to_key_mapping.hpp"
+#include "finger_keyboard_mapping/keyboard/keyboard_shape.hpp"
 
-#include <finger_keyboard_mapping/keyboard_shape.pb.h>
+#include <finger_keyboard_mapping/keyboard/keyboard_shape.pb.h>
 
 namespace finger_tracking {
 

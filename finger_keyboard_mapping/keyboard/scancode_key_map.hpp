@@ -1,8 +1,8 @@
 #ifndef SCANCODE_KEY_MAP_HPP
 #define SCANCODE_KEY_MAP_HPP
 
-#include "static_vector.hpp"
-#include "key.hpp"
+#include "finger_keyboard_mapping/static_vector.hpp"
+#include "finger_keyboard_mapping/keyboard/key.hpp"
 
 #include <chrono>
 

@@ -1,7 +1,7 @@
 #ifndef FRAME_H
 #define FRAME_H
 
-#include "finger_keyboard_mapping/both_hands.hpp"
+#include "finger_keyboard_mapping/hands/both_hands.hpp"
 
 #include <chrono>
 

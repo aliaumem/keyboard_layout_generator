@@ -1,8 +1,8 @@
 #ifndef FROM_PROTO_HPP
 #define FROM_PROTO_HPP
 
-#include "finger_keyboard_mapping/frame.hpp"
-#include "scancode_key_map.hpp"
+#include "finger_keyboard_mapping/hands/frame.hpp"
+#include "keyboard/scancode_key_map.hpp"
 #include "finger_keyboard_mapping/keyboard_timeline.hpp"
 
 #include "finger_landmarks/finger_landmarks.pb.h"

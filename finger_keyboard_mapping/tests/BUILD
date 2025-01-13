@@ -5,7 +5,7 @@ cc_test(
     srcs = ["closest_finger_mapping_test.cpp"],
     deps = [
         ":print_helpers",
-        "//finger_keyboard_mapping:finger_to_key_mapping",
+        "//finger_keyboard_mapping/mapping:closest_finger_mapping",
         "@catch2//:catch2_main",
     ],
 )
@@ -15,7 +15,7 @@ cc_test(
     srcs = ["hands_iteration_test.cpp"],
     deps = [
         ":print_helpers",
-        "//finger_keyboard_mapping:data_types",
+        "//finger_keyboard_mapping:fingers_and_hands",
         "@catch2//:catch2_main",
     ],
 )
@@ -24,7 +24,7 @@ cc_test(
     name = "scancode_key_map_test",
     srcs = ["scancode_key_map_test.cpp"],
     deps = [
-        "//finger_keyboard_mapping:data_types",
+        "//finger_keyboard_mapping/keyboard:scancode_key_map",
         "@catch2//:catch2_main",
     ],
 )
@@ -33,7 +33,7 @@ cc_test(
     name = "keyboard_timeline_test",
     srcs = ["keyboard_timeline_test.cpp"],
     deps = [
-        "//finger_keyboard_mapping:data_types",
+        "//finger_keyboard_mapping:keyboard_timeline",
         "@catch2//:catch2_main",
     ],
 )
@@ -41,5 +41,5 @@ cc_test(
 cc_library(
     name = "print_helpers",
     hdrs = ["print_helpers.hpp"],
-    deps = ["//finger_keyboard_mapping:data_types"],
+    deps = ["//finger_keyboard_mapping:finger_print_helpers"],
 )

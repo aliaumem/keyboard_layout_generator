@@ -1,0 +1,27 @@
+load("@rules_cc//cc:defs.bzl", "cc_library")
+
+package(default_visibility = ["//:finger_keyboard_mapping"])
+
+cc_library(
+    name = "finger_print_helpers",
+    hdrs = ["finger_print_helpers.hpp"],
+    deps = [":fingers_and_hands"],
+)
+
+cc_library(
+    name = "fingers_and_hands",
+    hdrs = [
+        "both_hands.hpp",
+        "finger_desc.hpp",
+        "frame.hpp",
+    ],
+    deps = [
+        "//finger_keyboard_mapping:geometry",
+    ],
+)
+
+cc_library(
+    name = "maybe_finger",
+    hdrs = ["maybe_finger.hpp"],
+    deps = [":fingers_and_hands"],
+)

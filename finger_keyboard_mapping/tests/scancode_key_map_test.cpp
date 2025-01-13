@@ -1,4 +1,4 @@
-#include "finger_keyboard_mapping/scancode_key_map.hpp"
+#include "finger_keyboard_mapping/keyboard/scancode_key_map.hpp"
 
 std::ostream& operator<<(std::ostream& os, finger_tracking::Key key) {
     return os << key.name;

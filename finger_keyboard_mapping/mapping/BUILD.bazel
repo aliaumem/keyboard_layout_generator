@@ -1,0 +1,26 @@
+load("@rules_cc//cc:defs.bzl", "cc_library")
+
+package(default_visibility = ["//:finger_keyboard_mapping"])
+
+cc_library(
+    name = "closest_finger_mapping",
+    srcs = ["closest_finger_mapping.cpp"],
+    hdrs = ["closest_finger_mapping.hpp"],
+    deps = [
+        "//finger_keyboard_mapping/hands:maybe_finger",
+        "//finger_keyboard_mapping/keyboard:keyboard_shape",
+    ],
+)
+
+cc_library(
+    name = "finger_to_key_mapping",
+    srcs = ["finger_to_key_mapping.cpp"],
+    hdrs = ["finger_to_key_mapping.hpp"],
+    deps = [
+        ":closest_finger_mapping",
+        "//finger_keyboard_mapping:keyboard_timeline",
+        "//finger_keyboard_mapping/hands:fingers_and_hands",
+        "//finger_keyboard_mapping/keyboard:keyboard_shape",
+        "//finger_keyboard_mapping/keyboard:scancode_key_map",
+    ],
+)

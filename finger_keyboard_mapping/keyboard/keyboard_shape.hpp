@@ -1,15 +1,13 @@
-#ifndef FINGER_TO_KEY_MAPPING_HPP
-#define FINGER_TO_KEY_MAPPING_HPP
+#ifndef KEYBOARD_SHAPE_HPP
+#define KEYBOARD_SHAPE_HPP
 
-#include "finger_keyboard_mapping/frame.hpp"
-#include "finger_keyboard_mapping/key.hpp"
-#include "finger_keyboard_mapping/keyboard_timeline.hpp"
-#include "finger_keyboard_mapping/scancode_key_map.hpp"
+#include "finger_keyboard_mapping/keyboard/key.hpp"
+#include "finger_keyboard_mapping/mapping_geometry.hpp"
 
+#include "finger_keyboard_mapping/static_vector.hpp"
 #include <span>
 
 namespace finger_tracking {
-
 struct KeyInSpace {
     Key       key;
     Rectangle aabb{};
@@ -32,14 +30,9 @@ public:
     [[nodiscard]] std::span<KeyInSpace const> keys() const {
         return std::span{m_keys.begin(), m_keys.size()};
     }
-    [[nodiscard]] std::optional<FingerRef> closestFinger(Key key, BothHands const& hands) const;
 
     static KeyboardShape defaultShape();
 };
-
-KeyboardTimeline mapFingersToKeys(std::vector<Frame> const&    frames,
-                                  std::vector<KeyEvent> const& keyEvents,
-                                  KeyboardShape const& shape, ScancodeKeyMap const& scancodeKeyMap);
 } // namespace finger_tracking
 
-#endif // FINGER_TO_KEY_MAPPING_HPP
+#endif // KEYBOARD_SHAPE_HPP

@@ -99,10 +99,12 @@ def print_kb(proto_path: str, fingers_proto_path: str, timeline_proto_path: str)
             draw_hand(display, frame.rightHand, scale_factor)
 
         cv.imshow("kb shape", display)
-        if len(finger_presses) == 0:
+        if frame.leftHand is None and frame.rightHand is None:
+            cv.waitKey(5)
+        elif len(finger_presses) == 0:
             cv.waitKey(33)
         else:
-            cv.waitKey(0)
+            cv.waitKey(300)
 
 
 def print_keys(scale_factor, shape, finger_presses: Sequence[FingerPress]):
@@ -122,11 +124,11 @@ def print_key(key: Key, image: np.ndarray, scale_factor: float, finger_press: Fi
     aabb = key.aabb * scale_factor
     cv.rectangle(image, aabb.top_left, aabb.bottom_right, color)
     if finger_press is not None:
-        bg_colors = [(180, 229, 255),
-                     (201, 101, 201),
-                     (0, 204, 255),
-                     (48, 255, 48),
-                     (192, 101, 21)]
+        bg_colors = [(129, 165, 184),
+                     (125, 62, 125),
+                     (0, 139, 173),
+                     (26, 138, 26),
+                     (122, 64, 13)]
         bg_color = bg_colors[finger_press.finger.value % 5]
         cv.rectangle(image, aabb.top_left, aabb.bottom_right, bg_color, thickness=-1)
 

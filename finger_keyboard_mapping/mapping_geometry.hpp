@@ -8,8 +8,6 @@ struct Point {
 
     bool  operator==(Point const& other) const = default;
     Point operator-(Point const& other) const { return {x - other.x, y - other.y}; }
-
-    float sqrMagnitude() const { return x * x + y * y; }
 };
 
 struct Size {
@@ -29,6 +27,11 @@ struct Rectangle {
     [[nodiscard]] Point bottomRight() const {
         return {topLeft.x + static_cast<int>(size.width),
                 topLeft.y + static_cast<int>(size.height)};
+    }
+
+    [[nodiscard]] bool contains(Point const& p) const {
+        auto delta = p - topLeft;
+        return 0 <= delta.x && delta.x <= size.width && 0 <= delta.y && delta.y <= size.height;
     }
 };
 

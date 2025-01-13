@@ -1,0 +1,69 @@
+load("@protobuf//bazel:cc_proto_library.bzl", "cc_proto_library")
+load("@protobuf//bazel:proto_library.bzl", "proto_library")
+load("@protobuf//bazel:py_proto_library.bzl", "py_proto_library")
+load("@rules_cc//cc:defs.bzl", "cc_binary", "cc_library")
+
+package(default_visibility = ["//:finger_keyboard_mapping"])
+
+cc_binary(
+    name = "dump_keyboard_shape",
+    srcs = ["dump_keyboard_shape.cpp"],
+    deps = [
+        ":keyboard_shape_cc_proto",
+        ":keyboard_shape_to_proto",
+    ],
+)
+
+cc_library(
+    name = "key",
+    hdrs = ["key.hpp"],
+)
+
+cc_library(
+    name = "scancode_key_map",
+    srcs = ["scancode_key_map.cpp"],
+    hdrs = ["scancode_key_map.hpp"],
+    deps = [
+        ":key",
+        "//finger_keyboard_mapping:static_vector",
+    ],
+)
+
+cc_library(
+    name = "keyboard_shape",
+    srcs = [
+        "keyboard_default_shape.cpp",
+        "keyboard_shape.cpp",
+    ],
+    hdrs = ["keyboard_shape.hpp"],
+    deps = [
+        ":key",
+        "//finger_keyboard_mapping:geometry",
+        "//finger_keyboard_mapping:static_vector",
+    ],
+)
+
+cc_library(
+    name = "keyboard_shape_to_proto",
+    hdrs = ["keyboard_shape_to_proto.hpp"],
+    deps = [
+        ":keyboard_shape",
+        ":keyboard_shape_cc_proto",
+    ],
+)
+
+proto_library(
+    name = "keyboard_shape_proto",
+    srcs = ["keyboard_shape.proto"],
+)
+
+cc_proto_library(
+    name = "keyboard_shape_cc_proto",
+    deps = [":keyboard_shape_proto"],
+)
+
+py_proto_library(
+    name = "keyboard_shape_py_proto",
+    visibility = ["//visibility:public"],
+    deps = [":keyboard_shape_proto"],
+)

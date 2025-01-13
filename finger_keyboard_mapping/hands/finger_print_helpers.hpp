@@ -1,7 +1,7 @@
 #ifndef FINGER_PRINT_HELPERS_HPP
 #define FINGER_PRINT_HELPERS_HPP
 
-#include "finger_keyboard_mapping/both_hands.hpp"
+#include "finger_keyboard_mapping/hands/both_hands.hpp"
 #include <format>
 
 template <>

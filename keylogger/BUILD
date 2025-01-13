@@ -16,6 +16,6 @@ proto_library(
 
 cc_proto_library(
     name = "keylog_cc_proto",
-    visibility = ["//visibility:public"],
+    visibility = ["//:finger_keyboard_mapping"],
     deps = [":keylog_proto"],
 )

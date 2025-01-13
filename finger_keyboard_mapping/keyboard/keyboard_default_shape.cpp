@@ -1,4 +1,4 @@
-#include "finger_keyboard_mapping/finger_to_key_mapping.hpp"
+#include "finger_keyboard_mapping/keyboard/keyboard_shape.hpp"
 
 #include <array>
 

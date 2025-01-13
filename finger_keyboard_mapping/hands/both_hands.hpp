@@ -2,9 +2,10 @@
 #define BOTH_HANDS_HPP
 
 #include "finger_keyboard_mapping/mapping_geometry.hpp"
-#include "finger_keyboard_mapping/fingers.hpp"
+#include "finger_keyboard_mapping/hands/finger_desc.hpp"
 
 #include <optional>
+#include <ranges>
 
 namespace finger_tracking {
 
@@ -16,8 +17,10 @@ struct FingerRef {
 
 struct BothHands {
     struct iterator {
-        using value_type     = FingerRef;
-        using reference_type = FingerRef;
+        using value_type        = FingerRef;
+        using reference         = FingerRef;
+        using iterator_category = std::forward_iterator_tag;
+        using difference_type   = std::ptrdiff_t;
 
         int              index = 0;
         BothHands const* hands;
@@ -45,6 +48,12 @@ struct BothHands {
             ++index;
             return *this;
         }
+        iterator operator++(int) {
+            iterator copy = *this;
+            ++index;
+            return copy;
+        }
+
         bool operator==(iterator const& other) const {
             return hands == other.hands && index == other.index;
         }
@@ -72,6 +81,9 @@ struct BothHands {
         return (left.has_value() ? 5 : 0) + (right.has_value() ? 5 : 0);
     }
 };
+
+static_assert(std::forward_iterator<BothHands::iterator>);
+static_assert(std::ranges::viewable_range<BothHands>);
 } // namespace finger_tracking
 
 #endif // BOTH_HANDS_HPP

@@ -5,43 +5,41 @@ load("@pypi//:requirements.bzl", "requirement")
 load("@rules_cc//cc:defs.bzl", "cc_binary", "cc_library")
 load("@rules_python//python:py_binary.bzl", "py_binary")
 
-package(default_visibility = ["__subpackages__"])
+package(default_visibility = ["//:finger_keyboard_mapping"])
 
 cc_binary(
     name = "finger_keyboard_mapping",
     srcs = ["main.cpp"],
     deps = [
-        ":finger_to_key_mapping",
-        ":keyboard_shape_cc_proto",
         ":proto_conversion",
+        "//finger_keyboard_mapping/hands:finger_print_helpers",
+        "//finger_keyboard_mapping/keyboard:keyboard_shape_cc_proto",
+        "//finger_keyboard_mapping/mapping:finger_to_key_mapping",
         "//keylogger:keylog_cc_proto",
         "@protobuf//:protobuf_headers",
     ],
 )
 
-cc_binary(
-    name = "dump_keyboard_shape",
-    srcs = ["dump_keyboard_shape.cpp"],
-    deps = [
-        ":keyboard_shape_cc_proto",
-        ":keyboard_shape_to_proto",
+cc_library(
+    name = "geometry",
+    hdrs = [
+        "mapping_geometry.hpp",
+        "mapping_geometry_literals.inl",
     ],
 )
 
 cc_library(
-    name = "data_types",
-    srcs = ["scancode_key_map.cpp"],
-    hdrs = [
-        "both_hands.hpp",
-        "finger_print_helpers.hpp",
-        "fingers.hpp",
-        "frame.hpp",
-        "key.hpp",
-        "keyboard_timeline.hpp",
-        "mapping_geometry.hpp",
-        "mapping_geometry_literals.inl",
-        "scancode_key_map.hpp",
-        "static_vector.hpp",
+    name = "static_vector",
+    hdrs = ["static_vector.hpp"],
+)
+
+cc_library(
+    name = "keyboard_timeline",
+    srcs = ["keyboard_timeline.cpp"],
+    hdrs = ["keyboard_timeline.hpp"],
+    deps = [
+        "//finger_keyboard_mapping/hands:fingers_and_hands",
+        "//finger_keyboard_mapping/keyboard:key",
     ],
 )
 
@@ -49,45 +47,10 @@ cc_library(
     name = "proto_conversion",
     hdrs = ["from_proto.hpp"],
     deps = [
-        ":data_types",
         ":keyboard_timeline_cc_proto",
+        "//finger_keyboard_mapping/hands:fingers_and_hands",
         "//finger_landmarks:finger_landmarks_cc_proto",
     ],
-)
-
-cc_library(
-    name = "finger_to_key_mapping",
-    srcs = [
-        "finger_to_key_mapping.cpp",
-        "keyboard_default_shape.cpp",
-    ],
-    hdrs = ["finger_to_key_mapping.hpp"],
-    deps = [":data_types"],
-)
-
-cc_library(
-    name = "keyboard_shape_to_proto",
-    hdrs = ["keyboard_shape_to_proto.hpp"],
-    deps = [
-        ":finger_to_key_mapping",
-        ":keyboard_shape_cc_proto",
-    ],
-)
-
-proto_library(
-    name = "keyboard_shape_proto",
-    srcs = ["keyboard_shape.proto"],
-)
-
-cc_proto_library(
-    name = "keyboard_shape_cc_proto",
-    deps = [":keyboard_shape_proto"],
-)
-
-py_proto_library(
-    name = "keyboard_shape_py_proto",
-    visibility = ["//visibility:public"],
-    deps = [":keyboard_shape_proto"],
 )
 
 proto_library(
@@ -111,8 +74,8 @@ py_binary(
     srcs = ["print_kb.py"],
     main = "print_kb.py",
     deps = [
-        ":keyboard_shape_py_proto",
         ":keyboard_timeline_py_proto",
+        "//finger_keyboard_mapping/keyboard:keyboard_shape_py_proto",
         "//finger_landmarks:finger_landmarks_py_proto",
         requirement("opencv-python"),
         requirement("numpy"),
