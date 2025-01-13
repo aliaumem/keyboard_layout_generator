@@ -37,7 +37,7 @@ class FingerLandmarksRunner:
         self.cap = cv.VideoCapture(video_path)
 
         if not self.cap.isOpened():
-            print("Could not open file")
+            print(f"Could not open file for landmarks {video_path}")
             exit()
         self.fps = self.cap.get(cv.CAP_PROP_FPS)
 

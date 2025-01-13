@@ -29,6 +29,9 @@ class KeyboardTimeline {
         , m_totalDistance(totalDistance) {}
 
 public:
+    KeyboardTimeline(std::vector<KeyboardState> states)
+        : m_keyboardStates(std::move(states)) {}
+
     KeyboardState const& operator[](size_t i) const { return m_keyboardStates.at(i); }
 
     [[nodiscard]] auto begin() const { return m_keyboardStates.begin(); }
@@ -53,7 +56,7 @@ public:
         };
         using Event = std::variant<PressedEvent, ReleasedEvent>;
 
-        std::vector<std::vector<Event>>        m_frames     = {std::vector<Event>{}};
+        std::vector<std::vector<Event>>        m_frames     = {};
         std::vector<std::chrono::milliseconds> m_timestamps = {};
         long                                   m_distance   = 0;
 

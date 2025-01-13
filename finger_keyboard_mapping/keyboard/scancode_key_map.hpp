@@ -21,8 +21,8 @@ struct KeyCode {
 };
 
 struct KeyEvent {
-    std::chrono::milliseconds timestamp;
-    bool                      isPressed;
+    std::chrono::milliseconds timestamp{};
+    bool                      isPressed = false;
     KeyCode                   code;
 };
 

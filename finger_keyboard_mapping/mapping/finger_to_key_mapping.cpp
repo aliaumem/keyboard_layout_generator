@@ -15,6 +15,7 @@ auto FingerToKeyMapper::mapFingersToKeys(
 
     auto prevEvent = keyEvents.begin();
     for (auto const& frame : frames) {
+        builder.nextFrame(frame.timestamp);
         while (prevEvent != keyEvents.end()
                && prevEvent->timestamp < frame.timestamp + timeOffset) {
             auto key         = scancodeKeyMap.scanCodeToKey(prevEvent->code);
@@ -29,8 +30,6 @@ auto FingerToKeyMapper::mapFingersToKeys(
 
             ++prevEvent;
         }
-
-        builder.nextFrame(frame.timestamp);
     }
 
     return builder.build();

@@ -11,7 +11,7 @@ def record_kb_corners(video_path: str, rotation: Rotation):
     cap = cv2.VideoCapture(video_path)
 
     if not cap.isOpened():
-        print("Could not open file")
+        print(f"Could not open file for corners {video_path}")
         exit()
 
     keyboard_rec = KeyboardShapeRecorder()

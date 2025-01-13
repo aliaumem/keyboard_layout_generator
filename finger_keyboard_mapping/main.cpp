@@ -1,45 +1,46 @@
 #include "finger_keyboard_mapping/keyboard/scancode_key_map.hpp"
-#include "finger_keyboard_mapping/hands/finger_print_helpers.hpp"
 
 #include "finger_keyboard_mapping/mapping/finger_to_key_mapping.hpp"
 #include "finger_keyboard_mapping/mapping/closest_finger_mapping.hpp"
+#include "finger_keyboard_mapping/mapping/map_keylog_timeline.hpp"
 
 #include "finger_keyboard_mapping/from_proto.hpp"
+#include "finger_keyboard_mapping/keyboard_timeline_proto.hpp"
 #include <fstream>
 #include <ranges>
 
 using namespace std::string_literals;
 
-void mapForStats(finger_tracking::ScancodeKeyMap const&        scancodeKeyMap,
-                 std::vector<finger_tracking::Frame> const&    frames,
-                 finger_tracking::KeyboardShape const&         shape,
-                 std::vector<finger_tracking::KeyEvent> const& keyEvents,
-                 std::chrono::milliseconds                     timeOffset) {
+finger_tracking::KeyboardTimeline computeTimelineForOffset(
+    std::optional<std::chrono::milliseconds>&     timeOffset,
+    std::vector<finger_tracking::Frame> const&    frames,
+    std::vector<finger_tracking::KeyEvent> const& keyEvents,
+    finger_tracking::KeyboardShape const&         shape,
+    finger_tracking::ScancodeKeyMap const&        scancodeKeyMap) {
 
-    for (auto const& [timestamp, isPressed, code] : keyEvents) {
+    finger_tracking::FingerToKeyMapper mapper{shape, scancodeKeyMap};
 
-        if (!isPressed)
-            continue;
+    if (timeOffset.has_value())
+        return mapper.mapFingersToKeys(frames, keyEvents, *timeOffset);
 
-        using std::chrono::milliseconds;
-        auto prevFrame = std::lower_bound(frames.begin(), frames.end(), timestamp - timeOffset,
-                                          [](finger_tracking::Frame const& frame, milliseconds t) {
-                                              return frame.timestamp < t;
-                                          });
-        if ((timestamp - timeOffset) - prevFrame->timestamp > milliseconds{16})
-            ++prevFrame;
+    std::vector<finger_tracking::KeyboardTimeline> timelines{};
+    for (auto i = 0; i < 500; ++i) {
+        std::chrono::milliseconds delta{i * 1};
 
-        if (prevFrame == frames.end())
-            break;
-
-        auto key         = scancodeKeyMap.scanCodeToKey(code);
-        auto maybeFinger = closestFinger(shape, key, prevFrame->hands);
-
-        std::cout << timestamp << "\t" << (isPressed ? "v " : "^ ") << std::hex << code.scancode
-                  << std::dec << "  " << key.name << "\t"
-                  << (maybeFinger.has_value() ? std::format("{}", *maybeFinger) : "None") << "\n";
+        timelines.push_back(mapper.mapFingersToKeys(frames, keyEvents, delta));
     }
+
+    std::ranges::sort(timelines, [](auto const& lhs, auto const& rhs) {
+        return lhs.totalDistance() < rhs.totalDistance();
+    });
+
+    auto it = std::ranges::max_element(timelines, [](auto const& lhs, auto const& rhs) {
+        return lhs.totalPressedKeyFrameCount() < rhs.totalPressedKeyFrameCount();
+    });
+    timeOffset.emplace(std::chrono::milliseconds{std::distance(timelines.begin(), it)});
+    return std::move(*it);
 }
+
 int main(int argc, char const* argv[]) {
 
     std::string                              landmarksPath = argv[1];
@@ -65,58 +66,28 @@ int main(int argc, char const* argv[]) {
     finger_tracking::ScancodeKeyMap scancodeKeyMap;
 
     auto frames = finger_tracking::cast(landmarks.frames());
-
-    std::cout << "frames: " << frames.back().timestamp << "\tkeys: "
-              << std::chrono::milliseconds(keylog.keyevents().rbegin()->timestamp_ms())
-              << std::endl;
-
-    auto shape = finger_tracking::KeyboardShape::defaultShape();
+    auto shape  = finger_tracking::KeyboardShape::defaultShape();
 
     auto keyEventsRng = keylog.keyevents() | std::views::transform(finger_tracking::toKeyEvent);
     std::vector<finger_tracking::KeyEvent> keyEvents{keyEventsRng.begin(), keyEventsRng.end()};
 
-    finger_tracking::FingerToKeyMapper mapper{shape, scancodeKeyMap};
-
-    auto timeline = [&] {
-        if (timeOffset.has_value())
-            return mapper.mapFingersToKeys(frames, keyEvents, *timeOffset);
-
-        std::vector<finger_tracking::KeyboardTimeline> timelines{};
-        for (auto i = 0; i < 500; ++i) {
-            std::chrono::milliseconds delta{i * 1};
-
-            timelines.push_back(mapper.mapFingersToKeys(frames, keyEvents, delta));
-        }
-
-        std::ranges::sort(timelines, [](auto const& lhs, auto const& rhs) {
-            return lhs.totalDistance() < rhs.totalDistance();
-        });
-
-        auto it = std::ranges::max_element(timelines, [](auto const& lhs, auto const& rhs) {
-            return lhs.totalPressedKeyFrameCount() < rhs.totalPressedKeyFrameCount();
-        });
-        timeOffset.emplace(std::chrono::milliseconds{std::distance(timelines.begin(), it)});
-        return std::move(*it);
-    }();
-
-    // auto it = std::ranges::max_element(timelines, std::less{}, [](auto const& timeline) -> long {
-    //     return static_cast<long>(timeline.eventCount());
-    //     //- static_cast<long>(timeline.totalDistance() / timeline.eventCount());
-    // });
-
-    // auto timeOffset = std::chrono::milliseconds{427};
-
-    std::cout << "offset: " << (*timeOffset) << std::endl;
-
-    auto protoTimeline = cast(timeline);
-    // std::cout << protoTimeline.DebugString();
-
     {
+        auto timeline
+            = computeTimelineForOffset(timeOffset, frames, keyEvents, shape, scancodeKeyMap);
+        auto          protoTimeline = cast(timeline);
         std::ofstream file{basePath + "_timeline.binarypb", std::ios::binary | std::ios::out};
         protoTimeline.SerializeToOstream(&file);
     }
 
-    mapForStats(scancodeKeyMap, frames, shape, keyEvents, *timeOffset);
+    std::cout << "offset: " << (*timeOffset) << std::endl;
+    {
+        auto keylogTimeline = mapForStats(scancodeKeyMap, frames, shape, keyEvents, *timeOffset);
+        auto protoTimeline  = cast(keylogTimeline);
+        std::ofstream file{basePath + "_keylog_timeline.binarypb",
+                           std::ios::binary | std::ios::out};
+        protoTimeline.SerializeToOstream(&file);
+        // std::cout << protoTimeline.DebugString();
+    }
 
     return 0;
 }

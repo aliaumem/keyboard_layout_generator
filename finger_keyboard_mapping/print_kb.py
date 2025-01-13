@@ -5,7 +5,8 @@ import cv2 as cv
 import numpy as np
 import sys
 
-from finger_keyboard_mapping import keyboard_shape_pb2, keyboard_timeline_pb2
+from finger_keyboard_mapping.keyboard import keyboard_shape_pb2
+from finger_keyboard_mapping import keyboard_timeline_pb2
 from finger_landmarks import finger_landmarks_pb2
 
 Point = NamedTuple("Point", [("x", int), ("y", int)])

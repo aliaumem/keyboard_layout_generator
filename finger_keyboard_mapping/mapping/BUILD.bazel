@@ -24,3 +24,14 @@ cc_library(
         "//finger_keyboard_mapping/keyboard:scancode_key_map",
     ],
 )
+
+cc_library(
+    name = "map_keylog_timeling",
+    srcs = ["map_keylog_timeline.cpp"],
+    hdrs = ["map_keylog_timeline.hpp"],
+    deps = [
+        ":closest_finger_mapping",
+        "//finger_keyboard_mapping:keyboard_timeline",
+        "//finger_keyboard_mapping/keyboard:scancode_key_map",
+    ],
+)

@@ -8,6 +8,7 @@ message KeyboardTimeline{
 
 message KeyboardState {
   repeated PressedKey pressed_keys = 1;
+  uint64 timestamp_ms = 2;
 }
 
 message PressedKey{

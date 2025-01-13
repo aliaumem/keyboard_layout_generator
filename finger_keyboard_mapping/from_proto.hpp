@@ -57,20 +57,6 @@ inline KeyEvent toKeyEvent(keylog::proto::KeyEvent const& evt) {
         .code      = KeyCode{evt.scancode(), evt.ise0(), evt.ise1()},
     };
 }
-
-inline proto::KeyboardTimeline cast(KeyboardTimeline const& timeline) {
-    proto::KeyboardTimeline result;
-    for (auto const& state : timeline) {
-        auto& frame = *result.add_frames();
-        for (auto const& [key, finger] : state.pressedKeys) {
-            auto& pressedKey = *frame.add_pressed_keys();
-            pressedKey.set_key(key.name);
-            pressedKey.set_finger(static_cast<int>(finger));
-        }
-    }
-
-    return result;
-}
 } // namespace finger_tracking
 
 #endif // FROM_PROTO_HPP
