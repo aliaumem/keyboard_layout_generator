@@ -12,8 +12,12 @@ class static_vector {
 public:
     using iterator = typename std::array<T, N>::const_iterator;
 
-    explicit static_vector(std::array<T, N> args)
-        : m_data(std::move(args)) {}
+    template <size_t N2>
+        requires(N2 <= N)
+    explicit static_vector(std::array<T, N2> args)
+        : m_size{N2} {
+        std::copy_n(args.begin(), N, m_data.begin());
+    }
 
     static_vector() = default;
 

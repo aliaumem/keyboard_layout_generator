@@ -18,7 +18,7 @@ SCENARIO("A keyboard shape can map a finger to a key") {
 
     //  layout shape:   | A | B |
     //                  | C | D |
-    KeyboardShape kb{static_vector{std::array<KeyInSpace, 62>{
+    KeyboardShape kb{static_vector<KeyInSpace, 62>{std::array{
         KeyInSpace{keyA, Rectangle{(0_x, 0_y), (9_w, 9_h)}},
         KeyInSpace{keyB, Rectangle{(10_x, 0_y), (9_w, 9_h)}},
         KeyInSpace{keyC, Rectangle{(0_x, 10_y), (9_w, 9_h)}},
@@ -40,7 +40,7 @@ SCENARIO("A keyboard shape can map a finger to a key") {
         BothHands hands{
             .left = Hand{
                 .thumb  = (100_x, 100_y),
-                .index  = (5_x, 5_y),
+                .index  = (1_x, 3_y),
                 .middle = (100_x, 100_y),
                 .ring   = (100_x, 100_y),
                 .pinky  = (100_x, 100_y),
@@ -50,9 +50,9 @@ SCENARIO("A keyboard shape can map a finger to a key") {
         THEN("The matching finger is always the same") {
             using enum FingerDesc::Finger;
             using enum FingerDesc::Side;
-            CHECK(closestFinger(kb, keyA, hands) == FingerRef{{Left, Index}, (5_x, 5_y)});
+            CHECK(closestFinger(kb, keyA, hands) == hands[{Left, Index}]);
             CHECK(closestFinger(kb, keyB, hands) == std::nullopt);
-            CHECK(closestFinger(kb, keyC, hands) == std::nullopt);
+            CHECK(closestFinger(kb, keyC, hands) == hands[{Left, Index}]);
             CHECK(closestFinger(kb, keyD, hands) == std::nullopt);
         }
     }
@@ -61,7 +61,7 @@ SCENARIO("A keyboard shape can map a finger to a key") {
         BothHands hands{
             .left = Hand{
                 .thumb  = (100_x, 100_y),
-                .index  = (5_x, 5_y),
+                .index  = (1_x, 3_y),
                 .middle = (100_x, 100_y),
                 .ring   = (15_x, 5_y),
                 .pinky  = (100_x, 100_y),
@@ -71,10 +71,10 @@ SCENARIO("A keyboard shape can map a finger to a key") {
         THEN("The matching finger is always the same") {
             using enum FingerDesc::Finger;
             using enum FingerDesc::Side;
-            CHECK(closestFinger(kb, keyA, hands) == FingerRef{{Left, Index}, (5_x, 5_y)});
-            CHECK(closestFinger(kb, keyB, hands) == FingerRef{{Left, Ring}, (15_x, 5_y)});
-            CHECK(closestFinger(kb, keyC, hands) == std::nullopt);
-            CHECK(closestFinger(kb, keyD, hands) == std::nullopt);
+            CHECK(closestFinger(kb, keyA, hands) == hands[{Left, Index}]);
+            CHECK(closestFinger(kb, keyB, hands) == hands[{Left, Ring}]);
+            CHECK(closestFinger(kb, keyC, hands) == hands[{Left, Index}]);
+            CHECK(closestFinger(kb, keyD, hands) == hands[{Left, Ring}]);
         }
     }
 
@@ -99,10 +99,10 @@ SCENARIO("A keyboard shape can map a finger to a key") {
         THEN("The matching finger is always the same") {
             using enum FingerDesc::Finger;
             using enum FingerDesc::Side;
-            CHECK(closestFinger(kb, keyA, hands) == FingerRef{{Left, Index}, (5_x, 5_y)});
-            CHECK(closestFinger(kb, keyB, hands) == FingerRef{{Right, Index}, (15_x, 5_y)});
-            CHECK(closestFinger(kb, keyC, hands) == std::nullopt);
-            CHECK(closestFinger(kb, keyD, hands) == std::nullopt);
+            CHECK(closestFinger(kb, keyA, hands) == hands[{Left, Index}]);
+            CHECK(closestFinger(kb, keyB, hands) == hands[{Right, Index}]);
+            CHECK(closestFinger(kb, keyC, hands) == hands[{Left, Index}]);
+            CHECK(closestFinger(kb, keyD, hands) == hands[{Right, Index}]);
         }
     }
 }

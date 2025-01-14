@@ -15,7 +15,8 @@ cc_test(
     srcs = ["hands_iteration_test.cpp"],
     deps = [
         ":print_helpers",
-        "//finger_keyboard_mapping:fingers_and_hands",
+        "//finger_keyboard_mapping/hands:fingers_and_hands",
+        "//finger_keyboard_mapping/hands:maybe_finger",
         "@catch2//:catch2_main",
     ],
 )
@@ -41,5 +42,5 @@ cc_test(
 cc_library(
     name = "print_helpers",
     hdrs = ["print_helpers.hpp"],
-    deps = ["//finger_keyboard_mapping:finger_print_helpers"],
+    deps = ["//finger_keyboard_mapping/hands:finger_print_helpers"],
 )

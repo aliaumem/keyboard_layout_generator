@@ -13,4 +13,6 @@ using finger_tracking::ScancodeKeyMap;
 SCENARIO("The ScancodeKeyMap maps scancodes to key names") {
     ScancodeKeyMap map{};
     CHECK(map.scanCodeToKey(KeyCode{0x1D, true}) == Key{"RCtl"});
+    CHECK(map.scanCodeToKey(KeyCode{0x56, false}) == Key{"<"});
+    CHECK(map.scanCodeToKey(KeyCode{0x38, true}) == Key{"RAlt"});
 }

@@ -16,7 +16,10 @@ SCENARIO("The timeline represents the state of the keyboard at each frame") {
     using enum FingerDesc::Side;
     using enum FingerDesc::Finger;
 
-    builder.pressed(Key{"f"}, FingerDesc{Left, Index}).nextFrame(30ms).released(Key{"f"});
+    builder.nextFrame(0ms)
+        .pressed(Key{"f"}, FingerDesc{Left, Index})
+        .nextFrame(30ms)
+        .released(Key{"f"});
 
     KeyboardTimeline timeline = builder.build();
 

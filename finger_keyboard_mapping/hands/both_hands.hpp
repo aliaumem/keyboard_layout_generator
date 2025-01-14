@@ -77,6 +77,10 @@ struct BothHands {
             return iterator{0, this};
     }
 
+    FingerRef operator[](FingerDesc finger) const {
+        return *std::next(begin(), static_cast<int>(finger));
+    }
+
     [[nodiscard]] std::size_t size() const {
         return (left.has_value() ? 5 : 0) + (right.has_value() ? 5 : 0);
     }
