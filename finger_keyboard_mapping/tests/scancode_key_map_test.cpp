@@ -15,4 +15,6 @@ SCENARIO("The ScancodeKeyMap maps scancodes to key names") {
     CHECK(map.scanCodeToKey(KeyCode{0x1D, true}) == Key{"RCtl"});
     CHECK(map.scanCodeToKey(KeyCode{0x56, false}) == Key{"<"});
     CHECK(map.scanCodeToKey(KeyCode{0x38, true}) == Key{"RAlt"});
+
+    CHECK_FALSE(map.scanCodeToKey(KeyCode{0x48}).isValid());
 }

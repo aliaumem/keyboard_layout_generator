@@ -12,15 +12,14 @@ KeyboardTimeline mapForStats(ScancodeKeyMap const& scancodeKeyMap, std::vector<F
     auto compareTimestamps = [](Frame const& frame, milliseconds t) { return frame.timestamp < t; };
 
     for (auto const& [timestamp, isPressed, code] : keyEvents) {
-        builder.nextFrame(timestamp);
-
-        auto const key               = scancodeKeyMap.scanCodeToKey(code);
-        auto       adjustedTimestamp = timestamp - timeOffset;
-
-        if (!isPressed) {
-            builder.released(key);
+        if (!isPressed)
             continue;
-        }
+
+        auto const key = scancodeKeyMap.scanCodeToKey(code);
+        if (!key.isValid())
+            continue;
+
+        auto adjustedTimestamp = timestamp - timeOffset;
 
         auto prevFrame
             = std::lower_bound(frames.begin(), frames.end(), adjustedTimestamp, compareTimestamps);
@@ -37,14 +36,9 @@ KeyboardTimeline mapForStats(ScancodeKeyMap const& scancodeKeyMap, std::vector<F
         }
 
         if (auto maybeFinger = closestFinger(shape, key, prevFrame->hands); maybeFinger.has_value())
-            builder.pressed(key, maybeFinger->fingerDesc);
-
-        // std::cout << timestamp << "\t" << (isPressed ? "v " : "^ ") << std::hex << code.scancode
-        //           << std::dec << "  " << key.name << "\t"
-        //           << (maybeFinger.has_value() ? std::format("{}", *maybeFinger) : "None") <<
-        //           "\n";
+            builder.nextFrame(timestamp).pressed(key, maybeFinger->fingerDesc);
     }
 
-    return builder.build();
+    return builder.build(true);
 }
 } // namespace finger_tracking

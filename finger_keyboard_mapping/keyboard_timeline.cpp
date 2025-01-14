@@ -2,7 +2,7 @@
 
 namespace finger_tracking {
 
-KeyboardTimeline KeyboardTimeline::Builder::build() {
+KeyboardTimeline KeyboardTimeline::Builder::build(bool autoClear) {
     std::vector<KeyboardState> result;
 
     KeyboardState current;
@@ -10,6 +10,10 @@ KeyboardTimeline KeyboardTimeline::Builder::build() {
 
     for (auto const& frame : m_frames) {
         current.timestamp = *timestampIt++;
+
+        if (autoClear)
+            current.pressedKeys.clear();
+
         for (auto const& event : frame) {
             if (std::holds_alternative<PressedEvent>(event)) {
                 auto pressedEvent = std::get<PressedEvent>(event);

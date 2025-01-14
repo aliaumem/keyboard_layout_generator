@@ -24,20 +24,16 @@ finger_tracking::KeyboardTimeline computeTimelineForOffset(
         return mapper.mapFingersToKeys(frames, keyEvents, *timeOffset);
 
     std::vector<finger_tracking::KeyboardTimeline> timelines{};
-    for (auto i = 0; i < 500; ++i) {
-        std::chrono::milliseconds delta{i * 1};
+    for (auto i = 0; i < 100; ++i) {
+        std::chrono::milliseconds delta{i * 33};
 
         timelines.push_back(mapper.mapFingersToKeys(frames, keyEvents, delta));
     }
 
-    std::ranges::sort(timelines, [](auto const& lhs, auto const& rhs) {
-        return lhs.totalDistance() < rhs.totalDistance();
-    });
-
     auto it = std::ranges::max_element(timelines, [](auto const& lhs, auto const& rhs) {
         return lhs.totalPressedKeyFrameCount() < rhs.totalPressedKeyFrameCount();
     });
-    timeOffset.emplace(std::chrono::milliseconds{std::distance(timelines.begin(), it)});
+    timeOffset.emplace(std::chrono::milliseconds{33 * std::distance(timelines.begin(), it)});
     return std::move(*it);
 }
 

@@ -32,10 +32,11 @@ struct ScancodeKeyMap {
 
     ScancodeKeyMap();
 
-    Key scanCodeToKey(KeyCode const& key) const {
+    [[nodiscard]] Key scanCodeToKey(KeyCode const& key) const {
         auto it = std::lower_bound(scancodes.begin(), scancodes.end(), key);
-        if (it == scancodes.end())
-            return Key{"??"};
+        if (it == scancodes.end() || it->scancode != key.scancode)
+            return Key::invalid;
+
         return keys[std::distance(scancodes.begin(), it)];
     }
 };

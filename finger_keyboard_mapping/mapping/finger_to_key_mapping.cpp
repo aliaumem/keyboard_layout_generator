@@ -18,15 +18,17 @@ auto FingerToKeyMapper::mapFingersToKeys(
         builder.nextFrame(frame.timestamp);
         while (prevEvent != keyEvents.end()
                && prevEvent->timestamp < frame.timestamp + timeOffset) {
-            auto key         = scancodeKeyMap.scanCodeToKey(prevEvent->code);
-            auto maybeFinger = closestFinger(shape, key, frame.hands);
-            if (prevEvent->isPressed) {
-                if (maybeFinger.has_value()) {
-                    builder.addDistance(maybeFinger.distance);
-                    builder.pressed(key, maybeFinger->fingerDesc);
-                }
-            } else
-                builder.released(key);
+            auto key = scancodeKeyMap.scanCodeToKey(prevEvent->code);
+            if (key.isValid()) {
+                auto maybeFinger = closestFinger(shape, key, frame.hands);
+                if (prevEvent->isPressed) {
+                    if (maybeFinger.has_value()) {
+                        builder.addDistance(maybeFinger.distance);
+                        builder.pressed(key, maybeFinger->fingerDesc);
+                    }
+                } else
+                    builder.released(key);
+            }
 
             ++prevEvent;
         }

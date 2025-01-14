@@ -82,7 +82,7 @@ public:
             return *this;
         }
 
-        KeyboardTimeline build();
+        KeyboardTimeline build(bool autoClear = false);
 
         void addDistance(int distance) { m_distance += distance; }
     };
