@@ -143,6 +143,32 @@
   },
   "selectedYankedVersions": {},
   "moduleExtensions": {
+    "//third_party:range_v3_extension.bzl%range_v3": {
+      "general": {
+        "bzlTransitiveDigest": "l+sP5KPw2knKMXmTanlXTouSgZRgVjtuHsXXWchvKoc=",
+        "usagesDigest": "4D7S9SIyhusSAFwtMFWzfHtgFT3L2vqIVwgINdgXAdQ=",
+        "recordedFileInputs": {},
+        "recordedDirentsInputs": {},
+        "envVariables": {},
+        "generatedRepoSpecs": {
+          "range-v3": {
+            "repoRuleId": "@@bazel_tools//tools/build_defs/repo:http.bzl%http_archive",
+            "attributes": {
+              "integrity": "sha256-g5VRjhceWHPlHbnvFToXtb1G5pqZtk/WxEtFtT+Y188=",
+              "strip_prefix": "range-v3-7e6f34b1e820fb8321346888ef0558a0ec842b8e",
+              "url": "https://github.com/ericniebler/range-v3/archive/7e6f34b1e820fb8321346888ef0558a0ec842b8e.tar.gz"
+            }
+          }
+        },
+        "recordedRepoMappingEntries": [
+          [
+            "",
+            "bazel_tools",
+            "bazel_tools"
+          ]
+        ]
+      }
+    },
     "@@platforms//host:extension.bzl%host_platform": {
       "general": {
         "bzlTransitiveDigest": "xelQcPZH8+tmuOHVjL9vDxMnnQNMlwj0SlvgoqBkm4U=",

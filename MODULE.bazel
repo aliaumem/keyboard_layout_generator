@@ -10,6 +10,9 @@ bazel_dep(name = "protobuf", version = "29.2")
 
 bazel_dep(name = "rules_python", version = "1.0.0", dev_dependency = True)
 
+range_v3_ext = use_extension("//third_party:range_v3_extension.bzl", "range_v3")
+use_repo(range_v3_ext, "range-v3")
+
 python = use_extension("@rules_python//python/extensions:python.bzl", "python", dev_dependency = True)
 python.toolchain(
     is_default = True,
