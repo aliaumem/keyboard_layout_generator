@@ -20,3 +20,8 @@ package_group(
     name = "keylogger",
     packages = ["//keylogger/..."],
 )
+
+package_group(
+    name = "statistics",
+    packages = ["//statistics/..."],
+)

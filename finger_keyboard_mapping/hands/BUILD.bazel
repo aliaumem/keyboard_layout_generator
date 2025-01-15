@@ -5,6 +5,7 @@ package(default_visibility = ["//:finger_keyboard_mapping"])
 cc_library(
     name = "finger_print_helpers",
     hdrs = ["finger_print_helpers.hpp"],
+    visibility = ["//visibility:public"],
     deps = [":fingers_and_hands"],
 )
 

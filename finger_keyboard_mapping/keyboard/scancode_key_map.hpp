@@ -39,6 +39,18 @@ struct ScancodeKeyMap {
 
         return keys[std::distance(scancodes.begin(), it)];
     }
+
+    size_t keyIndex(Key key) const {
+        auto it = std::find(keys.begin(), keys.end(), key);
+        if (it == keys.end() || *it != key) {
+            if (key.isValid())
+                throw std::out_of_range(std::format(
+                    "key '{}' index out of range (found {} instead)", key.name, it->name));
+            else
+                throw std::invalid_argument("Trying to look up an invalid key");
+        }
+        return it - keys.begin();
+    }
 };
 
 } // namespace finger_tracking

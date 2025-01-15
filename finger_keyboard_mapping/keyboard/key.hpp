@@ -7,7 +7,7 @@ namespace finger_tracking {
 struct Key {
     std::string_view name;
 
-    bool operator==(Key const&) const = default;
+    std::strong_ordering operator<=>(Key const&) const = default;
 
     [[nodiscard]] bool isValid() const { return !name.empty(); }
 

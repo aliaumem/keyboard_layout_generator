@@ -23,6 +23,7 @@ cc_library(
     name = "scancode_key_map",
     srcs = ["scancode_key_map.cpp"],
     hdrs = ["scancode_key_map.hpp"],
+    visibility = ["//visibility:public"],
     deps = [
         ":key",
         "//finger_keyboard_mapping:static_vector",

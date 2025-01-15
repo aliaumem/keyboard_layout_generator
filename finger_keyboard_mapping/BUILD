@@ -62,6 +62,7 @@ proto_library(
 
 cc_proto_library(
     name = "keyboard_timeline_cc_proto",
+    visibility = ["//visibility:public"],
     deps = [":keyboard_timeline_proto"],
 )
 

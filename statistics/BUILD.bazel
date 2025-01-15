@@ -1,0 +1,12 @@
+load("@rules_cc//cc:defs.bzl", "cc_binary", "cc_library")
+
+cc_binary(
+    name = "compute_finger_statistics",
+    srcs = ["main.cpp"],
+    deps = [
+        "//finger_keyboard_mapping:keyboard_timeline_proto_conversion",
+        "//finger_keyboard_mapping/hands:finger_print_helpers",
+        "//finger_keyboard_mapping/keyboard:scancode_key_map",
+        "@range-v3",
+    ],
+)
