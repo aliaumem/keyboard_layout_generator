@@ -25,3 +25,8 @@ package_group(
     name = "statistics",
     packages = ["//statistics/..."],
 )
+
+package_group(
+    name = "layout_generator",
+    packages = ["//layout_generator/..."],
+)

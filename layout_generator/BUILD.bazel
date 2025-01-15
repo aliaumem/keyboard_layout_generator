@@ -1,0 +1,22 @@
+load("@rules_cc//cc:defs.bzl", "cc_binary", "cc_library")
+
+package(default_visibility = ["//:layout_generator"])
+
+cc_binary(
+    name = "layout_generator",
+    srcs = ["main.cpp"],
+    deps = [
+        ":voyager_shape",
+        "//finger_keyboard_mapping/keyboard:keyboard_shape_to_proto",
+    ],
+)
+
+cc_library(
+    name = "voyager_shape",
+    srcs = ["voyager_shape.cpp"],
+    hdrs = ["voyager_shape.hpp"],
+    deps = [
+        "//finger_keyboard_mapping/keyboard:keyboard_shape",
+        "@range-v3",
+    ],
+)

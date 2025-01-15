@@ -24,8 +24,20 @@ constexpr xpos operator+(xpos lhs, xpos rhs) {
     return xpos{lhs.v + rhs.v};
 }
 
+constexpr xpos operator+(xpos lhs, int scalar) {
+    return xpos{lhs.v + scalar};
+}
+
 constexpr ypos operator-(ypos y) {
     return {-y.v};
+}
+
+constexpr ypos operator*(int scalar, ypos y) {
+    return {scalar * y.v};
+}
+
+constexpr ypos operator+(ypos y, int scalar) {
+    return {scalar + y.v};
 }
 
 consteval ypos operator""_y(unsigned long long y) {

@@ -2,18 +2,23 @@
 #define FINGERS_HPP
 
 namespace finger_tracking {
+
+enum class HandSide {
+    Left,
+    Right,
+};
+enum class Finger {
+    Thumb,
+    Index,
+    Middle,
+    Ring,
+    Pinky,
+};
+
 struct FingerDesc {
-    enum class Side {
-        Left,
-        Right,
-    };
-    enum class Finger {
-        Thumb,
-        Index,
-        Middle,
-        Ring,
-        Pinky,
-    };
+
+    using Side   = HandSide;
+    using Finger = Finger;
 
     Side   side;
     Finger finger;
@@ -52,7 +57,8 @@ struct FingerDesc {
     constexpr bool operator==(FingerDesc const&) const = default;
 };
 
-static_assert(static_cast<int>(FingerDesc{FingerDesc::Side::Right, FingerDesc::Finger::Pinky}) == 9);
+static_assert(static_cast<int>(FingerDesc{FingerDesc::Side::Right, FingerDesc::Finger::Pinky})
+              == 9);
 } // namespace finger_tracking
 
 #endif // FINGERS_HPP
