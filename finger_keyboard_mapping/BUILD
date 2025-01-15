@@ -28,6 +28,7 @@ cc_library(
         "mapping_geometry.hpp",
         "mapping_geometry_literals.inl",
     ],
+    visibility = ["//visibility:public"],
 )
 
 cc_library(

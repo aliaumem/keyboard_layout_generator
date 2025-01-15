@@ -1,15 +1,19 @@
-#include "voyager_shape.hpp"
+#include "layout_generator/voyager_shape.hpp"
 #include "layout_generator/keyboard_layout.hpp"
 
 #include "finger_keyboard_mapping/keyboard/key_print_helpers.hpp"
-#include "finger_keyboard_mapping/hands/finger_print_helpers.hpp"
 
-#include <iostream>
+#include <format>
+
+std::ostream& operator<<(std::ostream& os, finger_tracking::Key const& value) {
+    return os << std::format("{}", value);
+}
+
+#include "catch2/catch_test_macros.hpp"
 
 using namespace finger_tracking;
 
-int main() {
-
+SCENARIO("Layout is iterable") {
     // clang-format off
     auto keys = std::array<Key, 52>{
         "Esc",  "&", "é", "\"",  "'", "(",    "-", "è", "_", "ç", "à",  ")",
@@ -21,12 +25,12 @@ int main() {
     // clang-format on
 
     KeyboardLayer  layerNormal{keys};
-    KeyboardLayout layout{voyagerShape(), Orientation::ColumnMajor, std::vector{layerNormal},
-                          Orientation::RowMajor};
+    KeyboardLayout layout(voyagerShape(), Orientation::ColumnMajor, std::vector{layerNormal},
+                          Orientation::RowMajor);
 
-    for (auto [key, position] : layout) {
-        std::cout << std::format("{}   \t{}", key, position.center()) << std::endl;
-    }
-    
-    return 0;
+    auto it = layout.begin();
+    CHECK(it != layout.end());
+    CHECK(std::distance(it, layout.end()) == 62);
+
+    CHECK((*++it).first == Key{"&"});
 }
