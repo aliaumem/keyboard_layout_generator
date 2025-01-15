@@ -46,6 +46,17 @@ py_binary(
     ],
 )
 
+py_binary(
+    name = "print_landmarks",
+    srcs = ["print_landmarks.py"],
+    main = "print_landmarks.py",
+    deps = [
+        ":finger_landmarks_py_proto",
+        ":rotation_enum",
+        requirement("opencv-python"),
+    ],
+)
+
 py_library(
     name = "rotation_enum",
     srcs = ["rotation_enum.py"],
