@@ -91,6 +91,7 @@ def print_kb(proto_path: str, fingers_proto_path: str, timeline_proto_path: str)
     with open(timeline_proto_path, "rb") as f:
         timeline.ParseFromString(f.read())
 
+    wait_time = 33
     for frame, kb_state in zip(fingers.frames, timeline.frames):
         finger_presses = proto_state_to_presses(kb_state)
         display = print_keys(scale_factor, shape, finger_presses)
@@ -100,12 +101,12 @@ def print_kb(proto_path: str, fingers_proto_path: str, timeline_proto_path: str)
             draw_hand(display, frame.rightHand, scale_factor)
 
         cv.imshow("kb shape", display)
-        if frame.leftHand is None and frame.rightHand is None:
-            cv.waitKey(5)
-        elif len(finger_presses) == 0:
-            cv.waitKey(33)
-        else:
-            cv.waitKey(300)
+
+        has_no_hand = frame.leftHand is None and frame.rightHand is None
+        no_key_pressed = len(finger_presses) == 0
+        key = cv.waitKey(5 if has_no_hand or no_key_pressed else wait_time)
+        if key == 32:  # space bar
+            wait_time = 300 if wait_time != 300 else 33
 
 
 def print_keys(scale_factor, shape, finger_presses: Sequence[FingerPress]):
