@@ -71,11 +71,7 @@ def draw_hand(display, hand, scale_factor):
     draw_finger(hand.pinky, (192, 101, 21))
 
 
-def print_kb(proto_path: str, fingers_proto_path: str, timeline_proto_path: str):
-    shape = keyboard_shape_pb2.KeyboardShape()
-    with open(proto_path, "rb") as f:
-        shape.ParseFromString(f.read())
-
+def print_kb(shape, fingers_proto_path: str, timeline_proto_path: str):
     scale_factor = 2
 
     image = print_keys(scale_factor, shape, [])
@@ -143,5 +139,15 @@ def print_key(key: Key, image: np.ndarray, scale_factor: float, finger_press: Fi
 
 
 if __name__ == '__main__':
-    print_kb(sys.argv[1], sys.argv[2],
-             sys.argv[2].rstrip("_landmarks.binarypb") + "_timeline.binarypb")
+
+    shape = keyboard_shape_pb2.KeyboardShape()
+    with open(sys.argv[1], "rb") as f:
+        shape.ParseFromString(f.read())
+
+    if len(sys.argv) == 2:
+        image = print_keys(2, shape, [])
+        cv.imshow("keyboard", image)
+        cv.waitKey(0)
+    else:
+        print_kb(shape, sys.argv[2],
+                 sys.argv[2].rstrip("_landmarks.binarypb") + "_timeline.binarypb")
