@@ -7,7 +7,8 @@
 
 namespace finger_tracking {
 
-inline proto::KeyboardShape serializeKbShapeToProto(KeyboardShape const& shape) {
+template <size_t N>
+proto::KeyboardShape serializeKbShapeToProto(KeyboardShape_<N> const& shape) {
 
     proto::KeyboardShape output{};
 

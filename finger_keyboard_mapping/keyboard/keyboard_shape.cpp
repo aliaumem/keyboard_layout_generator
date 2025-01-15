@@ -3,7 +3,8 @@
 #include <numeric>
 
 namespace finger_tracking {
-Rectangle KeyboardShape::aabb() const {
+template <size_t N>
+Rectangle KeyboardShape_<N>::aabb() const {
     Rectangle total = std::accumulate(
         m_keys.begin(), m_keys.end(), Rectangle{}, [](Rectangle accu, KeyInSpace key) {
             auto br = key.aabb.bottomRight();

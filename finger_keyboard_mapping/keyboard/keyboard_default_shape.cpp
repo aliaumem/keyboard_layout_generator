@@ -4,7 +4,7 @@
 
 namespace finger_tracking {
 
-KeyboardShape KeyboardShape::defaultShape() {
+KeyboardShape KeyboardShape_<>::defaultShape() {
     static_vector<KeyInSpace, 62> keys;
     using namespace geo_literals;
     // First row

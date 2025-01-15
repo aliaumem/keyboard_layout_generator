@@ -55,6 +55,7 @@ cc_library(
 cc_library(
     name = "keyboard_shape_to_proto",
     hdrs = ["keyboard_shape_to_proto.hpp"],
+    visibility = ["//visibility:public"],
     deps = [
         ":keyboard_shape",
         ":keyboard_shape_cc_proto",

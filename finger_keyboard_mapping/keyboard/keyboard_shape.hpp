@@ -15,15 +15,16 @@ struct KeyInSpace {
     bool operator==(Key const& other) const { return key == other; }
 };
 
-class KeyboardShape {
-    static_vector<KeyInSpace, 62> m_keys;
+template <size_t N = 62>
+class KeyboardShape_ {
+    static_vector<KeyInSpace, N> m_keys;
 
 public:
-    explicit KeyboardShape(static_vector<KeyInSpace, 62> const& keys)
+    explicit KeyboardShape_(static_vector<KeyInSpace, N> const& keys)
         : m_keys(keys) {}
 
-    KeyboardShape(KeyboardShape&&)      = default;
-    KeyboardShape(KeyboardShape const&) = delete;
+    KeyboardShape_(KeyboardShape_&&)      = default;
+    KeyboardShape_(KeyboardShape_ const&) = delete;
 
     [[nodiscard]] Rectangle aabb() const;
 
@@ -38,8 +39,10 @@ public:
         return it == m_keys.end() ? Rectangle{} : it->aabb;
     }
 
-    static KeyboardShape defaultShape();
+    static KeyboardShape_<> defaultShape();
 };
+
+using KeyboardShape = KeyboardShape_<>;
 } // namespace finger_tracking
 
 #endif // KEYBOARD_SHAPE_HPP
