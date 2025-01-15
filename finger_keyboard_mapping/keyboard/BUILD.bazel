@@ -20,6 +20,13 @@ cc_library(
 )
 
 cc_library(
+    name = "key_print_helpers",
+    hdrs = ["key_print_helpers.hpp"],
+    visibility = ["//visibility:public"],
+    deps = [":key"],
+)
+
+cc_library(
     name = "scancode_key_map",
     srcs = ["scancode_key_map.cpp"],
     hdrs = ["scancode_key_map.hpp"],
@@ -37,6 +44,7 @@ cc_library(
         "keyboard_shape.cpp",
     ],
     hdrs = ["keyboard_shape.hpp"],
+    visibility = ["//visibility:public"],
     deps = [
         ":key",
         "//finger_keyboard_mapping:geometry",

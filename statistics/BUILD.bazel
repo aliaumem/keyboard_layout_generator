@@ -4,9 +4,20 @@ cc_binary(
     name = "compute_finger_statistics",
     srcs = ["main.cpp"],
     deps = [
+        ":key_sequence_printer",
         "//finger_keyboard_mapping:keyboard_timeline_proto_conversion",
-        "//finger_keyboard_mapping/hands:finger_print_helpers",
         "//finger_keyboard_mapping/keyboard:scancode_key_map",
+        "//statistics/finger_key_frequency",
         "@range-v3",
+    ],
+)
+
+cc_library(
+    name = "key_sequence_printer",
+    hdrs = ["key_sequence_printer.hpp"],
+    deps = [
+        "//finger_keyboard_mapping/hands:finger_print_helpers",
+        "//finger_keyboard_mapping/keyboard:key_print_helpers",
+        "//finger_keyboard_mapping/keyboard:keyboard_shape",
     ],
 )

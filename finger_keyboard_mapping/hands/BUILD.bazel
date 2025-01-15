@@ -1,11 +1,10 @@
 load("@rules_cc//cc:defs.bzl", "cc_library")
 
-package(default_visibility = ["//:finger_keyboard_mapping"])
+package(default_visibility = ["//visibility:public"])
 
 cc_library(
     name = "finger_print_helpers",
     hdrs = ["finger_print_helpers.hpp"],
-    visibility = ["//visibility:public"],
     deps = [":fingers_and_hands"],
 )
 

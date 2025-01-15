@@ -31,6 +31,13 @@ public:
         return std::span{m_keys.begin(), m_keys.size()};
     }
 
+    [[nodiscard]] Rectangle keyAABB(Key const& key) const {
+        auto it = std::find_if(m_keys.begin(), m_keys.end(), [key](KeyInSpace const& key_in_space) {
+            return key == key_in_space.key;
+        });
+        return it == m_keys.end() ? Rectangle{} : it->aabb;
+    }
+
     static KeyboardShape defaultShape();
 };
 } // namespace finger_tracking

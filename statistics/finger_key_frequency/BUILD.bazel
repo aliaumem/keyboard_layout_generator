@@ -1,0 +1,19 @@
+load("@rules_cc//cc:defs.bzl", "cc_binary", "cc_library")
+
+package(default_visibility = ["//:statistics"])
+
+cc_library(
+    name = "finger_key_frequency",
+    srcs = ["finger_to_key_association_printer.cpp"],
+    hdrs = [
+        "finger_to_key_association.hpp",
+        "finger_to_key_map.hpp",
+    ],
+    deps = [
+        "//finger_keyboard_mapping:keyboard_timeline",
+        "//finger_keyboard_mapping/hands:finger_print_helpers",
+        "//finger_keyboard_mapping/hands:fingers_and_hands",
+        "//finger_keyboard_mapping/keyboard:scancode_key_map",
+        "@range-v3",
+    ],
+)
