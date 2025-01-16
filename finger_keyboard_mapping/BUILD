@@ -34,6 +34,7 @@ cc_library(
 cc_library(
     name = "static_vector",
     hdrs = ["static_vector.hpp"],
+    visibility = ["//visibility:public"],
 )
 
 cc_library(

@@ -9,6 +9,12 @@ cc_library(
 )
 
 cc_library(
+    name = "hand_side",
+    hdrs = ["hand_side.hpp"],
+    visibility = ["//visibility:public"],
+)
+
+cc_library(
     name = "fingers_and_hands",
     hdrs = [
         "both_hands.hpp",
@@ -16,6 +22,7 @@ cc_library(
         "frame.hpp",
     ],
     deps = [
+        ":hand_side",
         "//finger_keyboard_mapping:geometry",
     ],
 )

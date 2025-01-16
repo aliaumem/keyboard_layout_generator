@@ -32,7 +32,9 @@ public:
 
     size_t size() const { return m_size; }
 
-    T const& operator[](size_t index) const { return m_data[index]; }
+    [[nodiscard]] T const& operator[](size_t index) const { return m_data[index]; }
+    [[nodiscard]] T const& back() const { return m_data.back(); }
+    [[nodiscard]] T const& front() const { return m_data.front(); }
 };
 } // namespace finger_tracking
 

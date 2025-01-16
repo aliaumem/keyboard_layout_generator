@@ -25,12 +25,11 @@ SCENARIO("Layout is iterable") {
     // clang-format on
 
     KeyboardLayer  layerNormal{keys};
-    KeyboardLayout layout(voyagerShape(), Orientation::ColumnMajor, std::vector{layerNormal},
-                          Orientation::RowMajor);
+    KeyboardLayout layout(voyagerShape(), std::vector{layerNormal});
 
     auto it = layout.begin();
     CHECK(it != layout.end());
-    CHECK(std::distance(it, layout.end()) == 62);
+    CHECK(std::distance(it, layout.end()) == 52);
 
     CHECK((*++it).first == Key{"&"});
 }

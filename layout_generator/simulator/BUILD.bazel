@@ -1,0 +1,17 @@
+load("@rules_cc//cc:defs.bzl", "cc_binary", "cc_library")
+
+package(default_visibility = ["//:layout_generator"])
+
+cc_library(
+    name = "simulator",
+    srcs = [
+        "simulator.cpp",
+        "simulator_penalties.cpp",
+    ],
+    hdrs = ["simulator.hpp"],
+    deps = [
+        "//finger_keyboard_mapping:static_vector",
+        "//finger_keyboard_mapping/keyboard:key_print_helpers",
+        "//layout_generator:keyboard_layout",
+    ],
+)

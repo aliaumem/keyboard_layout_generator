@@ -1,9 +1,12 @@
+#include "layout_generator/simulator/simulator.hpp"
+
 #include "voyager_shape.hpp"
 #include "layout_generator/keyboard_layout.hpp"
 
 #include "finger_keyboard_mapping/keyboard/key_print_helpers.hpp"
 #include "finger_keyboard_mapping/hands/finger_print_helpers.hpp"
 
+#include <functional>
 #include <iostream>
 
 using namespace finger_tracking;
@@ -21,12 +24,21 @@ int main() {
     // clang-format on
 
     KeyboardLayer  layerNormal{keys};
-    KeyboardLayout layout{voyagerShape(), Orientation::ColumnMajor, std::vector{layerNormal},
-                          Orientation::RowMajor};
+    KeyboardLayout layout{voyagerShape(), std::vector{layerNormal}};
 
     for (auto [key, position] : layout) {
         std::cout << std::format("{}   \t{}", key, position.center()) << std::endl;
     }
-    
+
+    auto      quartad = Quartad{{"i", "m", "f", "e"}};
+    Simulator sim{layout};
+    float     penalty = sim.computePenalties(std::vector{quartad});
+
+    // - Compute the key sequence for the quartad
+    // - Compute each penalty
+    // - Do the annealing
+
+    std::cout << std::format("penalty : {}", penalty) << std::endl;
+
     return 0;
 }

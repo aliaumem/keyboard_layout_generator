@@ -9,22 +9,17 @@ struct KeyboardLayout<N>::iterator {
     using iterator_category = std::forward_iterator_tag;
     using difference_type   = std::ptrdiff_t;
 
+    KeyboardLayout::iterator(size_t index, KeyboardLayout const* layout)
+        : index(index)
+        , layout(layout) {}
+
     size_t                index = 0;
     KeyboardLayout const* layout;
 
     reference operator*() const {
-        size_t     layer        = index / N;
-        auto const indexInLayer = index % N;
-        auto const row          = static_cast<Row>(indexInLayer / 12);
-        auto const linearCol    = indexInLayer % 12;
-
-        int const split = row == Row::Thumb ? 2 : 6;
-
-        auto const side = linearCol < split ? HandSide::Left : HandSide::Right;
-        auto const col  = static_cast<Column>(
-            side == HandSide::Left ? split - 1 - linearCol : linearCol - split);
-
-        return layout->keyAt(layer, row, side, col);
+        std::uint8_t layer        = index / N;
+        auto const   indexInLayer = index % N;
+        return layout->keyAt(layer, indexInLayer);
     }
 
     iterator& operator++() {

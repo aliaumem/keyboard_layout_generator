@@ -10,8 +10,8 @@ KeyboardShape<52> voyagerShape() {
 
     std::array topRowOffsets{6, 6, 2, 0, 6, 8, 8, 6, 0, 2, 6, 6};
     std::array sideOffsets{0, 0, 0, 0, 0, 0, 60, 60, 60, 60, 60, 60};
-    for (auto [column, offset] : topRowOffsets | ranges::views::enumerate) {
-        for (int i = 0; i < 4; ++i) {
+    for (int i = 0; i < 4; ++i) {
+        for (auto [column, offset] : topRowOffsets | ranges::views::enumerate) {
             layout[column * 4 + i] = Rectangle{
                 (static_cast<int>(column) * 19_x + sideOffsets[column], i * 19_y + offset),
                 (18_w, 18_h),
