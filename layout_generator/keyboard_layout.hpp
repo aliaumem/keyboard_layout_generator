@@ -18,7 +18,10 @@ struct KeyboardLayer {
 
 template <size_t N>
 struct KeyboardLayout {
-    KeyboardLayout(KeyboardShape<N> const& shape, std::vector<KeyboardLayer<N>> layers)
+    using shape_type = KeyboardShape<N>;
+    using layer_type = KeyboardLayer<N>;
+
+    KeyboardLayout(shape_type const& shape, std::vector<layer_type> layers)
         : m_shape{shape}
         , m_layers{std::move(layers)} {}
 
@@ -56,8 +59,8 @@ struct KeyboardLayout {
     }
 
 private:
-    KeyboardShape<N>              m_shape;
-    std::vector<KeyboardLayer<N>> m_layers;
+    shape_type              m_shape;
+    std::vector<layer_type> m_layers;
 };
 
 using TargetKeyboardLayout = KeyboardLayout<52>;
