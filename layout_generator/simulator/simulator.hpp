@@ -8,7 +8,6 @@
 #include "finger_keyboard_mapping/hands/finger_desc.hpp"
 
 #include <vector>
-#include <functional>
 
 namespace finger_tracking {
 template <size_t N>
@@ -77,8 +76,8 @@ struct Simulator {
 
     [[nodiscard]] KeyLayoutSequence sequenceForQuartad(Quartad const& quartad) const;
 
-    TargetKeyboardLayout const&                                 m_layout;
-    std::vector<std::function<float(KeyLayoutSequence const&)>> m_penalties;
+    TargetKeyboardLayout const&                      m_layout;
+    std::vector<float (*)(KeyLayoutSequence const&)> m_penalties;
 };
 } // namespace finger_tracking
 
