@@ -1,5 +1,6 @@
 #ifndef FINGERS_HPP
 #define FINGERS_HPP
+
 #include "finger_keyboard_mapping/hands/hand_side.hpp"
 
 namespace finger_tracking {
