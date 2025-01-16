@@ -6,14 +6,11 @@
 #include "finger_keyboard_mapping/static_vector.hpp"
 #include "finger_keyboard_mapping/keyboard/key.hpp"
 #include "finger_keyboard_mapping/hands/finger_desc.hpp"
+#include "layout_generator/keyboard_layout.hpp"
 
 #include <vector>
 
 namespace finger_tracking {
-template <size_t N>
-class KeyboardLayout;
-using TargetKeyboardLayout = KeyboardLayout<52>;
-
 enum class Row : std::uint8_t {
     Fn = 0,
     Top,
@@ -70,7 +67,7 @@ struct Quartad {
 };
 
 struct Simulator {
-    Simulator(TargetKeyboardLayout const&);
+    explicit Simulator(TargetKeyboardLayout const&);
 
     float computePenalties(std::vector<Quartad> const& quartads) const;
 

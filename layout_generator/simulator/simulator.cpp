@@ -31,7 +31,7 @@ KeyLayoutSequence Simulator::sequenceForQuartad(Quartad const& quartad) const {
 
         auto it = std::ranges::find_if(m_layout, keysMatch);
         if (it == m_layout.end())
-            throw std::invalid_argument{std::format("Key {} does not exist in layout", key)};
+            throw std::invalid_argument{std::format("Key '{}' does not exist in layout", key)};
 
         auto keyRef = m_layout.toKeyRef(it);
         sequence.emplace_back(keyRef, m_layout.fingerFor(keyRef),
