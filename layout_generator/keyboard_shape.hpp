@@ -32,6 +32,9 @@ struct KeyboardShape {
     }
 
     [[nodiscard]] Finger fingerFor(KeyRef keyRef) const {
+        if (keyRef.row == 4)
+            return Finger::Thumb;
+
         switch (keyRef.col) {
         case 0: [[fallthrough]];
         case 1: return Finger::Index;

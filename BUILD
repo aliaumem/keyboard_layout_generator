@@ -1,9 +1,17 @@
+load("@rules_cc//cc:cc_library.bzl", "cc_library")
 load("@rules_python//python:pip.bzl", "compile_pip_requirements")
 
 compile_pip_requirements(
     name = "requirements",
     src = "requirements.in",
     requirements_txt = "requirements_lock.txt",
+)
+
+cc_library(
+    name = "catch_string_helper",
+    hdrs = ["catch_string_helper.hpp"],
+    visibility = ["//visibility:public"],
+    deps = ["@catch2"],
 )
 
 package_group(

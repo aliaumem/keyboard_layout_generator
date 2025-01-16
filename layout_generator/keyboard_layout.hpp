@@ -7,9 +7,27 @@
 
 #include "finger_keyboard_mapping/keyboard/key.hpp"
 
+#include <stdexcept>
+#include <string>
 #include <vector>
 
 namespace finger_tracking {
+enum Row : std::uint8_t {
+    Fn = 0,
+    Top,
+    Home,
+    Bottom,
+    Thumb
+};
+
+enum Column : std::uint8_t {
+    IndexExt = 0,
+    Index,
+    Middle,
+    Ring,
+    Pinky,
+    PinkyExt,
+};
 
 template <size_t N>
 struct KeyboardLayer {
@@ -40,6 +58,13 @@ struct KeyboardLayout {
     }
 
     [[nodiscard]] Finger fingerFor(LayoutKeyRef keyRef) const { return m_shape.fingerFor(keyRef); }
+    [[nodiscard]] LayoutKeyRef layerTransitionKey(uint8_t layer) const {
+        if (layer == 2)
+            return LayoutKeyRef{0, HandSide::Right, Thumb, IndexExt};
+        if (layer == 1)
+            return LayoutKeyRef{0, HandSide::Right, Home, Middle};
+        throw std::invalid_argument("Unknown layer transition" + std::to_string(layer));
+    }
 
     struct iterator;
 

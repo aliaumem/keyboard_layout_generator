@@ -11,30 +11,17 @@
 #include <vector>
 
 namespace finger_tracking {
-enum class Row : std::uint8_t {
-    Fn = 0,
-    Top,
-    Home,
-    Bottom,
-    Thumb
-};
-
-enum class Column : std::uint8_t {
-    IndexExt = 0,
-    Index,
-    Middle,
-    Ring,
-    Pinky,
-    PinkyExt,
-};
 
 struct KeyPress {
     LayoutKeyRef keyRef;
     Finger       finger;
     Point        position;
+    bool         isPress = true;
 
     [[nodiscard]] HandSide   side() const { return keyRef.side; }
     [[nodiscard]] FingerDesc fingerDesc() const { return {side(), finger}; }
+
+    bool operator==(KeyPress const& other) const = default;
 };
 
 struct KeyLayoutSequence {
@@ -49,6 +36,7 @@ struct KeyLayoutSequence {
 
     auto current() const { return keyPresses.front(); }
     auto prev1() const { return keyPresses[1]; }
+    auto prev2() const { return keyPresses[2]; };
 
     [[nodiscard]] auto size() const { return keyPresses.size(); }
     [[nodiscard]] auto begin() const { return keyPresses.begin(); }
@@ -57,22 +45,24 @@ struct KeyLayoutSequence {
 
 struct Quartad {
     std::array<Key, 4> keys;
-    Key                current() const { return keys[3]; }
-    Key                prev1() const { return keys[2]; }
-    Key                prev2() const { return keys[1]; }
-    Key                prev3() const { return keys[0]; }
-
-    auto begin() const { return keys.begin(); }
-    auto end() const { return keys.end(); }
+    auto               begin() const { return keys.begin(); }
+    auto               end() const { return keys.end(); }
 };
 
-struct Simulator {
+class Simulator {
+public:
     explicit Simulator(TargetKeyboardLayout const&);
 
     float computePenalties(std::vector<Quartad> const& quartads) const;
 
+    [[nodiscard]] KeyLayoutSequence sequenceForKey(std::uint8_t layer, Key const& key) const;
     [[nodiscard]] KeyLayoutSequence sequenceForQuartad(Quartad const& quartad) const;
 
+private:
+    void emplaceKeyRefInSequence(KeyLayoutSequence& sequence, LayoutKeyRef keyRef,
+                                 bool isPress = true) const;
+    void insertLayoutChangeSequence(std::uint8_t fromLayer, KeyLayoutSequence& sequence,
+                                    LayoutKeyRef keyRef) const;
     TargetKeyboardLayout const&                      m_layout;
     std::vector<float (*)(KeyLayoutSequence const&)> m_penalties;
 };

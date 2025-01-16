@@ -3,7 +3,7 @@
 #include "voyager_shape.hpp"
 
 namespace finger_tracking {
-KeyboardLayout<52> azertyVoyagerLayout() {
+TargetKeyboardLayout azertyVoyagerLayout() {
     // clang-format off
     auto lowerKeys = std::array<Key, 52>{
         "Esc",  "&", "é", "\"",  "'", "(",    "-", "è", "_", "ç", "à",  ")",
