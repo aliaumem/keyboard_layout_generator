@@ -9,7 +9,9 @@ struct KeyboardLayout<N>::iterator {
     using iterator_category = std::forward_iterator_tag;
     using difference_type   = std::ptrdiff_t;
 
-    KeyboardLayout::iterator(size_t index, KeyboardLayout const* layout)
+    iterator() = default;
+
+    iterator(size_t index, KeyboardLayout const* layout)
         : index(index)
         , layout(layout) {}
 
