@@ -3,6 +3,8 @@
 #include "layout_generator/keyboard_layout.hpp"
 #include "finger_keyboard_mapping/keyboard/key_print_helpers.hpp"
 
+#include <numeric>
+#include <optional>
 #include <ranges>
 #include <format>
 
@@ -22,12 +24,18 @@ float Simulator::computePenalties(std::vector<Quartad> const& quartads) const {
 KeyLayoutSequence Simulator::sequenceForQuartad(Quartad const& quartad) const {
     KeyLayoutSequence sequence;
     for (auto const& key : quartad | std::views::reverse) {
-        auto it = std::find_if(m_layout.begin(), m_layout.end(), [&key](auto const& pairs) -> bool {
-            return pairs.first == key;
-        });
+        if (!key.isValid())
+            continue;
+
+        auto keysMatch = [&key](auto const& pairs) -> bool { return pairs.first == key; };
+
+        auto it = std::ranges::find_if(m_layout, keysMatch);
         if (it == m_layout.end())
             throw std::invalid_argument{std::format("Key {} does not exist in layout", key)};
-        sequence.emplace_back(m_layout.toKeyRef(it));
+
+        auto keyRef = m_layout.toKeyRef(it);
+        sequence.emplace_back(keyRef, m_layout.fingerFor(keyRef),
+                              m_layout.keyAt(keyRef).second.center());
     }
     return sequence;
 }
