@@ -6,6 +6,8 @@
 #include "finger_keyboard_mapping/mapping_geometry.hpp"
 #include "finger_keyboard_mapping/hands/finger_desc.hpp"
 
+#include "absl/hash/hash.h"
+
 namespace finger_tracking {
 struct KeyPress {
     LayoutKeyRef keyRef;
@@ -16,7 +18,17 @@ struct KeyPress {
     [[nodiscard]] HandSide   side() const { return keyRef.side; }
     [[nodiscard]] FingerDesc fingerDesc() const { return {side(), finger}; }
 
-    bool operator==(KeyPress const& other) const = default;
+    bool operator==(KeyPress const& other) const {
+        // Position and finger are redundant since they are fully determined by the LayoutKeyRef
+        return keyRef == other.keyRef && isPress == other.isPress;
+    };
+
+    template <typename H>
+    friend H AbslHashValue(H h, KeyPress const& kp) {
+        // Position and finger are redundant since they are fully determined by the LayoutKeyRef
+        return H::combine(std::move(h), kp.keyRef.layer, kp.keyRef.side, kp.keyRef.row,
+                          kp.keyRef.column, kp.isPress);
+    }
 };
 } // namespace finger_tracking
 #endif // KEY_PRESS_HPP

@@ -7,7 +7,19 @@ cc_library(
     srcs = ["penalty_calculator.cpp"],
     hdrs = ["penalty_calculator.hpp"],
     deps = [
+        ":ngraphs",
         "//layout_generator:key_press",
         "//layout_generator:row_col",
+    ],
+)
+
+cc_library(
+    name = "ngraphs",
+    srcs = ["ngraphs.cpp"],
+    hdrs = ["ngraphs.hpp"],
+    deps = [
+        "//layout_generator:key_press",
+        "@abseil-cpp//absl/container:flat_hash_map",
+        "@range-v3",
     ],
 )

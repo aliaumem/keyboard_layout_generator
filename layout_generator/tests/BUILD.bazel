@@ -23,3 +23,17 @@ cc_test(
         "@catch2//:catch2_main",
     ],
 )
+
+cc_test(
+    name = "ngraph_set_test",
+    srcs = ["ngraph_set_test.cpp"],
+    deps = [
+        "//:catch_string_helper",
+        "//finger_keyboard_mapping/hands:finger_print_helpers",
+        "//finger_keyboard_mapping/keyboard:key_print_helpers",
+        "//layout_generator:azerty_voyager_layout",
+        "//layout_generator/penalties:ngraphs",
+        "//layout_generator/simulator",
+        "@catch2//:catch2_main",
+    ],
+)
