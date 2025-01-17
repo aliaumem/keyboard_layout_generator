@@ -41,7 +41,7 @@ SCENARIO("The simulator creates a sequence of key presses to output the desired 
 
             THEN("There is only the key press found") {
                 REQUIRE(sequence.size() == 1);
-                CHECK(sequence.current().keyRef == expected);
+                CHECK(sequence.begin()->keyRef == expected);
             }
         }
 
@@ -59,8 +59,9 @@ SCENARIO("The simulator creates a sequence of key presses to output the desired 
 
             THEN("We have a key release and then the normal key press") {
                 REQUIRE(sequence.size() == 2);
-                CHECK(sequence.current() == transitionToDefault);
-                CHECK(sequence.prev1().keyRef == expected);
+                auto it = sequence.begin();
+                CHECK(*it++ == transitionToDefault);
+                CHECK(it->keyRef == expected);
             }
         }
     }
@@ -75,7 +76,7 @@ SCENARIO("The simulator creates a sequence of key presses to output the desired 
 
             THEN("There is only the key press found") {
                 REQUIRE(sequence.size() == 1);
-                CHECK(sequence.current().keyRef == expected);
+                CHECK(sequence.begin()->keyRef == expected);
             }
         }
         auto transitionFromDefault = KeyPress{
@@ -91,9 +92,9 @@ SCENARIO("The simulator creates a sequence of key presses to output the desired 
 
             THEN("We have a key press and then the normal key press") {
                 REQUIRE(sequence.size() == 2);
-                CHECK(sequence.current() == transitionFromDefault);
-
-                CHECK(sequence.prev1().keyRef == expected);
+                auto it = sequence.begin();
+                CHECK(*it++ == transitionFromDefault);
+                CHECK(it->keyRef == expected);
             }
         }
 
@@ -109,9 +110,10 @@ SCENARIO("The simulator creates a sequence of key presses to output the desired 
 
             THEN("We have a key release, a key press and finally the normal key press") {
                 REQUIRE(sequence.size() == 3);
-                CHECK(sequence.current() == transitionToDefault);
-                CHECK(sequence.prev1() == transitionFromDefault);
-                CHECK(sequence.prev2().keyRef == expected);
+                auto it = sequence.begin();
+                CHECK(*it++ == transitionToDefault);
+                CHECK(*it++ == transitionFromDefault);
+                CHECK(it->keyRef == expected);
             }
         }
     }

@@ -34,10 +34,6 @@ struct KeyLayoutSequence {
         return keyPresses.emplace_back(std::forward<Args>(args)...);
     }
 
-    auto current() const { return keyPresses.front(); }
-    auto prev1() const { return keyPresses[1]; }
-    auto prev2() const { return keyPresses[2]; };
-
     [[nodiscard]] auto size() const { return keyPresses.size(); }
     [[nodiscard]] auto begin() const { return keyPresses.begin(); }
     [[nodiscard]] auto end() const { return keyPresses.end(); }

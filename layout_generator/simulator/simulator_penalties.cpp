@@ -5,13 +5,13 @@
 namespace finger_tracking {
 namespace {
 float penalizeDistanceToHomeRow(KeyLayoutSequence const& sequence) {
-    auto keyRef = sequence.current();
+    auto keyRef = *sequence.begin();
     return 4.f * static_cast<float>(std::abs(keyRef.keyRef.row - static_cast<int>(Row::Home)));
 }
 
 float penalizeSameFingerTwice(KeyLayoutSequence const& sequence) {
-    auto current  = sequence.current();
-    auto previous = sequence.prev1();
+    auto current  = *sequence.begin();
+    auto previous = *++sequence.begin();
 
     bool isSameFinger = current.fingerDesc() == previous.fingerDesc();
 
