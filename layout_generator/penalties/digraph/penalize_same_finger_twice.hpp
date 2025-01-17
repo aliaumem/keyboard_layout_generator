@@ -4,10 +4,7 @@
 #include "layout_generator/penalties/ngraphs.hpp"
 
 namespace finger_tracking::penalties {
-float penalizeSameFingerTwice(Digraph const& digraph) {
-    auto current  = digraph.current();
-    auto previous = digraph.prev1();
-
+inline float penalizeSameFingerTwice(KeyPress const& current, KeyPress const& previous) {
     bool isSameFinger = current.fingerDesc() == previous.fingerDesc();
 
     return current.keyRef != previous.keyRef && isSameFinger ? 4.f : 0.f;

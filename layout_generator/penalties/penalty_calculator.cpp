@@ -6,39 +6,37 @@
 
 namespace finger_tracking {
 namespace {
-template <size_t N>
-using PenaltyFn = float (*)(NGraph<N> const&);
 
-template <size_t N>
-auto processOneNGraph(PenaltyFn<N> penalty) {
+template <size_t N, typename Fn>
+auto processOneNGraph(Fn penalty) {
     return [penalty](float innerAccumulator, std::pair<NGraph<N>, size_t> const& pair) {
-        return innerAccumulator + penalty(pair.first) * pair.second;
+        return innerAccumulator + std::apply(penalty, pair.first.keys) * pair.second;
     };
 }
 
-template <size_t N>
+template <size_t N, typename Fn>
 float processAllNGraphsForPenalty(absl::flat_hash_map<NGraph<N>, size_t> const& ngraphs,
-                                  PenaltyFn<N>                                  penalty) {
-    return std::reduce(ngraphs.begin(), ngraphs.end(), 0.f, processOneNGraph(penalty));
+                                  Fn&&                                          penalty) {
+    return std::reduce(ngraphs.begin(), ngraphs.end(), 0.f, processOneNGraph<N>(penalty));
 }
 } // namespace
 
 float PenaltyCalculator::computePenalties(NGraphSet const& ngraphSet) const {
     float digraphPenalty = std::reduce(
         m_digraphPenalties.begin(), m_digraphPenalties.end(), 0.f,
-        [ngraphSet](float accu, PenaltyFn<2> penalty) {
+        [ngraphSet](float accu, digraph_fn penalty) {
             return accu + processAllNGraphsForPenalty(ngraphSet.digraphOccurrences, penalty);
         });
 
     float trigraphPenalty = std::reduce(
         m_trigraphPenalties.begin(), m_trigraphPenalties.end(), 0.f,
-        [ngraphSet](float accu, PenaltyFn<3> penalty) {
+        [ngraphSet](float accu, trigraph_fn penalty) {
             return accu + processAllNGraphsForPenalty(ngraphSet.trigraphOccurrences, penalty);
         });
 
     float quartadPenalty = std::reduce(
         m_quartadPenalties.begin(), m_quartadPenalties.end(), 0.f,
-        [ngraphSet](float accu, PenaltyFn<4> penalty) {
+        [ngraphSet](float accu, quartad_fn penalty) {
             return accu + processAllNGraphsForPenalty(ngraphSet.quartadOccurrences, penalty);
         });
 

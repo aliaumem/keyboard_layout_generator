@@ -10,6 +10,7 @@ cc_library(
     ],
     hdrs = ["penalty_calculator.hpp"],
     deps = [
+        ":digraph_penalties",
         ":ngraphs",
         "//layout_generator:key_press",
     ],

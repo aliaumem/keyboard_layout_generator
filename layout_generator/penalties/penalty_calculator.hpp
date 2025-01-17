@@ -4,11 +4,7 @@
 #include <vector>
 
 namespace finger_tracking {
-template <size_t N>
-struct NGraph;
-using Quartad  = NGraph<4>;
-using Trigraph = NGraph<3>;
-using Digraph  = NGraph<2>;
+struct KeyPress;
 struct NGraphSet;
 
 class PenaltyCalculator {
@@ -17,9 +13,14 @@ public:
     float                    computePenalties(NGraphSet const& ngraphSet) const;
 
 private:
-    std::vector<float (*)(Digraph const&)>  m_digraphPenalties;
-    std::vector<float (*)(Trigraph const&)> m_trigraphPenalties;
-    std::vector<float (*)(Quartad const&)>  m_quartadPenalties;
+    using digraph_fn  = float (*)(KeyPress const&, KeyPress const&);
+    using trigraph_fn = float (*)(KeyPress const&, KeyPress const&, KeyPress const&);
+    using quartad_fn
+        = float (*)(KeyPress const&, KeyPress const&, KeyPress const&, KeyPress const&);
+
+    std::vector<digraph_fn>  m_digraphPenalties;
+    std::vector<trigraph_fn> m_trigraphPenalties;
+    std::vector<quartad_fn>  m_quartadPenalties;
 };
 } // namespace finger_tracking
 
