@@ -31,7 +31,10 @@ cc_library(
 
 cc_library(
     name = "digraph_penalties",
-    hdrs = glob(["digraph/*.hpp"]),
+    hdrs = [
+        "penalize_base_penalty.hpp",
+        "penalize_digraphs.hpp",
+    ],
     deps = [
         ":ngraphs",
         "//layout_generator:key_press",

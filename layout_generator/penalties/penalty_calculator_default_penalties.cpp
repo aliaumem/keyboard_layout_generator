@@ -1,9 +1,8 @@
 #include "penalty_calculator.hpp"
 
 #include "layout_generator/penalties/ngraphs.hpp"
-#include "layout_generator/penalties/digraph/penalize_distance_to_home_row.hpp"
-#include "layout_generator/penalties/digraph/penalize_base_penalty.hpp"
-#include "layout_generator/penalties/digraph/penalize_same_finger_twice.hpp"
+#include "penalize_base_penalty.hpp"
+#include "penalize_digraphs.hpp"
 #include "layout_generator/penalties/penalize_trigraph.hpp"
 #include "layout_generator/penalties/penalize_quartads.hpp"
 
@@ -14,7 +13,6 @@ PenaltyCalculator PenaltyCalculator::defaultPenalties() {
     PenaltyCalculator result;
     result.m_digraphPenalties = {
         {penalizeBaseCost, 1.f},
-        {penalizeDistanceToHomeRow, 4.f},
         {penalizeSameFingerTwice, 4.f},
         {penalizeLongJumpSameHand, 1.f},
         {penalizeLongJumpSameFinger, 10.f},
