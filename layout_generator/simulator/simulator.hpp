@@ -37,6 +37,8 @@ struct KeyLayoutSequence {
     [[nodiscard]] auto size() const { return keyPresses.size(); }
     [[nodiscard]] auto begin() const { return keyPresses.begin(); }
     [[nodiscard]] auto end() const { return keyPresses.end(); }
+    [[nodiscard]] auto front() const -> value_type const& { return keyPresses[0]; }
+    [[nodiscard]] auto back() const -> value_type const& { return keyPresses[size() - 1]; }
 };
 
 struct Quartad {
@@ -51,8 +53,9 @@ public:
 
     float computePenalties(std::vector<Quartad> const& quartads) const;
 
-    [[nodiscard]] KeyLayoutSequence sequenceForKey(std::uint8_t layer, Key const& key) const;
-    [[nodiscard]] KeyLayoutSequence sequenceForQuartad(Quartad const& quartad) const;
+    [[nodiscard]] KeyLayoutSequence     sequenceForKey(std::uint8_t layer, Key const& key) const;
+    [[nodiscard]] std::vector<KeyPress> simulate(std::string_view corpus) const;
+    [[nodiscard]] KeyLayoutSequence     sequenceForQuartad(Quartad const& quartad) const;
 
 private:
     void emplaceKeyRefInSequence(KeyLayoutSequence& sequence, LayoutKeyRef keyRef,

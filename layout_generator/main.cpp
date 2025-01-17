@@ -27,6 +27,10 @@ int main() {
         // - Do the annealing
 
         std::cout << std::format("penalty : {}", penalty) << std::endl;
+
+        auto totalKeys = sim.simulate("pqD&éa");
+        std::cout << totalKeys.size() << std::endl;
+
     } catch (std::exception const& e) {
         std::cerr << e.what() << std::endl;
     }

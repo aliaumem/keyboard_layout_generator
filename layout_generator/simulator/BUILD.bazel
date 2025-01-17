@@ -13,5 +13,6 @@ cc_library(
         "//finger_keyboard_mapping:static_vector",
         "//finger_keyboard_mapping/keyboard:key_print_helpers",
         "//layout_generator:keyboard_layout",
+        "@range-v3",
     ],
 )
