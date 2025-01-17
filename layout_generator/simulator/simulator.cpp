@@ -12,8 +12,8 @@
 namespace finger_tracking {
 void Simulator::emplaceKeyRefInSequence(KeyLayoutSequence& sequence, LayoutKeyRef keyRef,
                                         bool isPress) const {
-    sequence.emplace_back(keyRef, m_layout.fingerFor(keyRef),
-                          m_layout.keyAt(keyRef).second.center(), isPress);
+    sequence.emplace_back(keyRef, m_layout.fingerFor(keyRef), isPress,
+                          m_layout.keyAt(keyRef).second.center().cast<std::int16_t>());
 }
 
 void Simulator::insertLayoutChangeSequence(std::uint8_t fromLayer, KeyLayoutSequence& sequence,

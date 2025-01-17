@@ -10,8 +10,8 @@ namespace finger_tracking {
 struct KeyPress {
     LayoutKeyRef keyRef;
     Finger       finger;
-    Point        position;
     bool         isPress = true;
+    Point16      position;
 
     [[nodiscard]] HandSide   side() const { return keyRef.side; }
     [[nodiscard]] FingerDesc fingerDesc() const { return {side(), finger}; }

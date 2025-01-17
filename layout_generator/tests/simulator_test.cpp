@@ -53,8 +53,8 @@ SCENARIO("The simulator creates a sequence of key presses to output the desired 
                                          .row    = Thumb,
                                          .column = IndexExt},
                 .finger   = Finger::Thumb,
-                .position = Point{174, 94},
                 .isPress  = false,
+                .position = Point16{174, 94},
             };
 
             THEN("We have a key release and then the normal key press") {
@@ -83,8 +83,8 @@ SCENARIO("The simulator creates a sequence of key presses to output the desired 
             .keyRef
             = LayoutKeyRef{.layer = 0, .side = HandSide::Right, .row = Thumb, .column = IndexExt},
             .finger   = Finger::Thumb,
-            .position = Point{174, 94},
             .isPress  = true,
+            .position = Point16{174, 94},
         };
 
         WHEN("Starting from the default layout") {
@@ -104,8 +104,8 @@ SCENARIO("The simulator creates a sequence of key presses to output the desired 
                 .keyRef
                 = LayoutKeyRef{.layer = 0, .side = HandSide::Right, .row = Home, .column = Middle},
                 .finger   = Finger::Middle,
-                .position = Point{221, 9},
                 .isPress  = false,
+                .position = Point16{221, 9},
             };
 
             THEN("We have a key release, a key press and finally the normal key press") {

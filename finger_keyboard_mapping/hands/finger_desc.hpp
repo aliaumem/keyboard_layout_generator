@@ -5,7 +5,7 @@
 
 namespace finger_tracking {
 
-enum class Finger {
+enum class Finger : std::uint8_t {
     Thumb,
     Index,
     Middle,
