@@ -2,13 +2,22 @@
 #define MAPPING_GEOMETRY_HPP
 
 namespace finger_tracking {
-struct Point {
-    int x;
-    int y;
+template <typename T>
+struct Point_ {
+    T x;
+    T y;
 
-    bool  operator==(Point const& other) const = default;
-    Point operator-(Point const& other) const { return {x - other.x, y - other.y}; }
+    bool   operator==(Point_ const& other) const = default;
+    Point_ operator-(Point_ const& other) const {
+        return {static_cast<T>(x - other.x), static_cast<T>(y - other.y)};
+    }
+    template <typename U>
+    Point_<U> cast() {
+        return Point_<U>{static_cast<U>(x), static_cast<U>(y)};
+    }
 };
+using Point   = Point_<int>;
+using Point16 = Point_<std::int16_t>;
 
 struct Size {
     unsigned width;

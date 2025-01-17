@@ -4,10 +4,10 @@
 #include "finger_keyboard_mapping/hands/both_hands.hpp"
 #include <format>
 
-template <>
-struct std::formatter<finger_tracking::Point> : std::formatter<char> {
+template <typename T>
+struct std::formatter<finger_tracking::Point_<T>> : std::formatter<char> {
     template <class FmtContext>
-    auto format(finger_tracking::Point p, FmtContext& ctx) const {
+    auto format(finger_tracking::Point_<T> p, FmtContext& ctx) const {
         return std::format_to(ctx.out(), "({}, {})", p.x, p.y);
     }
 };
