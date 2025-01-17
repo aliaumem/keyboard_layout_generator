@@ -8,7 +8,7 @@ inline float penalizeFourTimeSameHand(KeyPress const& current, KeyPress const& p
                                       KeyPress const& previous2, KeyPress const& previous3) {
     return current.side() == previous1.side() && previous1.side() == previous2.side()
                 && previous2.side() == previous3.side()
-             ? 0.5f
+             ? 1
              : 0;
 }
 
@@ -16,7 +16,7 @@ inline float penalizeFourAlternatingHands(KeyPress const& current, KeyPress cons
                                           KeyPress const& previous2, KeyPress const& previous3) {
     return current.side() != previous1.side() && previous1.side() != previous2.side()
                 && previous2.side() != previous3.side()
-             ? 0.5
+             ? 1
              : 0;
 }
 } // namespace finger_tracking

@@ -14,7 +14,7 @@ inline float penalizeExteriorRollReversal(KeyPress const& current, KeyPress cons
     bool isReverseExteriorRoll
         = seq == std::tuple{Middle, Pinky, Ring} || seq == std::tuple{Ring, Pinky, Middle};
 
-    return isSameHand && isReverseExteriorRoll ? 20 : 0;
+    return isSameHand && isReverseExteriorRoll ? 1 : 0;
 }
 
 inline float penalizeThreeFingerTwist(KeyPress const& current, KeyPress const& previous1,
@@ -29,7 +29,7 @@ inline float penalizeThreeFingerTwist(KeyPress const& current, KeyPress const& p
     bool isRollOut = current.finger > previous1.finger && previous1.finger > previous2.finger;
     bool isRollIn  = current.finger < previous1.finger && previous1.finger < previous2.finger;
 
-    return isSameHand && isMonotonicRow && (isRollOut || isRollIn) ? 10 : 0;
+    return isSameHand && isMonotonicRow && (isRollOut || isRollIn) ? 1 : 0;
 }
 
 inline float penalizeLongJumpSandwich(KeyPress const& current, KeyPress const& /*previous1*/,
@@ -38,7 +38,7 @@ inline float penalizeLongJumpSandwich(KeyPress const& current, KeyPress const& /
     bool crossHomeRow = (current.row() > Row::Home && previous2.row() < Row::Home)
                      || (current.row() < Row::Home && previous2.row() > Row::Home);
 
-    return isSameFinger && crossHomeRow ? 3 : 0;
+    return isSameFinger && crossHomeRow ? 1 : 0;
 }
 } // namespace finger_tracking
 

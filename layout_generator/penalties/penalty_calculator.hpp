@@ -18,9 +18,9 @@ private:
     using quartad_fn
         = float (*)(KeyPress const&, KeyPress const&, KeyPress const&, KeyPress const&);
 
-    std::vector<digraph_fn>  m_digraphPenalties;
-    std::vector<trigraph_fn> m_trigraphPenalties;
-    std::vector<quartad_fn>  m_quartadPenalties;
+    std::vector<std::pair<digraph_fn, float>>  m_digraphPenalties;
+    std::vector<std::pair<trigraph_fn, float>> m_trigraphPenalties;
+    std::vector<std::pair<quartad_fn, float>>  m_quartadPenalties;
 };
 } // namespace finger_tracking
 

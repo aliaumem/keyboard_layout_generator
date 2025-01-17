@@ -13,26 +13,26 @@ using namespace penalties;
 PenaltyCalculator PenaltyCalculator::defaultPenalties() {
     PenaltyCalculator result;
     result.m_digraphPenalties = {
-        penalizeBaseCost,
-        penalizeDistanceToHomeRow,
-        penalizeSameFingerTwice,
-        penalizeLongJumpSameHand,
-        penalizeLongJumpSameFinger,
-        penalizeLongJumpConsecutiveFingers,
-        penalizeFingerTwist,
-        penalizeRollOut,
-        penalizeRollIn,
+        {penalizeBaseCost, 1.f},
+        {penalizeDistanceToHomeRow, 4.f},
+        {penalizeSameFingerTwice, 4.f},
+        {penalizeLongJumpSameHand, 1.f},
+        {penalizeLongJumpSameFinger, 10.f},
+        {penalizeLongJumpConsecutiveFingers, 5.f},
+        {penalizeFingerTwist, 6.f},
+        {penalizeRollOut, 0.125f},
+        {penalizeRollIn, -0.125f},
     };
 
     result.m_trigraphPenalties = {
-        penalizeExteriorRollReversal,
-        penalizeThreeFingerTwist,
-        penalizeLongJumpSandwich,
+        {penalizeExteriorRollReversal, 20.f},
+        {penalizeThreeFingerTwist, 10.f},
+        {penalizeLongJumpSandwich, 3.f},
     };
 
     result.m_quartadPenalties = {
-        penalizeFourTimeSameHand,
-        penalizeFourAlternatingHands,
+        {penalizeFourTimeSameHand, 0.5f},
+        {penalizeFourAlternatingHands, 0.5f},
     };
     return result;
 }

@@ -24,20 +24,26 @@ float processAllNGraphsForPenalty(absl::flat_hash_map<NGraph<N>, size_t> const& 
 float PenaltyCalculator::computePenalties(NGraphSet const& ngraphSet) const {
     float digraphPenalty = std::reduce(
         m_digraphPenalties.begin(), m_digraphPenalties.end(), 0.f,
-        [ngraphSet](float accu, digraph_fn penalty) {
-            return accu + processAllNGraphsForPenalty(ngraphSet.digraphOccurrences, penalty);
+        [ngraphSet](float accu, std::pair<digraph_fn, float> penalty) {
+            return accu
+                 + processAllNGraphsForPenalty(ngraphSet.digraphOccurrences, penalty.first)
+                       * penalty.second;
         });
 
     float trigraphPenalty = std::reduce(
         m_trigraphPenalties.begin(), m_trigraphPenalties.end(), 0.f,
-        [ngraphSet](float accu, trigraph_fn penalty) {
-            return accu + processAllNGraphsForPenalty(ngraphSet.trigraphOccurrences, penalty);
+        [ngraphSet](float accu, std::pair<trigraph_fn, float> penalty) {
+            return accu
+                 + processAllNGraphsForPenalty(ngraphSet.trigraphOccurrences, penalty.first)
+                       * penalty.second;
         });
 
     float quartadPenalty = std::reduce(
         m_quartadPenalties.begin(), m_quartadPenalties.end(), 0.f,
-        [ngraphSet](float accu, quartad_fn penalty) {
-            return accu + processAllNGraphsForPenalty(ngraphSet.quartadOccurrences, penalty);
+        [ngraphSet](float accu, std::pair<quartad_fn, float> penalty) {
+            return accu
+                 + processAllNGraphsForPenalty(ngraphSet.quartadOccurrences, penalty.first)
+                       * penalty.second;
         });
 
     return digraphPenalty + trigraphPenalty + quartadPenalty;

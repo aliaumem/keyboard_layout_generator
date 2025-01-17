@@ -6,7 +6,7 @@
 
 namespace finger_tracking::penalties {
 inline float penalizeDistanceToHomeRow(KeyPress const& current, KeyPress const& /*previous*/) {
-    return 4.f * static_cast<float>(std::abs(current.keyRef.row - static_cast<int>(Row::Home)));
+    return static_cast<float>(std::abs(current.row() - Row::Home));
 }
 } // namespace finger_tracking::penalties
 #endif // PENALIZE_DISTANCE_TO_HOME_ROW_HPP
