@@ -29,7 +29,7 @@ public:
     }
 
     iterator begin() const { return m_data.cbegin(); }
-    iterator end() const { return m_data.cend(); }
+    iterator end() const { return m_data.cbegin() + m_size; }
 
     size_t size() const { return m_size; }
 
