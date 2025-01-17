@@ -4,8 +4,8 @@
 #include "layout_generator/penalties/ngraphs.hpp"
 
 namespace finger_tracking {
-inline float penalizeExteriorRollReversal(KeyPress const& current, KeyPress const& previous1,
-                                          KeyPress const& previous2) {
+inline int64_t penalizeExteriorRollReversal(KeyPress const& current, KeyPress const& previous1,
+                                            KeyPress const& previous2) {
     using enum Finger;
 
     bool isSameHand = current.side() == previous1.side() && current.side() == previous2.side();
@@ -17,8 +17,8 @@ inline float penalizeExteriorRollReversal(KeyPress const& current, KeyPress cons
     return isSameHand && isReverseExteriorRoll ? 1 : 0;
 }
 
-inline float penalizeThreeFingerTwist(KeyPress const& current, KeyPress const& previous1,
-                                      KeyPress const& previous2) {
+inline int64_t penalizeThreeFingerTwist(KeyPress const& current, KeyPress const& previous1,
+                                        KeyPress const& previous2) {
     using enum Finger;
 
     bool isSameHand = current.side() == previous1.side() && current.side() == previous2.side();
@@ -32,8 +32,8 @@ inline float penalizeThreeFingerTwist(KeyPress const& current, KeyPress const& p
     return isSameHand && isMonotonicRow && (isRollOut || isRollIn) ? 1 : 0;
 }
 
-inline float penalizeLongJumpSandwich(KeyPress const& current, KeyPress const& /*previous1*/,
-                                      KeyPress const& previous2) {
+inline int64_t penalizeLongJumpSandwich(KeyPress const& current, KeyPress const& /*previous1*/,
+                                        KeyPress const& previous2) {
     bool isSameFinger = current.fingerDesc() == previous2.fingerDesc();
     bool crossHomeRow = (current.row() > Row::Home && previous2.row() < Row::Home)
                      || (current.row() < Row::Home && previous2.row() > Row::Home);

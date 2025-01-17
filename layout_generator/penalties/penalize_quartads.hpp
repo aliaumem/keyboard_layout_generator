@@ -4,16 +4,16 @@
 #include "layout_generator/penalties/ngraphs.hpp"
 
 namespace finger_tracking {
-inline float penalizeFourTimeSameHand(KeyPress const& current, KeyPress const& previous1,
-                                      KeyPress const& previous2, KeyPress const& previous3) {
+inline int64_t penalizeFourTimeSameHand(KeyPress const& current, KeyPress const& previous1,
+                                        KeyPress const& previous2, KeyPress const& previous3) {
     return current.side() == previous1.side() && previous1.side() == previous2.side()
                 && previous2.side() == previous3.side()
              ? 1
              : 0;
 }
 
-inline float penalizeFourAlternatingHands(KeyPress const& current, KeyPress const& previous1,
-                                          KeyPress const& previous2, KeyPress const& previous3) {
+inline int64_t penalizeFourAlternatingHands(KeyPress const& current, KeyPress const& previous1,
+                                            KeyPress const& previous2, KeyPress const& previous3) {
     return current.side() != previous1.side() && previous1.side() != previous2.side()
                 && previous2.side() != previous3.side()
              ? 1

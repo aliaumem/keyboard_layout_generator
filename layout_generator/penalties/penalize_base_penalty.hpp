@@ -4,7 +4,7 @@
 #include "layout_generator/penalties/ngraphs.hpp"
 
 namespace finger_tracking::penalties {
-inline float penalizeBaseCost(KeyPress const& current, KeyPress const& /*previous*/) {
+inline int64_t penalizeBaseCost(KeyPress const& current, KeyPress const& /*previous*/) {
     // clang-format off
     std::array<float, 26> costs {
         /*4.f, 5.f, 4.f, 3.f, 3.f, 4.f, */    4.f, 3.f, 3.f, 4.f, 5.f, 4.f,
@@ -15,7 +15,7 @@ inline float penalizeBaseCost(KeyPress const& current, KeyPress const& /*previou
     };
     // clang-format on
 
-    return costs[current.keyRef.row * 6 + current.keyRef.column];
+    return static_cast<int64_t>(costs[current.keyRef.row * 6 + current.keyRef.column] * 8);
 }
 } // namespace finger_tracking::penalties
 
