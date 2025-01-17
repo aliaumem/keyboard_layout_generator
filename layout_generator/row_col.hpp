@@ -1,6 +1,8 @@
 #ifndef ROW_COL_HPP
 #define ROW_COL_HPP
 
+#include <cstdint>
+
 namespace finger_tracking {
 enum Row : std::uint8_t {
     Fn = 0,
@@ -9,6 +11,10 @@ enum Row : std::uint8_t {
     Bottom,
     Thumb
 };
+
+inline int operator-(Row lhs, Row rhs) {
+    return static_cast<int>(lhs) - static_cast<int>(rhs);
+}
 
 enum Column : std::uint8_t {
     IndexExt = 0,

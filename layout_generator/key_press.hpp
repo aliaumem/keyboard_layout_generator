@@ -1,6 +1,7 @@
 #ifndef KEY_PRESS_HPP
 #define KEY_PRESS_HPP
 
+#include "layout_generator/row_col.hpp"
 #include "layout_generator/layout_key_ref.hpp"
 
 #include "finger_keyboard_mapping/mapping_geometry.hpp"
@@ -16,6 +17,8 @@ struct KeyPress {
     Point16      position;
 
     [[nodiscard]] HandSide   side() const { return keyRef.side; }
+    [[nodiscard]] Row        row() const { return static_cast<Row>(keyRef.row); }
+    [[nodiscard]] Column     col() const { return static_cast<Column>(keyRef.column); }
     [[nodiscard]] FingerDesc fingerDesc() const { return {side(), finger}; }
 
     bool operator==(KeyPress const& other) const {

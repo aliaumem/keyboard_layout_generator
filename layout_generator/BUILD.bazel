@@ -39,6 +39,7 @@ cc_library(
     hdrs = ["key_press.hpp"],
     deps = [
         ":layout_key_ref",
+        ":row_col",
         "//finger_keyboard_mapping:geometry",
         "//finger_keyboard_mapping/hands:finger_desc",
         "//finger_keyboard_mapping/keyboard:key",

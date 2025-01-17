@@ -12,6 +12,8 @@ cc_library(
     deps = [
         ":digraph_penalties",
         ":ngraphs",
+        ":quartad_penalties",
+        ":trigraph_penalties",
         "//layout_generator:key_press",
     ],
 )
@@ -33,6 +35,24 @@ cc_library(
     deps = [
         ":ngraphs",
         "//layout_generator:key_press",
+        "//layout_generator:row_col",
+    ],
+)
+
+cc_library(
+    name = "trigraph_penalties",
+    hdrs = ["penalize_trigraph.hpp"],
+    deps = [
+        ":ngraphs",
+        "//layout_generator:row_col",
+    ],
+)
+
+cc_library(
+    name = "quartad_penalties",
+    hdrs = ["penalize_quartads.hpp"],
+    deps = [
+        ":ngraphs",
         "//layout_generator:row_col",
     ],
 )

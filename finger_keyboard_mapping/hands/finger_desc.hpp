@@ -13,6 +13,10 @@ enum class Finger : std::uint8_t {
     Pinky,
 };
 
+inline int operator-(Finger lhs, Finger rhs) {
+    return static_cast<int>(lhs) - static_cast<int>(rhs);
+}
+
 struct FingerDesc {
 
     using Side   = HandSide;
