@@ -6,12 +6,12 @@ cc_library(
     name = "simulator",
     srcs = [
         "simulator.cpp",
-        "simulator_penalties.cpp",
     ],
     hdrs = ["simulator.hpp"],
     deps = [
         "//finger_keyboard_mapping:static_vector",
         "//finger_keyboard_mapping/keyboard:key_print_helpers",
+        "//layout_generator:key_press",
         "//layout_generator:keyboard_layout",
         "@range-v3",
     ],

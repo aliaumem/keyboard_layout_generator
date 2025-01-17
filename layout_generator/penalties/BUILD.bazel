@@ -1,0 +1,13 @@
+load("@rules_cc//cc:defs.bzl", "cc_binary", "cc_library")
+
+package(default_visibility = ["//:layout_generator"])
+
+cc_library(
+    name = "penalty_calculator",
+    srcs = ["penalty_calculator.cpp"],
+    hdrs = ["penalty_calculator.hpp"],
+    deps = [
+        "//layout_generator:key_press",
+        "//layout_generator:row_col",
+    ],
+)

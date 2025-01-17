@@ -10,6 +10,7 @@ cc_binary(
         "//finger_keyboard_mapping/hands:finger_print_helpers",
         "//finger_keyboard_mapping/keyboard:key_print_helpers",
         "//finger_keyboard_mapping/keyboard:keyboard_shape_to_proto",
+        "//layout_generator/penalties:penalty_calculator",
         "//layout_generator/simulator",
     ],
 )
@@ -23,6 +24,23 @@ cc_library(
     deps = [
         ":keyboard_shape",
         ":layout_key_ref",
+        ":row_col",
+        "//finger_keyboard_mapping/keyboard:key",
+    ],
+)
+
+cc_library(
+    name = "row_col",
+    hdrs = ["row_col.hpp"],
+)
+
+cc_library(
+    name = "key_press",
+    hdrs = ["key_press.hpp"],
+    deps = [
+        ":layout_key_ref",
+        "//finger_keyboard_mapping:geometry",
+        "//finger_keyboard_mapping/hands:finger_desc",
         "//finger_keyboard_mapping/keyboard:key",
     ],
 )

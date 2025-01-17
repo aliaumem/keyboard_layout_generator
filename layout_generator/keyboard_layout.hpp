@@ -2,6 +2,7 @@
 #define KEYBOARD_LAYOUT_HPP
 
 #include "finger_keyboard_mapping/hands/finger_desc.hpp"
+#include "layout_generator/row_col.hpp"
 #include "layout_generator/layout_key_ref.hpp"
 #include "layout_generator/keyboard_shape.hpp"
 
@@ -12,22 +13,6 @@
 #include <vector>
 
 namespace finger_tracking {
-enum Row : std::uint8_t {
-    Fn = 0,
-    Top,
-    Home,
-    Bottom,
-    Thumb
-};
-
-enum Column : std::uint8_t {
-    IndexExt = 0,
-    Index,
-    Middle,
-    Ring,
-    Pinky,
-    PinkyExt,
-};
 
 template <size_t N>
 struct KeyboardLayer {
