@@ -13,9 +13,8 @@ struct NGraphSet;
 
 class PenaltyCalculator {
 public:
-    PenaltyCalculator();
-
-    float computePenalties(NGraphSet const& ngraphSet) const;
+    static PenaltyCalculator defaultPenalties();
+    float                    computePenalties(NGraphSet const& ngraphSet) const;
 
 private:
     std::vector<float (*)(Digraph const&)>  m_digraphPenalties;

@@ -1,30 +1,10 @@
 #include "penalty_calculator.hpp"
 
 #include "layout_generator/penalties/ngraphs.hpp"
-#include "layout_generator/row_col.hpp"
 
 #include <numeric>
 
 namespace finger_tracking {
-namespace {
-float penalizeDistanceToHomeRow(Digraph const& digraph) {
-    auto keyRef = digraph.current();
-    return 4.f * static_cast<float>(std::abs(keyRef.keyRef.row - static_cast<int>(Row::Home)));
-}
-
-float penalizeSameFingerTwice(Digraph const& digraph) {
-    auto current  = digraph.current();
-    auto previous = digraph.prev1();
-
-    bool isSameFinger = current.fingerDesc() == previous.fingerDesc();
-
-    return current.keyRef != previous.keyRef && isSameFinger ? 4.f : 0.f;
-}
-} // namespace
-
-PenaltyCalculator::PenaltyCalculator()
-    : m_digraphPenalties{penalizeDistanceToHomeRow, penalizeSameFingerTwice} {}
-
 namespace {
 template <size_t N>
 using PenaltyFn = float (*)(NGraph<N> const&);

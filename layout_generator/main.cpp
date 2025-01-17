@@ -11,9 +11,11 @@ using namespace finger_tracking;
 
 int main() {
 
-    // - Compute the key sequence for the quartad
-    // - Compute each penalty
-    // - Do the annealing
+    // - Compute the key sequence for the quartad ✅
+    // - Compute registered penalties ✅
+    // - Fill in penalties 🔃
+    // - Do the annealing 🕐
+
     try {
         auto layout = azertyVoyagerLayout();
 
@@ -23,8 +25,8 @@ int main() {
 
         auto quartadSet = NGraphSet::computeSetFromKeyPresses(totalKeys);
 
-        PenaltyCalculator penaltyCalculator{};
-        float             penalty = penaltyCalculator.computePenalties(quartadSet);
+        PenaltyCalculator penaltyCalculator = PenaltyCalculator::defaultPenalties();
+        float             penalty           = penaltyCalculator.computePenalties(quartadSet);
         std::cout << std::format("penalty : {}", penalty) << std::endl;
 
     } catch (std::exception const& e) {
