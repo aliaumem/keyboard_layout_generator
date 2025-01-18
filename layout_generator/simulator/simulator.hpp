@@ -31,7 +31,7 @@ class Simulator {
 public:
     explicit Simulator(TargetKeyboardLayout const& layout);
 
-    [[nodiscard]] KeyLayoutSequence     sequenceForKey(std::uint8_t layer, Key const& key) const;
+    [[nodiscard]] KeyLayoutSequence     sequenceForKey(std::uint8_t& layer, Key const& key) const;
     [[nodiscard]] std::vector<KeyPress> simulate(std::string_view corpus) const;
 
 private:

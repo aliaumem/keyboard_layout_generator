@@ -48,7 +48,7 @@ Simulator::Simulator(TargetKeyboardLayout const& layout)
     });
 }
 
-KeyLayoutSequence Simulator::sequenceForKey(std::uint8_t fromLayer, Key const& key) const {
+KeyLayoutSequence Simulator::sequenceForKey(std::uint8_t& fromLayer, Key const& key) const {
     KeyLayoutSequence sequence;
 
     auto it = ranges::lower_bound(m_reverseLookup, key, std::less{}, [](auto const& pairs) {
@@ -59,8 +59,10 @@ KeyLayoutSequence Simulator::sequenceForKey(std::uint8_t fromLayer, Key const& k
 
     auto keyRef = m_layout.toKeyRef(m_layout.begin() + it->second);
 
-    if (keyRef.layer != fromLayer)
+    if (keyRef.layer != fromLayer) {
         insertLayoutChangeSequence(fromLayer, sequence, keyRef);
+        fromLayer = keyRef.layer;
+    }
 
     emplaceKeyRefInSequence(sequence, keyRef);
 
@@ -96,7 +98,6 @@ std::vector<KeyPress> Simulator::simulate(std::string_view corpus) const {
             &*chunk.begin(), static_cast<size_t>(ranges::distance(chunk.begin(), chunk.end()))};
         auto seq = sequenceForKey(layer, Key{keyStr});
         std::copy(seq.begin(), seq.end(), std::back_inserter(result));
-        layer = seq.back().keyRef.layer;
     }
 
     return result;
