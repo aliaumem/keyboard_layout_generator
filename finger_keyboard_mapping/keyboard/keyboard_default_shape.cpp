@@ -9,7 +9,7 @@ KeyboardShape KeyboardShape_<>::defaultShape() {
     using namespace geo_literals;
     // First row
     std::array<std::string_view, 13> firstRowNames{
-        "²", "&", "é", "\"", "'", "(", "-", "è", "_", "ç", "à", ")", "="};
+        "Sqr", "&", "é", "\"", "'", "(", "-", "è", "_", "ç", "à", ")", "="};
     for (int i = 0; i < 13; ++i) {
         keys.emplace_back(Key{firstRowNames[i]}, Rectangle{(i * 19_x, 0_y), (18_w, 18_h)});
     }

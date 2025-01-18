@@ -4,6 +4,8 @@
 #include "layout_generator/penalties/penalty_calculator.hpp"
 #include "penalties/ngraphs.hpp"
 
+#include "layout_generator/build_corpus.hpp"
+
 #include <format>
 #include <iostream>
 #include <fstream>
@@ -12,21 +14,23 @@ using namespace finger_tracking;
 
 int main(int argc, char* argv[]) {
 
-    // - Compute the key sequence for the quartad ✅
-    // - Compute registered penalties ✅
-    // - Fill in penalties 🔃
-    // - Do the annealing 🕐
+    // - Compute the key sequence for the quartad
+    // - Compute registered penalties
+    // - Fill in penalties
+    // - Do the annealing
 
     try {
-        std::ifstream     bookfile{argv[1]};
-        std::stringstream buffer;
-        buffer << bookfile.rdbuf();
-        auto book = buffer.str();
+
+        std::vector<std::filesystem::path> files;
+        for (int i = 1; i < argc; ++i) {
+            files.emplace_back(argv[i]);
+        }
+        std::string book = buildCorpus(files);
 
         auto      layout = azertyVoyagerLayout();
         Simulator sim{layout};
         auto      startSim  = std::chrono::high_resolution_clock::now();
-        auto      totalKeys = sim.simulate(buffer.str());
+        auto      totalKeys = sim.simulate(book);
         auto      endSim    = std::chrono::high_resolution_clock::now();
         std::cout << totalKeys.size() << " out of " << totalKeys.capacity() << "\t"
                   << std::chrono::duration_cast<std::chrono::milliseconds>(endSim - startSim)

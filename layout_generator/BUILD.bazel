@@ -7,6 +7,7 @@ cc_binary(
     srcs = ["main.cpp"],
     deps = [
         ":azerty_voyager_layout",
+        ":corpus_builder",
         "//finger_keyboard_mapping/hands:finger_print_helpers",
         "//finger_keyboard_mapping/keyboard:key_print_helpers",
         "//finger_keyboard_mapping/keyboard:keyboard_shape_to_proto",
@@ -84,4 +85,10 @@ cc_library(
         ":keyboard_shape",
         "@range-v3",
     ],
+)
+
+cc_library(
+    name = "corpus_builder",
+    srcs = ["build_corpus.cpp"],
+    hdrs = ["build_corpus.hpp"],
 )

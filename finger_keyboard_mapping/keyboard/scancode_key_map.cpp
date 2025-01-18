@@ -46,7 +46,7 @@ finger_tracking::ScancodeKeyMap::ScancodeKeyMap() {
     addPair(KeyCode{0x26}, {"l"});
     addPair(KeyCode{0x27}, {"m"});
     addPair(KeyCode{0x28}, {"ù"});
-    addPair(KeyCode{0x29}, {"²"});
+    addPair(KeyCode{0x29}, {"Sqr"});
     addPair(KeyCode{0x2A}, {"LSft"});
     addPair(KeyCode{0x2B}, {"*"});
     addPair(KeyCode{0x2C}, {"w"});
