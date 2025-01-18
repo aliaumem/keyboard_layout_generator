@@ -49,9 +49,9 @@ using Trigraph = NGraph<3>;
 using Digraph  = NGraph<2>;
 
 struct NGraphSet {
-    absl::flat_hash_map<Digraph, size_t>  digraphOccurrences;
-    absl::flat_hash_map<Trigraph, size_t> trigraphOccurrences;
-    absl::flat_hash_map<Quartad, size_t>  quartadOccurrences;
+    std::vector<Digraph>  digraphOccurrences;
+    std::vector<Trigraph> trigraphOccurrences;
+    std::vector<Quartad>  quartadOccurrences;
 
     static NGraphSet computeSetFromKeyPresses(std::span<KeyPress const> keys);
 

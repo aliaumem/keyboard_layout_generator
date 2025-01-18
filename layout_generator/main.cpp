@@ -6,10 +6,11 @@
 
 #include <format>
 #include <iostream>
+#include <fstream>
 
 using namespace finger_tracking;
 
-int main() {
+int main(int argc, char* argv[]) {
 
     // - Compute the key sequence for the quartad ✅
     // - Compute registered penalties ✅
@@ -17,17 +18,35 @@ int main() {
     // - Do the annealing 🕐
 
     try {
+        std::ifstream     bookfile{argv[1]};
+        std::stringstream buffer;
+        buffer << bookfile.rdbuf();
         auto layout = azertyVoyagerLayout();
+        auto book   = buffer.str();
 
         Simulator sim{layout};
-        auto      totalKeys = sim.simulate("pqD&éa");
-        std::cout << totalKeys.size() << std::endl;
+        auto      startSim  = std::chrono::high_resolution_clock::now();
+        auto      totalKeys = sim.simulate(buffer.str());
+        auto      endSim    = std::chrono::high_resolution_clock::now();
+        std::cout << totalKeys.size() << " out of " << totalKeys.capacity() << "\t"
+                  << std::chrono::duration_cast<std::chrono::milliseconds>(endSim - startSim)
+                  << std::endl;
 
-        auto quartadSet = NGraphSet::computeSetFromKeyPresses(totalKeys);
+        auto startNGraph = std::chrono::high_resolution_clock::now();
+        auto quartadSet  = NGraphSet::computeSetFromKeyPresses(totalKeys);
+        auto endNGraph   = std::chrono::high_resolution_clock::now();
+        std::cout << "ngraphs: " << quartadSet.size() << "\t"
+                  << std::chrono::duration_cast<std::chrono::milliseconds>(endNGraph - startNGraph)
+                  << std::endl;
 
         PenaltyCalculator penaltyCalculator = PenaltyCalculator::defaultPenalties();
+        auto              startPenalties    = std::chrono::high_resolution_clock::now();
         float             penalty           = penaltyCalculator.computePenalties(quartadSet);
-        std::cout << std::format("penalty : {}", penalty) << std::endl;
+        auto              endPenalties      = std::chrono::high_resolution_clock::now();
+        std::cout << std::format(
+            "penalty : {}, normalized: {} ({})", penalty, penalty / static_cast<float>(book.size()),
+            std::chrono::duration_cast<std::chrono::milliseconds>(endPenalties - startPenalties))
+                  << std::endl;
 
     } catch (std::exception const& e) {
         std::cerr << e.what() << std::endl;
