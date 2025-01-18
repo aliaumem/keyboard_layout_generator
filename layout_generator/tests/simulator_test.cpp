@@ -17,8 +17,7 @@ template <>
 struct std::formatter<finger_tracking::KeyPress> : std::formatter<char> {
     template <typename FmtContext>
     auto format(finger_tracking::KeyPress const& value, FmtContext& ctx) const {
-        return std::format_to(ctx.out(), "{} ({}) {} @{}", value.keyRef, value.finger,
-                              value.isPress, value.position);
+        return std::format_to(ctx.out(), "{} ({}) {}", value.keyRef, value.finger, value.isPress);
     }
 };
 
@@ -34,7 +33,7 @@ SCENARIO("The simulator creates a sequence of key presses to output the desired 
 
     GIVEN("A key on the default layout") {
         Key  key{"é"};
-        auto expected = LayoutKeyRef{.layer = 0, .side = HandSide::Left, .row = Fn, .column = Ring};
+        auto expected = LayoutKeyRef{0, HandSide::Left, Row::Fn, Column::Ring};
 
         WHEN("Starting from the default layout") {
             auto sequence = simulator.sequenceForKey(0, key);
@@ -48,19 +47,15 @@ SCENARIO("The simulator creates a sequence of key presses to output the desired 
         WHEN("Starting from another layout") {
             auto sequence            = simulator.sequenceForKey(2, key);
             auto transitionToDefault = KeyPress{
-                .keyRef   = LayoutKeyRef{.layer  = 0,
-                                         .side   = HandSide::Right,
-                                         .row    = Thumb,
-                                         .column = IndexExt},
-                .finger   = Finger::Thumb,
-                .isPress  = false,
-                .position = Point16{174, 94},
+                LayoutKeyRef{0, HandSide::Right, Row::Thumb, Column::IndexExt},
+                Finger::Thumb,
+                false,
             };
 
             THEN("We have a key release and then the normal key press") {
                 REQUIRE(sequence.size() == 2);
                 auto it = sequence.begin();
-                CHECK(*it++ == transitionToDefault);
+                CHECK((*it++).operator==(transitionToDefault));
                 CHECK(it->keyRef == expected);
             }
         }
@@ -68,8 +63,7 @@ SCENARIO("The simulator creates a sequence of key presses to output the desired 
 
     GIVEN("A key on a non-default layout") {
         Key  key{"€"};
-        auto expected
-            = LayoutKeyRef{.layer = 2, .side = HandSide::Left, .row = Top, .column = Middle};
+        auto expected = LayoutKeyRef{2, HandSide::Left, Row::Top, Column::Middle};
 
         WHEN("Starting from the same layout") {
             auto sequence = simulator.sequenceForKey(2, key);
@@ -80,11 +74,9 @@ SCENARIO("The simulator creates a sequence of key presses to output the desired 
             }
         }
         auto transitionFromDefault = KeyPress{
-            .keyRef
-            = LayoutKeyRef{.layer = 0, .side = HandSide::Right, .row = Thumb, .column = IndexExt},
-            .finger   = Finger::Thumb,
-            .isPress  = true,
-            .position = Point16{174, 94},
+            /*.keyRef   = */ LayoutKeyRef{0, HandSide::Right, Row::Thumb, Column::IndexExt},
+            /*.finger   = */ Finger::Thumb,
+            /*.isPress  = */ true,
         };
 
         WHEN("Starting from the default layout") {
@@ -101,11 +93,9 @@ SCENARIO("The simulator creates a sequence of key presses to output the desired 
         WHEN("Starting from another non-default layout") {
             auto sequence            = simulator.sequenceForKey(1, key);
             auto transitionToDefault = KeyPress{
-                .keyRef
-                = LayoutKeyRef{.layer = 0, .side = HandSide::Right, .row = Home, .column = Middle},
-                .finger   = Finger::Middle,
-                .isPress  = false,
-                .position = Point16{221, 9},
+                /*.keyRef =*/LayoutKeyRef{0, HandSide::Right, Row::Home, Column::Middle},
+                /*.finger   =*/Finger::Middle,
+                /*.isPress  =*/false,
             };
 
             THEN("We have a key release, a key press and finally the normal key press") {

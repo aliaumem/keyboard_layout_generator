@@ -35,6 +35,12 @@ struct KeyboardLayout<N>::iterator {
         return copy;
     }
 
+    iterator operator+(difference_type offset) const {
+        iterator copy = *this;
+        copy.index += offset;
+        return copy;
+    }
+
     bool operator==(iterator const& other) const {
         return layout == other.layout && index == other.index;
     }

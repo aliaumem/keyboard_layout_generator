@@ -6,14 +6,19 @@
 #include <range/v3/view/chunk_by.hpp>
 #include "range/v3/view/reverse.hpp"
 
+#include <algorithm>
+#include <range/v3/view/enumerate.hpp>
+#include <range/v3/view/map.hpp>
+#include <range/v3/action/sort.hpp>
+#include <range/v3/algorithm/lower_bound.hpp>
+#include <range/v3/algorithm/find_if.hpp>
 #include <numeric>
 #include <format>
 
 namespace finger_tracking {
 void Simulator::emplaceKeyRefInSequence(KeyLayoutSequence& sequence, LayoutKeyRef keyRef,
                                         bool isPress) const {
-    sequence.emplace_back(keyRef, m_layout.fingerFor(keyRef), isPress,
-                          m_layout.keyAt(keyRef).second.center().cast<std::int16_t>());
+    sequence.emplace_back(keyRef, m_layout.fingerFor(keyRef), isPress);
 }
 
 void Simulator::insertLayoutChangeSequence(std::uint8_t fromLayer, KeyLayoutSequence& sequence,
@@ -28,15 +33,31 @@ void Simulator::insertLayoutChangeSequence(std::uint8_t fromLayer, KeyLayoutSequ
     }
 }
 
+Simulator::Simulator(TargetKeyboardLayout const& layout)
+    : m_layout{layout} {
+    m_reverseLookup.reserve(m_layout.size());
+    for (auto const& [index, key] : m_layout | ranges::views::keys | ranges::views::enumerate) {
+        if (!key.isValid())
+            continue;
+
+        m_reverseLookup.emplace_back(key, index);
+    }
+
+    ranges::actions::sort(m_reverseLookup, std::less{}, [](auto const& pair) {
+        return pair.first;
+    });
+}
+
 KeyLayoutSequence Simulator::sequenceForKey(std::uint8_t fromLayer, Key const& key) const {
     KeyLayoutSequence sequence;
 
-    auto keysMatch = [&key](auto const& pairs) -> bool { return pairs.first == key; };
-    auto it        = std::ranges::find_if(m_layout, keysMatch);
-    if (it == m_layout.end())
+    auto it = ranges::lower_bound(m_reverseLookup, key, std::less{}, [](auto const& pairs) {
+        return pairs.first;
+    });
+    if (it == m_reverseLookup.end() || it->first != key)
         throw std::invalid_argument{std::format("Key '{}' does not exist in layout", key)};
 
-    auto keyRef = m_layout.toKeyRef(it);
+    auto keyRef = m_layout.toKeyRef(m_layout.begin() + it->second);
 
     if (keyRef.layer != fromLayer)
         insertLayoutChangeSequence(fromLayer, sequence, keyRef);

@@ -61,6 +61,7 @@ cc_library(
     name = "layout_key_ref",
     hdrs = ["layout_key_ref.hpp"],
     deps = [
+        ":row_col",
         "//finger_keyboard_mapping/hands:hand_side",
     ],
 )

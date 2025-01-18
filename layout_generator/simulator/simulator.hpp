@@ -29,8 +29,7 @@ struct KeyLayoutSequence {
 
 class Simulator {
 public:
-    explicit Simulator(TargetKeyboardLayout const& layout)
-        : m_layout{layout} {}
+    explicit Simulator(TargetKeyboardLayout const& layout);
 
     [[nodiscard]] KeyLayoutSequence     sequenceForKey(std::uint8_t layer, Key const& key) const;
     [[nodiscard]] std::vector<KeyPress> simulate(std::string_view corpus) const;
@@ -40,7 +39,8 @@ private:
                                  bool isPress = true) const;
     void insertLayoutChangeSequence(std::uint8_t fromLayer, KeyLayoutSequence& sequence,
                                     LayoutKeyRef keyRef) const;
-    TargetKeyboardLayout const& m_layout;
+    TargetKeyboardLayout const&         m_layout;
+    std::vector<std::pair<Key, size_t>> m_reverseLookup;
 };
 } // namespace finger_tracking
 

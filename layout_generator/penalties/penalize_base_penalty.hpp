@@ -15,7 +15,9 @@ inline int64_t penalizeBaseCost(KeyPress const& current, KeyPress const& /*previ
     };
     // clang-format on
 
-    return static_cast<int64_t>(costs[current.keyRef.row * 6 + current.keyRef.column] * 8);
+    return costs[static_cast<int64_t>(current.keyRef.row) * 6
+                 + static_cast<int64_t>(current.keyRef.column)]
+         * 8;
 }
 } // namespace finger_tracking::penalties
 

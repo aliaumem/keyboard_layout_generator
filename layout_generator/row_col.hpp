@@ -4,7 +4,7 @@
 #include <cstdint>
 
 namespace finger_tracking {
-enum Row : std::uint8_t {
+enum class Row : std::uint8_t {
     Fn = 0,
     Top,
     Home,
@@ -16,7 +16,7 @@ inline int operator-(Row lhs, Row rhs) {
     return static_cast<int>(lhs) - static_cast<int>(rhs);
 }
 
-enum Column : std::uint8_t {
+enum class Column : std::uint8_t {
     IndexExt = 0,
     Index,
     Middle,

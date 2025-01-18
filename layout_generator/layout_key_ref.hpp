@@ -2,6 +2,7 @@
 #define LAYOUT_KEY_REF_HPP
 
 #include "finger_keyboard_mapping/hands/hand_side.hpp"
+#include "row_col.hpp"
 
 #include <cstddef>
 
@@ -15,12 +16,21 @@ struct KeyRef {
 };
 
 struct LayoutKeyRef {
+    LayoutKeyRef() = default;
+    LayoutKeyRef(std::uint8_t layer, HandSide side, Row row, Column col)
+        : layer(layer)
+        , side(side)
+        , row(row)
+        , column(col) {}
+
     std::uint8_t layer;
     HandSide     side;
-    std::uint8_t row;
-    std::uint8_t column;
+    Row          row;
+    Column       column;
 
-    [[nodiscard]] operator KeyRef() const { return {side, row, column}; }
+    [[nodiscard]] operator KeyRef() const {
+        return {side, static_cast<uint8_t>(row), static_cast<uint8_t>(column)};
+    }
 
     bool operator==(LayoutKeyRef const& other) const = default;
 };

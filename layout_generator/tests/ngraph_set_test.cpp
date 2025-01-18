@@ -6,41 +6,40 @@
 using namespace finger_tracking;
 
 SCENARIO("Digraph Trigraphs and Quartads can be computed from a list of key presses") {
-    std::vector<KeyPress> presses = {
-        {
-            .keyRef
-            = {.layer = 0, .side = HandSide::Left, .row = Row::Home, .column = Column::Middle},
-            .finger   = Finger::Middle,
-            .isPress  = true,
-            .position = Point16{30, 52},
+    std::vector presses = {
+        KeyPress{
+            {0, HandSide::Left, Row::Home, Column::Middle},
+            Finger::Middle,
+            Point16{30, 52},
+            true,
         },
-        {
-            .keyRef
-            = {.layer = 0, .side = HandSide::Right, .row = Row::Home, .column = Column::Middle},
-            .finger   = Finger::Middle,
-            .isPress  = true,
-            .position = Point16{153, 52},
+        KeyPress{
+
+            {0, HandSide::Right, Row::Home, Column::Middle},
+            Finger::Middle,
+            Point16{153, 52},
+            true,
         },
-        {
-            .keyRef
-            = {.layer = 1, .side = HandSide::Left, .row = Row::Top, .column = Column::Pinky},
-            .finger   = Finger::Pinky,
-            .isPress  = true,
-            .position = Point16{8, 5},
+        KeyPress{
+
+            {1, HandSide::Left, Row::Top, Column::Pinky},
+            Finger::Pinky,
+            Point16{8, 5},
+            true,
         },
-        {
-            .keyRef
-            = {.layer = 1, .side = HandSide::Right, .row = Row::Home, .column = Column::Middle},
-            .finger   = Finger::Middle,
-            .isPress  = false,
-            .position = Point16{153, 52},
+        KeyPress{
+
+            {1, HandSide::Right, Row::Home, Column::Middle},
+            Finger::Middle,
+            Point16{153, 52},
+            false,
         },
-        {
-            .keyRef
-            = {.layer = 1, .side = HandSide::Left, .row = Row::Thumb, .column = Column::IndexExt},
-            .finger   = Finger::Thumb,
-            .isPress  = true,
-            .position = Point16{70, 152},
+        KeyPress{
+
+            {1, HandSide::Left, Row::Thumb, Column::IndexExt},
+            Finger::Thumb,
+            Point16{70, 152},
+            true,
         },
     };
 

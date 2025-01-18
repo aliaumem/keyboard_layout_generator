@@ -45,14 +45,15 @@ struct KeyboardLayout {
     [[nodiscard]] Finger fingerFor(LayoutKeyRef keyRef) const { return m_shape.fingerFor(keyRef); }
     [[nodiscard]] LayoutKeyRef layerTransitionKey(uint8_t layer) const {
         if (layer == 2)
-            return LayoutKeyRef{0, HandSide::Right, Thumb, IndexExt};
+            return LayoutKeyRef{0, HandSide::Right, Row::Thumb, Column::IndexExt};
         if (layer == 1)
-            return LayoutKeyRef{0, HandSide::Right, Home, Middle};
+            return LayoutKeyRef{0, HandSide::Right, Row::Home, Column::Middle};
         throw std::invalid_argument("Unknown layer transition" + std::to_string(layer));
     }
 
     struct iterator;
 
+    auto     size() const { return m_layers.size() * N; }
     iterator layerBegin(size_t layer) const { return {layer * N, this}; }
     iterator layerEnd(size_t layer) const { return {layer * (N + 1), this}; }
     iterator begin() const { return {0, this}; }
@@ -61,10 +62,10 @@ struct KeyboardLayout {
     LayoutKeyRef toKeyRef(iterator it) const {
         KeyRef keyRef = m_shape.atIndex(it.index % N);
         return LayoutKeyRef{
-            .layer  = static_cast<std::uint8_t>(it.index / N),
-            .side   = keyRef.side,
-            .row    = keyRef.row,
-            .column = keyRef.col,
+            static_cast<std::uint8_t>(it.index / N),
+            keyRef.side,
+            static_cast<Row>(keyRef.row),
+            static_cast<Column>(keyRef.col),
         };
     }
 

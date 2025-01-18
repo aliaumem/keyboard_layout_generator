@@ -21,9 +21,9 @@ int main(int argc, char* argv[]) {
         std::ifstream     bookfile{argv[1]};
         std::stringstream buffer;
         buffer << bookfile.rdbuf();
-        auto layout = azertyVoyagerLayout();
-        auto book   = buffer.str();
+        auto book = buffer.str();
 
+        auto      layout = azertyVoyagerLayout();
         Simulator sim{layout};
         auto      startSim  = std::chrono::high_resolution_clock::now();
         auto      totalKeys = sim.simulate(buffer.str());
@@ -41,10 +41,11 @@ int main(int argc, char* argv[]) {
 
         PenaltyCalculator penaltyCalculator = PenaltyCalculator::defaultPenalties();
         auto              startPenalties    = std::chrono::high_resolution_clock::now();
-        float             penalty           = penaltyCalculator.computePenalties(quartadSet);
+        int64_t           penalty           = penaltyCalculator.computePenalties(quartadSet);
         auto              endPenalties      = std::chrono::high_resolution_clock::now();
         std::cout << std::format(
-            "penalty : {}, normalized: {} ({})", penalty, penalty / static_cast<float>(book.size()),
+            "penalty : {}, normalized: {} ({})", penalty,
+            static_cast<float>(penalty) / static_cast<float>(book.size()),
             std::chrono::duration_cast<std::chrono::milliseconds>(endPenalties - startPenalties))
                   << std::endl;
 
