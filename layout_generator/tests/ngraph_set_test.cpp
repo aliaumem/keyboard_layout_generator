@@ -10,35 +10,30 @@ SCENARIO("Digraph Trigraphs and Quartads can be computed from a list of key pres
         KeyPress{
             {0, HandSide::Left, Row::Home, Column::Middle},
             Finger::Middle,
-            Point16{30, 52},
             true,
         },
         KeyPress{
 
             {0, HandSide::Right, Row::Home, Column::Middle},
             Finger::Middle,
-            Point16{153, 52},
             true,
         },
         KeyPress{
 
             {1, HandSide::Left, Row::Top, Column::Pinky},
             Finger::Pinky,
-            Point16{8, 5},
             true,
         },
         KeyPress{
 
             {1, HandSide::Right, Row::Home, Column::Middle},
             Finger::Middle,
-            Point16{153, 52},
             false,
         },
         KeyPress{
 
             {1, HandSide::Left, Row::Thumb, Column::IndexExt},
             Finger::Thumb,
-            Point16{70, 152},
             true,
         },
     };

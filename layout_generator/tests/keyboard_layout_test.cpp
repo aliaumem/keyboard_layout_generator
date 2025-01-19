@@ -28,5 +28,5 @@ SCENARIO("Layout is iterable") {
     CHECK(it != layout.end());
     CHECK(std::distance(it, layout.end()) == 52);
 
-    CHECK((*++it).first == Key{"&"});
+    CHECK((*(++it)) == LayoutKeyRef{0ull, HandSide::Left, Row::Fn, Column::Pinky});
 }

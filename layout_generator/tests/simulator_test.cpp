@@ -21,7 +21,8 @@ SCENARIO("The simulator creates a sequence of key presses to output the desired 
         auto expected = LayoutKeyRef{0, HandSide::Left, Row::Fn, Column::Ring};
 
         WHEN("Starting from the default layout") {
-            auto sequence = simulator.sequenceForKey(0, key);
+            std::uint8_t layer    = 0;
+            auto         sequence = simulator.sequenceForKey(layer, key);
 
             THEN("There is only the key press found") {
                 REQUIRE(sequence.size() == 1);
@@ -30,9 +31,10 @@ SCENARIO("The simulator creates a sequence of key presses to output the desired 
         }
 
         WHEN("Starting from another layout") {
-            auto sequence            = simulator.sequenceForKey(2, key);
-            auto transitionToDefault = KeyPress{
-                LayoutKeyRef{0, HandSide::Right, Row::Thumb, Column::IndexExt},
+            std::uint8_t layer               = 2;
+            auto         sequence            = simulator.sequenceForKey(layer, key);
+            auto         transitionToDefault = KeyPress{
+                LayoutKeyRef{0, HandSide::Right, Row::Thumb, Column::Index},
                 Finger::Thumb,
                 false,
             };
@@ -40,7 +42,7 @@ SCENARIO("The simulator creates a sequence of key presses to output the desired 
             THEN("We have a key release and then the normal key press") {
                 REQUIRE(sequence.size() == 2);
                 auto it = sequence.begin();
-                CHECK((*it++).operator==(transitionToDefault));
+                CHECK(*it++ == transitionToDefault);
                 CHECK(it->keyRef == expected);
             }
         }
@@ -51,7 +53,8 @@ SCENARIO("The simulator creates a sequence of key presses to output the desired 
         auto expected = LayoutKeyRef{2, HandSide::Left, Row::Top, Column::Middle};
 
         WHEN("Starting from the same layout") {
-            auto sequence = simulator.sequenceForKey(2, key);
+            std::uint8_t layer    = 2;
+            auto         sequence = simulator.sequenceForKey(layer, key);
 
             THEN("There is only the key press found") {
                 REQUIRE(sequence.size() == 1);
@@ -59,13 +62,14 @@ SCENARIO("The simulator creates a sequence of key presses to output the desired 
             }
         }
         auto transitionFromDefault = KeyPress{
-            /*.keyRef   = */ LayoutKeyRef{0, HandSide::Right, Row::Thumb, Column::IndexExt},
+            /*.keyRef   = */ LayoutKeyRef{0, HandSide::Right, Row::Thumb, Column::Index},
             /*.finger   = */ Finger::Thumb,
             /*.isPress  = */ true,
         };
 
         WHEN("Starting from the default layout") {
-            auto sequence = simulator.sequenceForKey(0, key);
+            std::uint8_t layer    = 0;
+            auto         sequence = simulator.sequenceForKey(layer, key);
 
             THEN("We have a key press and then the normal key press") {
                 REQUIRE(sequence.size() == 2);
@@ -76,9 +80,10 @@ SCENARIO("The simulator creates a sequence of key presses to output the desired 
         }
 
         WHEN("Starting from another non-default layout") {
-            auto sequence            = simulator.sequenceForKey(1, key);
-            auto transitionToDefault = KeyPress{
-                /*.keyRef =*/LayoutKeyRef{0, HandSide::Right, Row::Home, Column::Middle},
+            std::uint8_t layer               = 1;
+            auto         sequence            = simulator.sequenceForKey(layer, key);
+            auto         transitionToDefault = KeyPress{
+                /*.keyRef =*/LayoutKeyRef{0, HandSide::Left, Row::Home, Column::Middle},
                 /*.finger   =*/Finger::Middle,
                 /*.isPress  =*/false,
             };

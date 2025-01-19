@@ -15,7 +15,7 @@ TargetKeyboardLayout azertyVoyagerLayout() {
     auto lowerHeldKeys = std::array<Key, 52>{
         "", "",  "",  "",  "",  "",      "",  "",   "",  "",  "",  "",
         "", "",  "",  "",  "",  "",      "",  "",   "",  "",  "",  "",
-        "", "Win",  "LAlt",  "LSft",     "LCtl", "LSft", "LAlt",  "Win", "",
+        "", "Win",  "LAlt",  "LSft", "LCtl", "", "",     "LCtl", "LSft", "LAlt",  "Win", "",
         "", "",  "",  "",  "",  "",      "",  "", "",  "",  "",  "",
                            "",  "",      "", "RAlt"
     };
