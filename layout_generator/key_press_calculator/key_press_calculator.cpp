@@ -1,4 +1,4 @@
-#include "simulator.hpp"
+#include "key_press_calculator.hpp"
 
 #include "layout_generator/keyboard_layout.hpp"
 #include "finger_keyboard_mapping/keyboard/key_print_helpers.hpp"
@@ -8,21 +8,19 @@
 
 #include <algorithm>
 #include <range/v3/view/enumerate.hpp>
-#include <range/v3/view/map.hpp>
 #include <range/v3/action/sort.hpp>
 #include <range/v3/algorithm/lower_bound.hpp>
-#include <range/v3/algorithm/find_if.hpp>
 #include <numeric>
 #include <fmt/format.h>
 
 namespace finger_tracking {
-void Simulator::emplaceKeyRefInSequence(KeyLayoutSequence& sequence, LayoutKeyRef keyRef,
-                                        bool isPress) const {
+void KeyPressCalculator::emplaceKeyRefInSequence(KeyLayoutSequence& sequence, LayoutKeyRef keyRef,
+                                                 bool isPress) const {
     sequence.emplace_back(keyRef, m_layout.fingerFor(keyRef), isPress);
 }
 
-void Simulator::insertLayoutChangeSequence(std::uint8_t fromLayer, KeyLayoutSequence& sequence,
-                                           LayoutKeyRef keyRef) const {
+void KeyPressCalculator::insertLayoutChangeSequence(
+    std::uint8_t fromLayer, KeyLayoutSequence& sequence, LayoutKeyRef keyRef) const {
     if (fromLayer != 0) {
         auto extraKey    = m_layout.layerTransitionKey(fromLayer);
         auto extraKeyRef = lookupKey(extraKey);
@@ -36,7 +34,7 @@ void Simulator::insertLayoutChangeSequence(std::uint8_t fromLayer, KeyLayoutSequ
     }
 }
 
-Simulator::Simulator(TargetKeyboardLayout const& layout)
+KeyPressCalculator::KeyPressCalculator(TargetKeyboardLayout const& layout)
     : m_layout{layout} {
     m_reverseLookup.reserve(m_layout.size());
     for (auto const& [index, keyRef] : m_layout | ranges::views::enumerate) {
@@ -51,7 +49,8 @@ Simulator::Simulator(TargetKeyboardLayout const& layout)
     });
 }
 
-KeyLayoutSequence Simulator::sequenceForKey(std::uint8_t& fromLayer, Key const& key) const {
+KeyLayoutSequence KeyPressCalculator::sequenceForKey(std::uint8_t& fromLayer,
+                                                     Key const&    key) const {
     KeyLayoutSequence sequence;
 
     auto keyRef = lookupKey(key);
@@ -86,7 +85,7 @@ auto belongInTheSameUTF8Char(char, char c) -> bool {
     return !(isSingleChar || isTwoBytesChar || isThreeBytesChar || isFourBytesChar);
 }
 
-std::vector<KeyPress> Simulator::simulate(std::string_view corpus) const {
+std::vector<KeyPress> KeyPressCalculator::simulate(std::string_view corpus) const {
     std::uint8_t          layer = 0;
     std::vector<KeyPress> result;
     result.reserve(corpus.size() * 5 / 4); // 20% extra for layer changes
@@ -99,7 +98,7 @@ std::vector<KeyPress> Simulator::simulate(std::string_view corpus) const {
 
     return result;
 }
-std::vector<KeyPress> Simulator::simulateShortcuts(
+std::vector<KeyPress> KeyPressCalculator::simulateShortcuts(
     std::vector<static_vector<Key, 4>> const& shortcuts) const {
     std::vector<KeyPress> result;
     result.reserve(shortcuts.size() * 3);
@@ -112,7 +111,7 @@ std::vector<KeyPress> Simulator::simulateShortcuts(
     }
     return result;
 }
-auto Simulator::lookupKey(Key const& key) const -> LayoutKeyRef {
+auto KeyPressCalculator::lookupKey(Key const& key) const -> LayoutKeyRef {
     auto it = ranges::lower_bound(m_reverseLookup, key, std::less{}, [](auto const& lookupInfo) {
         return lookupInfo.key;
     });

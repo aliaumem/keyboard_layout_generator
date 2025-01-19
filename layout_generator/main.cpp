@@ -1,4 +1,4 @@
-#include "layout_generator/simulator/simulator.hpp"
+#include "layout_generator/key_press_calculator/key_press_calculator.hpp"
 #include "layout_generator/azerty_voyager_layout.hpp"
 
 #include "layout_generator/penalties/penalty_calculator.hpp"

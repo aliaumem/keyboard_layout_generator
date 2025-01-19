@@ -14,15 +14,15 @@ cc_test(
 )
 
 cc_test(
-    name = "simulator_test",
-    srcs = ["simulator_test.cpp"],
+    name = "key_press_calculator_test",
+    srcs = ["key_press_calculator_test.cpp"],
     deps = [
         "//:catch_string_helper",
         "//finger_keyboard_mapping/hands:finger_print_helpers",
         "//finger_keyboard_mapping/keyboard:key_print_helpers",
         "//layout_generator:azerty_voyager_layout",
         "//layout_generator:layout_print_helpers",
-        "//layout_generator/simulator",
+        "//layout_generator/key_press_calculator",
         "@catch2//:catch2_main",
     ],
 )
@@ -35,8 +35,8 @@ cc_test(
         "//finger_keyboard_mapping/hands:finger_print_helpers",
         "//finger_keyboard_mapping/keyboard:key_print_helpers",
         "//layout_generator:azerty_voyager_layout",
+        "//layout_generator/key_press_calculator",
         "//layout_generator/penalties:ngraphs",
-        "//layout_generator/simulator",
         "@catch2//:catch2_main",
     ],
 )

@@ -1,4 +1,4 @@
-#include "layout_generator/simulator/simulator.hpp"
+#include "layout_generator/key_press_calculator/key_press_calculator.hpp"
 #include "layout_generator/azerty_voyager_layout.hpp"
 
 #include "finger_keyboard_mapping/hands/finger_print_helpers.hpp"
@@ -11,10 +11,10 @@
 
 using namespace finger_tracking;
 
-SCENARIO("The simulator creates a sequence of key presses to output the desired key") {
+SCENARIO("The KeyPressCalculator creates a sequence of key presses to output the desired key") {
     auto layout = azertyVoyagerLayout();
 
-    Simulator simulator{layout};
+    KeyPressCalculator keyPressCalculator{layout};
 
     GIVEN("A key on the default layout") {
         Key  key{"é"};
@@ -22,7 +22,7 @@ SCENARIO("The simulator creates a sequence of key presses to output the desired 
 
         WHEN("Starting from the default layout") {
             std::uint8_t layer    = 0;
-            auto         sequence = simulator.sequenceForKey(layer, key);
+            auto         sequence = keyPressCalculator.sequenceForKey(layer, key);
 
             THEN("There is only the key press found") {
                 REQUIRE(sequence.size() == 1);
@@ -32,7 +32,7 @@ SCENARIO("The simulator creates a sequence of key presses to output the desired 
 
         WHEN("Starting from another layout") {
             std::uint8_t layer               = 2;
-            auto         sequence            = simulator.sequenceForKey(layer, key);
+            auto         sequence            = keyPressCalculator.sequenceForKey(layer, key);
             auto         transitionToDefault = KeyPress{
                 LayoutKeyRef{0, HandSide::Right, Row::Thumb, Column::Index},
                 Finger::Thumb,
@@ -54,7 +54,7 @@ SCENARIO("The simulator creates a sequence of key presses to output the desired 
 
         WHEN("Starting from the same layout") {
             std::uint8_t layer    = 2;
-            auto         sequence = simulator.sequenceForKey(layer, key);
+            auto         sequence = keyPressCalculator.sequenceForKey(layer, key);
 
             THEN("There is only the key press found") {
                 REQUIRE(sequence.size() == 1);
@@ -69,7 +69,7 @@ SCENARIO("The simulator creates a sequence of key presses to output the desired 
 
         WHEN("Starting from the default layout") {
             std::uint8_t layer    = 0;
-            auto         sequence = simulator.sequenceForKey(layer, key);
+            auto         sequence = keyPressCalculator.sequenceForKey(layer, key);
 
             THEN("We have a key press and then the normal key press") {
                 REQUIRE(sequence.size() == 2);
@@ -81,7 +81,7 @@ SCENARIO("The simulator creates a sequence of key presses to output the desired 
 
         WHEN("Starting from another non-default layout") {
             std::uint8_t layer               = 1;
-            auto         sequence            = simulator.sequenceForKey(layer, key);
+            auto         sequence            = keyPressCalculator.sequenceForKey(layer, key);
             auto         transitionToDefault = KeyPress{
                 /*.keyRef =*/LayoutKeyRef{0, HandSide::Left, Row::Home, Column::Middle},
                 /*.finger   =*/Finger::Middle,

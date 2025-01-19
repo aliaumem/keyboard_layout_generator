@@ -3,11 +3,9 @@ load("@rules_cc//cc:defs.bzl", "cc_binary", "cc_library")
 package(default_visibility = ["//:layout_generator"])
 
 cc_library(
-    name = "simulator",
-    srcs = [
-        "simulator.cpp",
-    ],
-    hdrs = ["simulator.hpp"],
+    name = "key_press_calculator",
+    srcs = ["key_press_calculator.cpp"],
+    hdrs = ["key_press_calculator.hpp"],
     deps = [
         "//finger_keyboard_mapping:static_vector",
         "//finger_keyboard_mapping/keyboard:key_print_helpers",

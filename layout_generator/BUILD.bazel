@@ -12,7 +12,7 @@ cc_binary(
         "//finger_keyboard_mapping/keyboard:key_print_helpers",
         "//finger_keyboard_mapping/keyboard:keyboard_shape_to_proto",
         "//layout_generator/penalties:penalty_calculator",
-        "//layout_generator/simulator",
+        "//layout_generator/key_press_calculator",
     ],
 )
 

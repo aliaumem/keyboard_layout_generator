@@ -1,5 +1,5 @@
-#ifndef SIMULATOR_HPP
-#define SIMULATOR_HPP
+#ifndef KEY_PRESS_CALCULATOR_HPP
+#define KEY_PRESS_CALCULATOR_HPP
 
 #include "layout_generator/key_press.hpp"
 #include "finger_keyboard_mapping/static_vector.hpp"
@@ -27,9 +27,9 @@ struct KeyLayoutSequence {
     [[nodiscard]] auto back() const -> value_type const& { return keyPresses[size() - 1]; }
 };
 
-class Simulator {
+class KeyPressCalculator {
 public:
-    explicit Simulator(TargetKeyboardLayout const& layout);
+    explicit KeyPressCalculator(TargetKeyboardLayout const& layout);
 
     [[nodiscard]] KeyLayoutSequence     sequenceForKey(std::uint8_t& layer, Key const& key) const;
     [[nodiscard]] std::vector<KeyPress> simulate(std::string_view corpus) const;
@@ -52,4 +52,4 @@ private:
 };
 } // namespace finger_tracking
 
-#endif // SIMULATOR_HPP
+#endif // KEY_PRESS_CALCULATOR_HPP
