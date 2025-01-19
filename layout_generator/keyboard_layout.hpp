@@ -1,6 +1,7 @@
 #ifndef KEYBOARD_LAYOUT_HPP
 #define KEYBOARD_LAYOUT_HPP
 
+#include "finger_keyboard_mapping/static_vector.hpp"
 #include "finger_keyboard_mapping/hands/finger_desc.hpp"
 #include "layout_generator/row_col.hpp"
 #include "layout_generator/layout_key_ref.hpp"
@@ -20,8 +21,10 @@ struct LayerJumpKey {
 
 template <size_t N>
 struct KeyboardLayer {
-    std::array<Key, N> keys;
-    std::array<Key, N> keysHeld;
+    std::array<Key, N>             keys;
+    std::array<bool, N>            lockedKeysMask;
+    std::array<Key, N>             keysHeld;
+    static_vector<std::uint8_t, 2> relatedLayerIndices;
 };
 
 template <size_t N>
@@ -40,18 +43,16 @@ struct KeyboardLayout {
         , m_layers{std::move(layers)}
         , m_layerJumpKeys{std::move(jumpKeys)} {}
 
-    [[nodiscard]] std::pair<Key, Rectangle> keyAt(std::uint8_t layer,
-                                                  std::size_t  indexInLayer) const {
-        Key       key = m_layers[layer].keys[indexInLayer];
-        Rectangle pos = m_shape.keys[indexInLayer];
-        return std::make_pair(key, pos);
+    [[nodiscard]] Key keyAt(LayoutKeyRef keyRef) const {
+        auto layerIndex = m_shape.indexInLayer(keyRef);
+        Key  key        = m_layers[keyRef.layer].keys[layerIndex];
+        return key;
     }
 
-    [[nodiscard]] std::pair<Key, Rectangle> keyAt(LayoutKeyRef keyRef) const {
-        auto      layerIndex = m_shape.indexInLayer(keyRef);
-        Key       key        = m_layers[keyRef.layer].keys[layerIndex];
-        Rectangle pos        = m_shape.keys[layerIndex];
-        return std::make_pair(key, pos);
+    [[nodiscard]] bool isLockedAt(LayoutKeyRef keyRef) const {
+        auto layerIndex = m_shape.indexInLayer(keyRef);
+        bool isLocked   = m_layers[keyRef.layer].lockedKeysMask[layerIndex];
+        return isLocked;
     }
 
     [[nodiscard]] Key heldKeyAt(LayoutKeyRef keyRef) const {
@@ -70,11 +71,15 @@ struct KeyboardLayout {
         return it->key;
     }
 
+    bool areRelatedLayers(uint8_t lhs, uint8_t rhs) {
+        return m_layers[lhs].relatedLayerIndices.contains(rhs);
+    }
+
     struct iterator;
 
     auto     size() const { return m_layers.size() * N; }
     iterator layerBegin(size_t layer) const { return {layer * N, this}; }
-    iterator layerEnd(size_t layer) const { return {layer * (N + 1), this}; }
+    iterator layerEnd(size_t layer) const { return {(layer + 1) * N, this}; }
     iterator begin() const { return {0, this}; }
     iterator end() const { return {m_layers.size() * N, this}; }
 

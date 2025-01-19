@@ -83,7 +83,7 @@ SCENARIO("The KeyPressCalculator creates a sequence of key presses to output the
             std::uint8_t layer               = 1;
             auto         sequence            = keyPressCalculator.sequenceForKey(layer, key);
             auto         transitionToDefault = KeyPress{
-                /*.keyRef =*/LayoutKeyRef{0, HandSide::Left, Row::Home, Column::Middle},
+                /*.keyRef =*/LayoutKeyRef{0, HandSide::Right, Row::Home, Column::Middle},
                 /*.finger   =*/Finger::Middle,
                 /*.isPress  =*/false,
             };

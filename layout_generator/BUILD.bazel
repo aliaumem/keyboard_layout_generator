@@ -25,6 +25,7 @@ cc_library(
         ":keyboard_shape",
         ":layout_key_ref",
         ":row_col",
+        "//finger_keyboard_mapping:static_vector",
         "//finger_keyboard_mapping/keyboard:key",
     ],
 )

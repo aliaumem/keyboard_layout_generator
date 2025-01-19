@@ -38,7 +38,7 @@ KeyPressCalculator::KeyPressCalculator(TargetKeyboardLayout const& layout)
     : m_layout{layout} {
     m_reverseLookup.reserve(m_layout.size());
     for (auto const& [index, keyRef] : m_layout | ranges::views::enumerate) {
-        if (auto key = m_layout.keyAt(keyRef).first; key.isValid())
+        if (auto key = m_layout.keyAt(keyRef); key.isValid())
             m_reverseLookup.emplace_back(key, index, false);
         if (auto key = m_layout.heldKeyAt(keyRef); key.isValid())
             m_reverseLookup.emplace_back(key, index, true);
@@ -98,6 +98,7 @@ std::vector<KeyPress> KeyPressCalculator::simulate(std::string_view corpus) cons
 
     return result;
 }
+
 std::vector<KeyPress> KeyPressCalculator::simulateShortcuts(
     std::vector<static_vector<Key, 4>> const& shortcuts) const {
     std::vector<KeyPress> result;
@@ -111,6 +112,7 @@ std::vector<KeyPress> KeyPressCalculator::simulateShortcuts(
     }
     return result;
 }
+
 auto KeyPressCalculator::lookupKey(Key const& key) const -> LayoutKeyRef {
     auto it = ranges::lower_bound(m_reverseLookup, key, std::less{}, [](auto const& lookupInfo) {
         return lookupInfo.key;

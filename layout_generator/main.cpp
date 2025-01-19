@@ -59,7 +59,7 @@ int main(int argc, char* argv[]) {
                 auto keys = row
                           | ranges::views::transform(
                                 [&resultLayout](LayoutKeyRef keyRef) -> std::string_view {
-                                    return resultLayout.keyAt(keyRef).first.name;
+                                    return resultLayout.keyAt(keyRef).name;
                                 });
                 fmt::print("'{}'\n", fmt::join(keys, "' '"));
             }

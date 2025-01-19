@@ -10,6 +10,7 @@ struct Key {
     std::strong_ordering operator<=>(Key const&) const = default;
 
     [[nodiscard]] bool isValid() const { return !name.empty(); }
+    [[nodiscard]] bool isEmpty() const { return name.empty(); }
 
     static Key invalid;
 };

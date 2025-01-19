@@ -22,6 +22,7 @@ public:
     static_vector() = default;
 
     template <typename... Args>
+        requires(std::convertible_to<Args, T> && ...)
     static_vector(Args&&... args)
         : m_data{std::forward<Args>(args)...}
         , m_size{sizeof...(Args)} {}
@@ -41,6 +42,10 @@ public:
     [[nodiscard]] T const& operator[](size_t index) const { return m_data[index]; }
     [[nodiscard]] T const& back() const { return m_data.back(); }
     [[nodiscard]] T const& front() const { return m_data.front(); }
+
+    bool contains(T const& value) const {
+        return std::find(m_data.cbegin(), m_data.cend(), value) != m_data.cend();
+    }
 };
 } // namespace finger_tracking
 

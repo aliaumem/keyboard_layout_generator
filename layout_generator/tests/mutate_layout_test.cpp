@@ -14,14 +14,47 @@ SCENARIO("Keyboard layouts can be mutated") {
 
     LayoutMutator mutator{layout};
 
-    LayoutKeyRef lhs{0, HandSide::Left, Row::Fn, Column::Pinky};
-    LayoutKeyRef rhs{1, HandSide::Right, Row::Fn, Column::Pinky};
+    GIVEN("Keys on the same layer") {
+        REQUIRE_FALSE(layout.areRelatedLayers(0, 3));
 
-    auto oldValueLhs = layout.keyAt(lhs);
-    auto oldValueRhs = layout.keyAt(rhs);
+        LayoutKeyRef lhs{0, HandSide::Left, Row::Fn, Column::Pinky};
+        LayoutKeyRef rhs{0, HandSide::Right, Row::Fn, Column::Pinky};
 
-    mutator.swapKeys(lhs, rhs);
+        THEN("The keys are swapped") {
+            auto oldValueLhs = layout.keyAt(lhs);
+            auto oldValueRhs = layout.keyAt(rhs);
 
-    CHECK(oldValueLhs.first == layout.keyAt(rhs).first);
-    CHECK(oldValueRhs.first == layout.keyAt(lhs).first);
+            mutator.swapKeys(lhs, rhs);
+
+            CHECK(oldValueLhs == layout.keyAt(rhs));
+            CHECK(oldValueRhs == layout.keyAt(lhs));
+        }
+    }
+
+    GIVEN("A key on the Shift layer") {
+        LayoutKeyRef lhs{1, HandSide::Left, Row::Fn, Column::Middle};
+        THEN("It can be moved to layer 5") {
+            LayoutKeyRef rhs{5, HandSide::Left, Row::Home, Column::Middle};
+            CHECK_FALSE(mutator.canSwapKeys(lhs, rhs));
+            CHECK(mutator.canCopyTo(rhs));
+            CHECK_FALSE(mutator.canCopyTo(lhs));
+
+            auto oldKey = layout.keyAt(lhs);
+            mutator.copyKeyTo(lhs, rhs);
+            CHECK(layout.keyAt(lhs) == layout.keyAt(rhs));
+            CHECK(layout.keyAt(lhs) == oldKey);
+        }
+
+        THEN("It can be moved to layer 0 on a repeated key") {
+            LayoutKeyRef rhs{0, HandSide::Right, Row::Fn, Column::IndexExt};
+            CHECK_FALSE(mutator.canSwapKeys(lhs, rhs));
+            CHECK(mutator.canCopyTo(rhs));
+            CHECK_FALSE(mutator.canCopyTo(lhs));
+
+            auto oldKey = layout.keyAt(lhs);
+            mutator.copyKeyTo(lhs, rhs);
+            CHECK(layout.keyAt(lhs) == layout.keyAt(rhs));
+            CHECK(layout.keyAt(lhs) == oldKey);
+        }
+    }
 }
