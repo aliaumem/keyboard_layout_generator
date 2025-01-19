@@ -4,22 +4,7 @@
 #include "finger_keyboard_mapping/hands/finger_print_helpers.hpp"
 #include "finger_keyboard_mapping/keyboard/key_print_helpers.hpp"
 
-template <>
-struct std::formatter<finger_tracking::LayoutKeyRef> : std::formatter<char> {
-    template <typename FmtContext>
-    auto format(finger_tracking::LayoutKeyRef value, FmtContext& ctx) const {
-        return std::format_to(ctx.out(), "{}. {} {}:{}", value.layer, value.side, value.row,
-                              value.column);
-    }
-};
-
-template <>
-struct std::formatter<finger_tracking::KeyPress> : std::formatter<char> {
-    template <typename FmtContext>
-    auto format(finger_tracking::KeyPress const& value, FmtContext& ctx) const {
-        return std::format_to(ctx.out(), "{} ({}) {}", value.keyRef, value.finger, value.isPress);
-    }
-};
+#include "layout_generator/layout_print_helpers.hpp"
 
 #include "catch_string_helper.hpp"
 #include "catch2/catch_test_macros.hpp"

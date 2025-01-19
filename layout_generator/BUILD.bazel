@@ -92,3 +92,13 @@ cc_library(
     srcs = ["build_corpus.cpp"],
     hdrs = ["build_corpus.hpp"],
 )
+
+cc_library(
+    name = "layout_print_helpers",
+    hdrs = ["layout_print_helpers.hpp"],
+    deps = [
+        ":key_press",
+        ":layout_key_ref",
+        "@fmt",
+    ],
+)

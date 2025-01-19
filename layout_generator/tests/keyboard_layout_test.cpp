@@ -1,13 +1,10 @@
 #include "layout_generator/voyager_shape.hpp"
 #include "layout_generator/keyboard_layout.hpp"
 
-#include "finger_keyboard_mapping/keyboard/key_print_helpers.hpp"
+#include "finger_keyboard_mapping/hands/finger_print_helpers.hpp"
+#include "layout_generator/layout_print_helpers.hpp"
 
-#include <format>
-
-std::ostream& operator<<(std::ostream& os, finger_tracking::Key const& value) {
-    return os << std::format("{}", value);
-}
+#include "catch_string_helper.hpp"
 
 #include "catch2/catch_test_macros.hpp"
 

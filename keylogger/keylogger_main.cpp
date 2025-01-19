@@ -7,7 +7,7 @@
 #include <fstream>
 
 #include <chrono>
-#include <format>
+#include <fmt/format.h>
 
 namespace {
 std::ofstream                                      logfile;
@@ -24,7 +24,7 @@ void process_kbd_event(unsigned short makeCode, bool isE0, bool isE1, bool isKey
     using namespace std::chrono_literals;
     auto ms = duration_cast<milliseconds>(key_timestamp - start_time);
     auto timestamp
-        = std::format("{} {} {} {}", duration_cast<hours>(ms), duration_cast<minutes>(ms % 1h),
+        = fmt::format("{} {} {} {}", duration_cast<hours>(ms), duration_cast<minutes>(ms % 1h),
                       duration_cast<seconds>(ms % 1min), ms % 1s);
 
     keylog::proto::KeyLog keylog;

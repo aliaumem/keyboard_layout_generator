@@ -17,7 +17,7 @@ struct FingerToKeyAssociation {
         for (auto const& state : timeline) {
             if (state.pressedKeys.empty())
                 throw std::runtime_error(
-                    std::format("No keys pressed at timestamp {}", state.timestamp));
+                    fmt::format("No keys pressed at timestamp {}", state.timestamp));
             auto const& [key, finger] = state.pressedKeys.front();
             size_t keyIndex           = keyMap.keyIndex(key);
             fingerToKeyMap[{keyIndex, finger}]++;

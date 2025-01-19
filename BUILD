@@ -11,7 +11,10 @@ cc_library(
     name = "catch_string_helper",
     hdrs = ["catch_string_helper.hpp"],
     visibility = ["//visibility:public"],
-    deps = ["@catch2"],
+    deps = [
+        "@catch2",
+        "@fmt",
+    ],
 )
 
 package_group(

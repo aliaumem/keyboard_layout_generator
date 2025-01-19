@@ -16,7 +16,7 @@ int main(int argc, char* argv[]) {
         proto::KeyboardTimeline protoTimeline;
         std::ifstream           protoFile(argv[1], std::ios::binary | std::ios::in);
         if (!protoFile.is_open())
-            throw std::runtime_error(std::format("Failed to open {}", argv[1]));
+            throw std::runtime_error(fmt::format("Failed to open {}", argv[1]));
         protoTimeline.ParseFromIstream(&protoFile);
 
         // We need to keep the proto around because this timeline has references on the key names

@@ -13,7 +13,7 @@
 #include <range/v3/algorithm/lower_bound.hpp>
 #include <range/v3/algorithm/find_if.hpp>
 #include <numeric>
-#include <format>
+#include <fmt/format.h>
 
 namespace finger_tracking {
 void Simulator::emplaceKeyRefInSequence(KeyLayoutSequence& sequence, LayoutKeyRef keyRef,
@@ -117,7 +117,7 @@ auto Simulator::lookupKey(Key const& key) const -> LayoutKeyRef {
         return lookupInfo.key;
     });
     if (it == m_reverseLookup.end() || it->key != key)
-        throw std::invalid_argument{std::format("Key '{}' does not exist in layout", key)};
+        throw std::invalid_argument{fmt::format("Key '{}' does not exist in layout", key)};
     auto keyRef = m_layout.toKeyRef(m_layout.begin() + it->index);
 
     return keyRef;

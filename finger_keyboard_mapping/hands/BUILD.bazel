@@ -5,7 +5,10 @@ package(default_visibility = ["//visibility:public"])
 cc_library(
     name = "finger_print_helpers",
     hdrs = ["finger_print_helpers.hpp"],
-    deps = [":fingers_and_hands"],
+    deps = [
+        ":fingers_and_hands",
+        "@fmt",
+    ],
 )
 
 cc_library(

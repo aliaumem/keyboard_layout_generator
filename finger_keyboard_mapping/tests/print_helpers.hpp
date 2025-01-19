@@ -7,7 +7,7 @@
 #include <ostream>
 
 inline std::ostream& operator<<(std::ostream& os, finger_tracking::FingerRef const& d) {
-    return os << std::format("{}", d);
+    return os << fmt::format("{}", d);
 }
 
 inline std::ostream& operator<<(std::ostream& os, std::nullopt_t) {

@@ -6,7 +6,8 @@
 
 #include "layout_generator/build_corpus.hpp"
 
-#include <format>
+#include <fmt/format.h>
+#include <fmt/chrono.h>
 #include <iostream>
 
 using namespace finger_tracking;
@@ -24,7 +25,7 @@ float penaltiesForKeys(std::size_t size, std::vector<KeyPress> const& totalKeys)
     int64_t           penalty           = penaltyCalculator.computePenalties(ngraphSet);
     auto              endPenalties      = std::chrono::high_resolution_clock::now();
     float             normalizedPenalty = static_cast<float>(penalty) / static_cast<float>(size);
-    std::cout << std::format(
+    std::cout << fmt::format(
         "penalty : {}, normalized: {} ({})", penalty, normalizedPenalty,
         std::chrono::duration_cast<std::chrono::milliseconds>(endPenalties - startPenalties))
               << std::endl;

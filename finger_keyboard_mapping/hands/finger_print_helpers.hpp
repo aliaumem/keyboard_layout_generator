@@ -2,21 +2,21 @@
 #define FINGER_PRINT_HELPERS_HPP
 
 #include "finger_keyboard_mapping/hands/both_hands.hpp"
-#include <format>
+#include <fmt/format.h>
 
 template <typename T>
-struct std::formatter<finger_tracking::Point_<T>> : std::formatter<char> {
+struct fmt::formatter<finger_tracking::Point_<T>> : fmt::formatter<char> {
     template <class FmtContext>
     auto format(finger_tracking::Point_<T> p, FmtContext& ctx) const {
-        return std::format_to(ctx.out(), "({}, {})", p.x, p.y);
+        return fmt::format_to(ctx.out(), "({}, {})", p.x, p.y);
     }
 };
 
 template <>
-struct std::formatter<finger_tracking::Finger> : std::formatter<char> {
+struct fmt::formatter<finger_tracking::Finger> : fmt::formatter<char> {
     template <typename FmtContext>
     auto format(finger_tracking::Finger finger, FmtContext& ctx) const {
-        return std::format_to(ctx.out(), "{}", [finger]() -> std::string_view {
+        return fmt::format_to(ctx.out(), "{}", [finger]() -> std::string_view {
             using enum finger_tracking::Finger;
             switch (finger) {
             case Thumb: return "Thumb";
@@ -31,27 +31,27 @@ struct std::formatter<finger_tracking::Finger> : std::formatter<char> {
 };
 
 template <>
-struct std::formatter<finger_tracking::HandSide> : std::formatter<char> {
+struct fmt::formatter<finger_tracking::HandSide> : fmt::formatter<char> {
     template <typename FmtContext>
     auto format(finger_tracking::FingerDesc::Side side, FmtContext& ctx) const {
-        return std::format_to(ctx.out(), "{}",
+        return fmt::format_to(ctx.out(), "{}",
                               side == finger_tracking::HandSide::Left ? "Left" : "Right");
     }
 };
 
 template <>
-struct std::formatter<finger_tracking::FingerDesc> : std::formatter<char> {
+struct fmt::formatter<finger_tracking::FingerDesc> : fmt::formatter<char> {
     template <typename FmtContext>
     auto format(finger_tracking::FingerDesc d, FmtContext& ctx) const {
-        return std::format_to(ctx.out(), "{}, {}", d.side, d.finger);
+        return fmt::format_to(ctx.out(), "{}, {}", d.side, d.finger);
     }
 };
 
 template <>
-struct std::formatter<finger_tracking::FingerRef> : std::formatter<char> {
+struct fmt::formatter<finger_tracking::FingerRef> : fmt::formatter<char> {
     template <typename FmtContext>
     auto format(finger_tracking::FingerRef d, FmtContext& ctx) const {
-        return std::format_to(ctx.out(), "{{{}, {}}}", d.fingerDesc, d.position);
+        return fmt::format_to(ctx.out(), "{{{}, {}}}", d.fingerDesc, d.position);
     }
 };
 

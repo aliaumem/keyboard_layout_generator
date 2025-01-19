@@ -3,13 +3,13 @@
 
 #include "finger_keyboard_mapping/keyboard/key.hpp"
 
-#include <format>
+#include <fmt/format.h>
 
 template <>
-struct std::formatter<finger_tracking::Key> : std::formatter<std::string_view> {
+struct fmt::formatter<finger_tracking::Key> : fmt::formatter<std::string_view> {
     template <typename FmtContext>
     auto format(finger_tracking::Key key, FmtContext& ctx) const {
-        return std::format_to(ctx.out(), "{}", key.name);
+        return fmt::format_to(ctx.out(), "{}", key.name);
     }
 };
 

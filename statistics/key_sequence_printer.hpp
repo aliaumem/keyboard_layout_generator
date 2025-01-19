@@ -27,7 +27,7 @@ struct KeySequencePrinter {
             auto  vec  = prev - pos.center();
             prev       = pos.center();
 
-            std::cout << std::format(
+            std::cout << fmt::format(
                 "{: <6} {}\t{}  \t{}", delta, pressedKey.first, pressedKey.second, vec)
                       << std::endl;
         }

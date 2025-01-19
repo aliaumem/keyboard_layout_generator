@@ -12,3 +12,5 @@ build --enable_runfiles
 build --build_python_zip=false
 
 build --cxxopt=/std:c++20
+build --copt=/utf-8
+build --cxxopt=/utf-8

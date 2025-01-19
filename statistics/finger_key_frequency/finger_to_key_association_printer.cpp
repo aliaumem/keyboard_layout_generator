@@ -12,7 +12,7 @@ void FingerToKeyAssociation::print(FingerToKeyMap const& association) const {
         for (auto const& [fingerInt, finger] : ranges::views::enumerate(fingers)) {
             if (finger != 0) {
                 FingerDesc desc{static_cast<int>(fingerInt)};
-                std::cout << std::format("[{}: {}]", desc, finger);
+                std::cout << fmt::format("[{}: {}]", desc, finger);
             }
         }
         std::cout << std::endl;
