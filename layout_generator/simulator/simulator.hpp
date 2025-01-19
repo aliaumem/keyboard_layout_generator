@@ -33,14 +33,22 @@ public:
 
     [[nodiscard]] KeyLayoutSequence     sequenceForKey(std::uint8_t& layer, Key const& key) const;
     [[nodiscard]] std::vector<KeyPress> simulate(std::string_view corpus) const;
+    [[nodiscard]] std::vector<KeyPress> simulateShortcuts(
+        std::vector<static_vector<Key, 4>> const& shortcuts) const;
 
 private:
+    auto lookupKey(Key const& key) const -> LayoutKeyRef;
     void emplaceKeyRefInSequence(KeyLayoutSequence& sequence, LayoutKeyRef keyRef,
                                  bool isPress = true) const;
     void insertLayoutChangeSequence(std::uint8_t fromLayer, KeyLayoutSequence& sequence,
                                     LayoutKeyRef keyRef) const;
-    TargetKeyboardLayout const&         m_layout;
-    std::vector<std::pair<Key, size_t>> m_reverseLookup;
+    TargetKeyboardLayout const& m_layout;
+    struct ReverseLookupInfo {
+        Key    key;
+        size_t index;
+        bool   isHeldKey;
+    };
+    std::vector<ReverseLookupInfo> m_reverseLookup;
 };
 } // namespace finger_tracking
 

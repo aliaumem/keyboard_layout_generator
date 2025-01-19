@@ -24,11 +24,14 @@ void Simulator::emplaceKeyRefInSequence(KeyLayoutSequence& sequence, LayoutKeyRe
 void Simulator::insertLayoutChangeSequence(std::uint8_t fromLayer, KeyLayoutSequence& sequence,
                                            LayoutKeyRef keyRef) const {
     if (fromLayer != 0) {
-        auto extraKeyRef = m_layout.layerTransitionKey(fromLayer);
+        auto extraKey    = m_layout.layerTransitionKey(fromLayer);
+        auto extraKeyRef = lookupKey(extraKey);
         emplaceKeyRefInSequence(sequence, extraKeyRef, false);
     }
+
     if (keyRef.layer != 0) {
-        auto extraKeyRef = m_layout.layerTransitionKey(keyRef.layer);
+        auto extraKey    = m_layout.layerTransitionKey(keyRef.layer);
+        auto extraKeyRef = lookupKey(extraKey);
         emplaceKeyRefInSequence(sequence, extraKeyRef, true);
     }
 }
@@ -36,28 +39,22 @@ void Simulator::insertLayoutChangeSequence(std::uint8_t fromLayer, KeyLayoutSequ
 Simulator::Simulator(TargetKeyboardLayout const& layout)
     : m_layout{layout} {
     m_reverseLookup.reserve(m_layout.size());
-    for (auto const& [index, key] : m_layout | ranges::views::keys | ranges::views::enumerate) {
-        if (!key.isValid())
-            continue;
-
-        m_reverseLookup.emplace_back(key, index);
+    for (auto const& [index, keyRef] : m_layout | ranges::views::enumerate) {
+        if (auto key = m_layout.keyAt(keyRef).first; key.isValid())
+            m_reverseLookup.emplace_back(key, index, false);
+        if (auto key = m_layout.heldKeyAt(keyRef); key.isValid())
+            m_reverseLookup.emplace_back(key, index, true);
     }
 
-    ranges::actions::sort(m_reverseLookup, std::less{}, [](auto const& pair) {
-        return pair.first;
+    ranges::actions::sort(m_reverseLookup, std::less{}, [](auto const& lookupInfo) {
+        return lookupInfo.key;
     });
 }
 
 KeyLayoutSequence Simulator::sequenceForKey(std::uint8_t& fromLayer, Key const& key) const {
     KeyLayoutSequence sequence;
 
-    auto it = ranges::lower_bound(m_reverseLookup, key, std::less{}, [](auto const& pairs) {
-        return pairs.first;
-    });
-    if (it == m_reverseLookup.end() || it->first != key)
-        throw std::invalid_argument{std::format("Key '{}' does not exist in layout", key)};
-
-    auto keyRef = m_layout.toKeyRef(m_layout.begin() + it->second);
+    auto keyRef = lookupKey(key);
 
     if (keyRef.layer != fromLayer) {
         insertLayoutChangeSequence(fromLayer, sequence, keyRef);
@@ -101,5 +98,28 @@ std::vector<KeyPress> Simulator::simulate(std::string_view corpus) const {
     }
 
     return result;
+}
+std::vector<KeyPress> Simulator::simulateShortcuts(
+    std::vector<static_vector<Key, 4>> const& shortcuts) const {
+    std::vector<KeyPress> result;
+    result.reserve(shortcuts.size() * 3);
+    for (auto const& shortcut : shortcuts) {
+        std::uint8_t layer = 0;
+        for (auto const& key : shortcut) {
+            auto seq = sequenceForKey(layer, key);
+            std::copy(seq.begin(), seq.end(), std::back_inserter(result));
+        }
+    }
+    return result;
+}
+auto Simulator::lookupKey(Key const& key) const -> LayoutKeyRef {
+    auto it = ranges::lower_bound(m_reverseLookup, key, std::less{}, [](auto const& lookupInfo) {
+        return lookupInfo.key;
+    });
+    if (it == m_reverseLookup.end() || it->key != key)
+        throw std::invalid_argument{std::format("Key '{}' does not exist in layout", key)};
+    auto keyRef = m_layout.toKeyRef(m_layout.begin() + it->index);
+
+    return keyRef;
 }
 } // namespace finger_tracking

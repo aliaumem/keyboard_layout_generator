@@ -13,10 +13,15 @@
 #include <vector>
 
 namespace finger_tracking {
+struct LayerJumpKey {
+    Key          key;
+    std::uint8_t targetLayer;
+};
 
 template <size_t N>
 struct KeyboardLayer {
     std::array<Key, N> keys;
+    std::array<Key, N> keysHeld;
 };
 
 template <size_t N>
@@ -24,9 +29,11 @@ struct KeyboardLayout {
     using shape_type = KeyboardShape<N>;
     using layer_type = KeyboardLayer<N>;
 
-    KeyboardLayout(shape_type const& shape, std::vector<layer_type> layers)
+    KeyboardLayout(shape_type const& shape, std::vector<layer_type> layers,
+                   std::vector<LayerJumpKey> jumpKeys)
         : m_shape{shape}
-        , m_layers{std::move(layers)} {}
+        , m_layers{std::move(layers)}
+        , m_layerJumpKeys{std::move(jumpKeys)} {}
 
     [[nodiscard]] std::pair<Key, Rectangle> keyAt(std::uint8_t layer,
                                                   std::size_t  indexInLayer) const {
@@ -42,13 +49,20 @@ struct KeyboardLayout {
         return std::make_pair(key, pos);
     }
 
+    [[nodiscard]] Key heldKeyAt(LayoutKeyRef keyRef) const {
+        auto layerIndex = m_shape.indexInLayer(keyRef);
+        return m_layers[keyRef.layer].keysHeld[layerIndex];
+    }
+
     [[nodiscard]] Finger fingerFor(LayoutKeyRef keyRef) const { return m_shape.fingerFor(keyRef); }
-    [[nodiscard]] LayoutKeyRef layerTransitionKey(uint8_t layer) const {
-        if (layer == 2)
-            return LayoutKeyRef{0, HandSide::Right, Row::Thumb, Column::IndexExt};
-        if (layer == 1)
-            return LayoutKeyRef{0, HandSide::Right, Row::Home, Column::Middle};
-        throw std::invalid_argument("Unknown layer transition" + std::to_string(layer));
+
+    [[nodiscard]] Key layerTransitionKey(uint8_t layer) const {
+        auto it = std::find_if(m_layerJumpKeys.begin(), m_layerJumpKeys.end(), [&](auto& key) {
+            return key.targetLayer == layer;
+        });
+        if (it == m_layerJumpKeys.end())
+            throw std::invalid_argument("Unknown layer transition" + std::to_string(layer));
+        return it->key;
     }
 
     struct iterator;
@@ -70,8 +84,9 @@ struct KeyboardLayout {
     }
 
 private:
-    shape_type              m_shape;
-    std::vector<layer_type> m_layers;
+    shape_type                m_shape;
+    std::vector<layer_type>   m_layers;
+    std::vector<LayerJumpKey> m_layerJumpKeys;
 };
 
 using TargetKeyboardLayout = KeyboardLayout<52>;

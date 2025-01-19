@@ -4,8 +4,8 @@
 namespace finger_tracking {
 template <size_t N>
 struct KeyboardLayout<N>::iterator {
-    using value_type        = std::pair<Key, Rectangle>;
-    using reference         = std::pair<Key, Rectangle>;
+    using value_type        = LayoutKeyRef;
+    using reference         = LayoutKeyRef;
     using iterator_category = std::forward_iterator_tag;
     using difference_type   = std::ptrdiff_t;
 
@@ -18,11 +18,7 @@ struct KeyboardLayout<N>::iterator {
     size_t                index = 0;
     KeyboardLayout const* layout;
 
-    reference operator*() const {
-        std::uint8_t layer        = index / N;
-        auto const   indexInLayer = index % N;
-        return layout->keyAt(layer, indexInLayer);
-    }
+    reference operator*() const { return layout->toKeyRef(*this); }
 
     iterator& operator++() {
         ++index;

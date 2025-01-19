@@ -22,6 +22,11 @@ public:
     static_vector() = default;
 
     template <typename... Args>
+    static_vector(Args&&... args)
+        : m_data{std::forward<Args>(args)...}
+        , m_size{sizeof...(Args)} {}
+
+    template <typename... Args>
         requires std::constructible_from<T, Args...>
     T& emplace_back(Args&&... args) {
         m_data[m_size] = T{std::forward<Args>(args)...};

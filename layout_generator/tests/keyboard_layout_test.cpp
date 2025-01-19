@@ -25,7 +25,7 @@ SCENARIO("Layout is iterable") {
     // clang-format on
 
     KeyboardLayer  layerNormal{keys};
-    KeyboardLayout layout(voyagerShape(), std::vector{layerNormal});
+    KeyboardLayout layout(voyagerShape(), std::vector{layerNormal}, {});
 
     auto it = layout.begin();
     CHECK(it != layout.end());
