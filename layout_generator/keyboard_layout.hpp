@@ -25,9 +25,14 @@ struct KeyboardLayer {
 };
 
 template <size_t N>
+class LayoutMutator;
+
+template <size_t N>
 struct KeyboardLayout {
     using shape_type = KeyboardShape<N>;
     using layer_type = KeyboardLayer<N>;
+
+    friend class LayoutMutator<N>;
 
     KeyboardLayout(shape_type const& shape, std::vector<layer_type> layers,
                    std::vector<LayerJumpKey> jumpKeys)

@@ -1,0 +1,9 @@
+load("@rules_cc//cc:defs.bzl", "cc_library")
+
+package(default_visibility = ["//:layout_generator"])
+
+cc_library(
+    name = "layout_mutator",
+    hdrs = ["layout_mutator.hpp"],
+    deps = ["//layout_generator:keyboard_layout"],
+)

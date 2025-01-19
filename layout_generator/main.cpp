@@ -59,10 +59,10 @@ int main(int argc, char* argv[]) {
     // - Compute the key sequence for the quartad
     // - Compute registered penalties
     // - Fill in penalties
+    // - Mutate layouts
     // - Do the annealing
 
     try {
-
         std::vector<std::filesystem::path> files;
         for (int i = 1; i < argc; ++i) {
             files.emplace_back(argv[i]);
