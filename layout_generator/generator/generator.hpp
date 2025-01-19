@@ -8,11 +8,14 @@
 
 namespace finger_tracking {
 struct Generator {
-    float penaltiesForKeys(std::size_t size, std::vector<KeyPress> const& totalKeys);
+    std::string_view                   corpus;
+    std::vector<static_vector<Key, 4>> shortcuts;
 
-    float computeLayoutPenalty(std::string_view                          corpus,
-                               std::vector<static_vector<Key, 4>> const& shortcuts,
-                               TargetKeyboardLayout const&               layout);
+    auto  run(TargetKeyboardLayout const& initialLayout) -> TargetKeyboardLayout;
+    float computeLayoutPenalty(TargetKeyboardLayout const& layout);
+
+private:
+    float penaltiesForKeys(std::size_t size, std::vector<KeyPress> const& totalKeys);
 };
 } // namespace finger_tracking
 
