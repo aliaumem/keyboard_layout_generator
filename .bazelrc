@@ -1,16 +1,16 @@
 common --enable_bzlmod
 common --lockfile_mode=update
 
-test --test_output=errors --enable_runfiles
+common --enable_platform_specific_config
+
+test:windows --test_output=errors --enable_runfiles
 
 # Windows requires these for multi-python support:
-build --enable_runfiles
+startup:windows --windows_enable_symlinks
+build:windows --enable_runfiles
 common:bazel7.x --incompatible_python_disallow_native_rules
-
-startup --windows_enable_symlinks
-build --enable_runfiles
 build --build_python_zip=false
 
-build --cxxopt=/std:c++20
-build --copt=/utf-8
-build --cxxopt=/utf-8
+build:windows --cxxopt=/std:c++20
+build:windows --copt=/utf-8
+build:windows --cxxopt=/utf-8
