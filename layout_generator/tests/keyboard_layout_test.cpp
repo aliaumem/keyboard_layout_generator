@@ -38,4 +38,11 @@ SCENARIO("Layout is iterable") {
     CHECK(std::distance(layout.layerBegin(0), layout.layerEnd(0)) == 52);
 
     CHECK((*(++it)) == LayoutKeyRef{LayerId::defaultLayer, HandSide::Left, Row::Fn, Column::Pinky});
+
+    CHECK(toShiftedKey(Key{"z"}).name == "Z");
+    CHECK(toShiftedKey(Key{""}).name == "");
+    CHECK(toShiftedKey(Key{"°"}).name == "");
+    CHECK(toShiftedKey(Key{"<"}).name == ">");
+    CHECK(toShiftedKey(Key{"^"}).name == "¨");
+    CHECK(toShiftedKey(Key{"a"}).name == "A");
 }
