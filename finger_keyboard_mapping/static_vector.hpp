@@ -2,6 +2,8 @@
 #define STATIC_VECTOR_HPP
 
 #include <array>
+#include <algorithm>
+#include <concepts>
 
 namespace finger_tracking {
 template <typename T, size_t N>

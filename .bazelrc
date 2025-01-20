@@ -14,3 +14,15 @@ build --build_python_zip=false
 build:windows --cxxopt=/std:c++20
 build:windows --copt=/utf-8
 build:windows --cxxopt=/utf-8
+
+build:linux --cxxopt=-std=c++20
+
+# Address sanitizer
+build:asan --strip=never
+build:asan --copt -fsanitize=address
+build:asan --copt -D_FORTIFY_SOURCE
+build:asan --copt -DADDRESS_SANITIZER
+build:asan --copt -O0
+build:asan --copt -g
+build:asan --copt -fno-omit-frame-pointer
+build:asan --linkopt -fsanitize=address

@@ -159,7 +159,7 @@
   "moduleExtensions": {
     "//third_party:range_v3_extension.bzl%range_v3": {
       "general": {
-        "bzlTransitiveDigest": "l+sP5KPw2knKMXmTanlXTouSgZRgVjtuHsXXWchvKoc=",
+        "bzlTransitiveDigest": "N//sG3cLT9TbNnHZE7alqP3UHpsYL7lSN85sY8bRyxI=",
         "usagesDigest": "4D7S9SIyhusSAFwtMFWzfHtgFT3L2vqIVwgINdgXAdQ=",
         "recordedFileInputs": {},
         "recordedDirentsInputs": {},
@@ -305,7 +305,7 @@
         "bzlTransitiveDigest": "b7yaNpUGZLn3mZOzyxDku8HdKEnDUccWr4puwv3QxJs=",
         "usagesDigest": "hBY0zb1a9bCS1BHHtdPxoDu0qQm3IuaCg8fW018u4wM=",
         "recordedFileInputs": {
-          "@@//requirements_lock.txt": "c2ed8014bf457e793f456cfbdd1d920955f61a1706733a71567381a1ec106f46",
+          "@@//requirements_lock.txt": "6914b38d61d94ba2547355a2ce488f062e7d8a354ce204842e686057c6bc9c31",
           "@@protobuf+//python/requirements.txt": "983be60d3cec4b319dcab6d48aeb3f5b2f7c3350f26b3a9e97486c37967c73c5",
           "@@rules_fuzzing+//fuzzing/requirements.txt": "ab04664be026b632a0d2a2446c4f65982b7654f5b6851d2f9d399a19b7242a5b",
           "@@rules_python+//tools/publish/requirements_darwin.txt": "2994136eab7e57b083c3de76faf46f70fad130bc8e7360a7fed2b288b69e79dc",

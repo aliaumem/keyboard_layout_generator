@@ -9,6 +9,10 @@ cc_library(
         "penalty_calculator_default_penalties.cpp",
     ],
     hdrs = ["penalty_calculator.hpp"],
+    linkopts = select({
+        "//conditions:default": [],
+        "@platforms//os:linux": ["-ltbb"],
+    }),
     deps = [
         ":digraph_penalties",
         ":ngraphs",

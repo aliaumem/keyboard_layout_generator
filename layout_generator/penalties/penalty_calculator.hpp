@@ -2,6 +2,7 @@
 #define PENALTY_CALCULATOR_HPP
 
 #include <vector>
+#include <cstdint>
 
 namespace finger_tracking {
 struct KeyPress;

@@ -3,7 +3,7 @@
 #include <array>
 
 namespace finger_tracking {
-
+template<>
 KeyboardShape KeyboardShape_<>::defaultShape() {
     static_vector<KeyInSpace, 62> keys;
     using namespace geo_literals;

@@ -1,7 +1,7 @@
 #ifndef LAYOUT_MUTATOR_HPP
 #define LAYOUT_MUTATOR_HPP
 
-#include <layout_generator/keyboard_layout.hpp>
+#include "layout_generator/keyboard_layout.hpp"
 #include <range/v3/view/transform.hpp>
 #include <range/v3/view/join.hpp>
 #include <range/v3/algorithm/count.hpp>

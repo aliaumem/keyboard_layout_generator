@@ -10,14 +10,14 @@ namespace {
 
 template <size_t N, typename Fn>
 auto processOneNGraph(Fn penalty) {
-    return [penalty](int64_t innerAccumulator, NGraph<N> const& ngraph) {
-        return innerAccumulator + std::apply(penalty, ngraph.keys);
+    return [penalty](NGraph<N> const& ngraph) -> int64_t {
+        return std::apply(penalty, ngraph.keys);
     };
 }
 
 template <size_t N, typename Fn>
 int64_t processAllNGraphsForPenalty(std::vector<NGraph<N>> const& ngraphs, Fn&& penalty) {
-    return std::reduce(ngraphs.begin(), ngraphs.end(), 0ll, processOneNGraph<N>(penalty));
+    return std::transform_reduce(ngraphs.begin(), ngraphs.end(), 0ll, std::plus{}, processOneNGraph<N>(penalty));
 }
 } // namespace
 

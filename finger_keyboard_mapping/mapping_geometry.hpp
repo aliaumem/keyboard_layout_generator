@@ -1,6 +1,8 @@
 #ifndef MAPPING_GEOMETRY_HPP
 #define MAPPING_GEOMETRY_HPP
 
+#include <cstdint>
+
 namespace finger_tracking {
 template <typename T>
 struct Point_ {
@@ -40,7 +42,8 @@ struct Rectangle {
 
     [[nodiscard]] bool contains(Point const& p) const {
         auto delta = p - topLeft;
-        return 0 <= delta.x && delta.x <= size.width && 0 <= delta.y && delta.y <= size.height;
+        return 0 <= delta.x && delta.x <= static_cast<int>(size.width) && 0 <= delta.y && delta.y <=
+               static_cast<int>(size.height);
     }
 };
 
