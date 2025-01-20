@@ -15,16 +15,16 @@
 
 namespace finger_tracking {
 struct LayerJumpKey {
-    Key          key;
-    std::uint8_t targetLayer;
+    Key     key;
+    LayerId targetLayer;
 };
 
 template <size_t N>
 struct KeyboardLayer {
-    std::array<Key, N>             keys;
-    std::array<bool, N>            lockedKeysMask;
-    std::array<Key, N>             keysHeld;
-    static_vector<std::uint8_t, 2> relatedLayerIndices;
+    std::array<Key, N>        keys;
+    std::array<bool, N>       lockedKeysMask;
+    std::array<Key, N>        keysHeld;
+    static_vector<LayerId, 2> relatedLayerIndices;
 };
 
 template <size_t N>
@@ -45,34 +45,32 @@ struct KeyboardLayout {
 
     [[nodiscard]] Key keyAt(LayoutKeyRef keyRef) const {
         auto layerIndex = m_shape.indexInLayer(keyRef);
-        Key  key        = m_layers[keyRef.layer].keys[layerIndex];
-        return key;
+        if (keyRef.layer.isHeld)
+            return m_layers[keyRef.layer.layer].keysHeld[layerIndex];
+        else
+            return m_layers[keyRef.layer.layer].keys[layerIndex];
     }
 
     [[nodiscard]] bool isLockedAt(LayoutKeyRef keyRef) const {
         auto layerIndex = m_shape.indexInLayer(keyRef);
-        bool isLocked   = m_layers[keyRef.layer].lockedKeysMask[layerIndex];
+        bool isLocked   = m_layers[keyRef.layer.layer].lockedKeysMask[layerIndex];
         return isLocked;
-    }
-
-    [[nodiscard]] Key heldKeyAt(LayoutKeyRef keyRef) const {
-        auto layerIndex = m_shape.indexInLayer(keyRef);
-        return m_layers[keyRef.layer].keysHeld[layerIndex];
     }
 
     [[nodiscard]] Finger fingerFor(LayoutKeyRef keyRef) const { return m_shape.fingerFor(keyRef); }
 
-    [[nodiscard]] Key layerTransitionKey(uint8_t layer) const {
+    [[nodiscard]] Key layerTransitionKey(LayerId layer) const {
+        if (layer.isShift)
+            return Key{"LSft"};
+        if (layer.isAlt)
+            return Key{"RAlt"};
+
         auto it = std::find_if(m_layerJumpKeys.begin(), m_layerJumpKeys.end(), [&](auto& key) {
             return key.targetLayer == layer;
         });
         if (it == m_layerJumpKeys.end())
-            throw std::invalid_argument("Unknown layer transition" + std::to_string(layer));
+            throw std::invalid_argument("Unknown layer transition" + std::to_string(layer.layer));
         return it->key;
-    }
-
-    bool areRelatedLayers(uint8_t lhs, uint8_t rhs) {
-        return m_layers[lhs].relatedLayerIndices.contains(rhs);
     }
 
     struct iterator;
@@ -86,7 +84,7 @@ struct KeyboardLayout {
     LayoutKeyRef toKeyRef(iterator it) const {
         KeyRef keyRef = m_shape.atIndex(it.index % N);
         return LayoutKeyRef{
-            static_cast<std::uint8_t>(it.index / N),
+            LayerId{static_cast<std::uint8_t>(it.index / N)},
             keyRef.side,
             static_cast<Row>(keyRef.row),
             static_cast<Column>(keyRef.col),

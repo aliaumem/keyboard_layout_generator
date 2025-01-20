@@ -1,5 +1,7 @@
 #include "key_press_calculator.hpp"
 
+#include "to_shifted_keys.hpp"
+
 #include "layout_generator/keyboard_layout.hpp"
 #include "finger_keyboard_mapping/keyboard/key_print_helpers.hpp"
 
@@ -10,38 +12,23 @@
 #include <range/v3/view/enumerate.hpp>
 #include <range/v3/action/sort.hpp>
 #include <range/v3/algorithm/lower_bound.hpp>
-#include <numeric>
+
 #include <fmt/format.h>
 
 namespace finger_tracking {
-void KeyPressCalculator::emplaceKeyRefInSequence(KeyLayoutSequence& sequence, LayoutKeyRef keyRef,
-                                                 bool isPress) const {
-    sequence.emplace_back(keyRef, m_layout.fingerFor(keyRef), isPress);
-}
-
-void KeyPressCalculator::insertLayoutChangeSequence(
-    std::uint8_t fromLayer, KeyLayoutSequence& sequence, LayoutKeyRef keyRef) const {
-    if (fromLayer != 0) {
-        auto extraKey    = m_layout.layerTransitionKey(fromLayer);
-        auto extraKeyRef = lookupKey(extraKey);
-        emplaceKeyRefInSequence(sequence, extraKeyRef, false);
-    }
-
-    if (keyRef.layer != 0) {
-        auto extraKey    = m_layout.layerTransitionKey(keyRef.layer);
-        auto extraKeyRef = lookupKey(extraKey);
-        emplaceKeyRefInSequence(sequence, extraKeyRef, true);
-    }
-}
-
 KeyPressCalculator::KeyPressCalculator(TargetKeyboardLayout const& layout)
     : m_layout{layout} {
     m_reverseLookup.reserve(m_layout.size());
-    for (auto const& [index, keyRef] : m_layout | ranges::views::enumerate) {
-        if (auto key = m_layout.keyAt(keyRef); key.isValid())
-            m_reverseLookup.emplace_back(key, index, false);
-        if (auto key = m_layout.heldKeyAt(keyRef); key.isValid())
-            m_reverseLookup.emplace_back(key, index, true);
+    for (auto const& keyRef : m_layout) {
+        if (auto key = m_layout.keyAt(keyRef); key.isValid()) {
+            m_reverseLookup.emplace_back(key, keyRef, false);
+            if (auto shiftKey = toShiftedKey(key); shiftKey.isValid())
+                m_reverseLookup.emplace_back(shiftKey, keyRef.withShift(), false);
+            if (auto altKey = toAltKey(key); altKey.isValid())
+                m_reverseLookup.emplace_back(altKey, keyRef.withAlt(), false);
+        }
+        if (auto key = m_layout.keyAt(keyRef.withHeld()); key.isValid())
+            m_reverseLookup.emplace_back(key, keyRef, true);
     }
 
     ranges::actions::sort(m_reverseLookup, std::less{}, [](auto const& lookupInfo) {
@@ -49,8 +36,27 @@ KeyPressCalculator::KeyPressCalculator(TargetKeyboardLayout const& layout)
     });
 }
 
-KeyLayoutSequence KeyPressCalculator::sequenceForKey(std::uint8_t& fromLayer,
-                                                     Key const&    key) const {
+void KeyPressCalculator::emplaceKeyRefInSequence(KeyLayoutSequence& sequence, LayoutKeyRef keyRef,
+                                                 bool isPress) const {
+    sequence.emplace_back(keyRef, m_layout.fingerFor(keyRef), isPress);
+}
+
+void KeyPressCalculator::insertLayoutChangeSequence(LayerId fromLayer, KeyLayoutSequence& sequence,
+                                                    LayoutKeyRef keyRef) const {
+    if (fromLayer != LayerId::defaultLayer) {
+        auto extraKey    = m_layout.layerTransitionKey(fromLayer);
+        auto extraKeyRef = lookupKey(extraKey);
+        emplaceKeyRefInSequence(sequence, extraKeyRef, false);
+    }
+
+    if (keyRef.layer != LayerId::defaultLayer) {
+        auto extraKey    = m_layout.layerTransitionKey(keyRef.layer);
+        auto extraKeyRef = lookupKey(extraKey);
+        emplaceKeyRefInSequence(sequence, extraKeyRef, true);
+    }
+}
+
+KeyLayoutSequence KeyPressCalculator::sequenceForKey(LayerId& fromLayer, Key const& key) const {
     KeyLayoutSequence sequence;
 
     auto keyRef = lookupKey(key);
@@ -86,7 +92,7 @@ auto belongInTheSameUTF8Char(char, char c) -> bool {
 }
 
 std::vector<KeyPress> KeyPressCalculator::simulate(std::string_view corpus) const {
-    std::uint8_t          layer = 0;
+    LayerId               layer = LayerId::defaultLayer;
     std::vector<KeyPress> result;
     result.reserve(corpus.size() * 5 / 4); // 20% extra for layer changes
     for (auto chunk : corpus | ranges::views::chunk_by(belongInTheSameUTF8Char)) {
@@ -104,7 +110,7 @@ std::vector<KeyPress> KeyPressCalculator::simulateShortcuts(
     std::vector<KeyPress> result;
     result.reserve(shortcuts.size() * 3);
     for (auto const& shortcut : shortcuts) {
-        std::uint8_t layer = 0;
+        LayerId layer = LayerId::defaultLayer;
         for (auto const& key : shortcut) {
             auto seq = sequenceForKey(layer, key);
             std::copy(seq.begin(), seq.end(), std::back_inserter(result));
@@ -119,8 +125,7 @@ auto KeyPressCalculator::lookupKey(Key const& key) const -> LayoutKeyRef {
     });
     if (it == m_reverseLookup.end() || it->key != key)
         throw std::invalid_argument{fmt::format("Key '{}' does not exist in layout", key)};
-    auto keyRef = m_layout.toKeyRef(m_layout.begin() + it->index);
 
-    return keyRef;
+    return it->index;
 }
 } // namespace finger_tracking

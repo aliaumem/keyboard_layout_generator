@@ -39,6 +39,18 @@ struct fmt::formatter<finger_tracking::Column> : fmt::formatter<char> {
         }());
     }
 };
+template <>
+struct fmt::formatter<finger_tracking::LayerId> : fmt::formatter<char> {
+    template <typename FmtContext>
+    auto format(finger_tracking::LayerId layer, FmtContext& ctx) const {
+        uint8_t id = layer.layer;
+        auto it = fmt::format_to(ctx.out(), "{}", id);
+        if (layer.isModified())
+            it = fmt::format_to(ctx.out(), "({}{}{})", layer.isShift ? "shift" : "",
+                                layer.isAlt ? "alt" : "", layer.isHeld ? "held" : "");
+        return it;
+    }
+};
 
 template <>
 struct fmt::formatter<finger_tracking::LayoutKeyRef> : fmt::formatter<char> {

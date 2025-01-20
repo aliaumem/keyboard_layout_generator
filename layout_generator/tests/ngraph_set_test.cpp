@@ -8,31 +8,31 @@ using namespace finger_tracking;
 SCENARIO("Digraph Trigraphs and Quartads can be computed from a list of key presses") {
     std::vector presses = {
         KeyPress{
-            {0, HandSide::Left, Row::Home, Column::Middle},
+            {{0}, HandSide::Left, Row::Home, Column::Middle},
             Finger::Middle,
             true,
         },
         KeyPress{
 
-            {0, HandSide::Right, Row::Home, Column::Middle},
+            {{0}, HandSide::Right, Row::Home, Column::Middle},
             Finger::Middle,
             true,
         },
         KeyPress{
 
-            {1, HandSide::Left, Row::Top, Column::Pinky},
+            {{1}, HandSide::Left, Row::Top, Column::Pinky},
             Finger::Pinky,
             true,
         },
         KeyPress{
 
-            {1, HandSide::Right, Row::Home, Column::Middle},
+            {{1}, HandSide::Right, Row::Home, Column::Middle},
             Finger::Middle,
             false,
         },
         KeyPress{
 
-            {1, HandSide::Left, Row::Thumb, Column::IndexExt},
+            {{1}, HandSide::Left, Row::Thumb, Column::IndexExt},
             Finger::Thumb,
             true,
         },

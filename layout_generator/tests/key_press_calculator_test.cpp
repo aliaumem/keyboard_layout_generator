@@ -18,11 +18,11 @@ SCENARIO("The KeyPressCalculator creates a sequence of key presses to output the
 
     GIVEN("A key on the default layout") {
         Key  key{"é"};
-        auto expected = LayoutKeyRef{0, HandSide::Left, Row::Fn, Column::Ring};
+        auto expected = LayoutKeyRef{LayerId::defaultLayer, HandSide::Left, Row::Fn, Column::Ring};
 
         WHEN("Starting from the default layout") {
-            std::uint8_t layer    = 0;
-            auto         sequence = keyPressCalculator.sequenceForKey(layer, key);
+            LayerId layer    = LayerId::defaultLayer;
+            auto    sequence = keyPressCalculator.sequenceForKey(layer, key);
 
             THEN("There is only the key press found") {
                 REQUIRE(sequence.size() == 1);
@@ -31,10 +31,27 @@ SCENARIO("The KeyPressCalculator creates a sequence of key presses to output the
         }
 
         WHEN("Starting from another layout") {
-            std::uint8_t layer               = 2;
-            auto         sequence            = keyPressCalculator.sequenceForKey(layer, key);
-            auto         transitionToDefault = KeyPress{
-                LayoutKeyRef{0, HandSide::Right, Row::Thumb, Column::Index},
+            LayerId layer{2};
+            auto    sequence            = keyPressCalculator.sequenceForKey(layer, key);
+            auto    transitionToDefault = KeyPress{
+                LayoutKeyRef{LayerId::defaultLayer, HandSide::Left, Row::Thumb, Column::IndexExt},
+                Finger::Thumb,
+                false,
+            };
+
+            THEN("We have a key release and then the normal key press") {
+                REQUIRE(sequence.size() == 2);
+                auto it = sequence.begin();
+                CHECK(*it++ == transitionToDefault);
+                CHECK(it->keyRef == expected);
+            }
+        }
+
+        WHEN("Starting from the same layer with alt") {
+            LayerId layer               = LayerId::defaultLayer.withAlt();
+            auto    sequence            = keyPressCalculator.sequenceForKey(layer, key);
+            auto    transitionToDefault = KeyPress{
+                LayoutKeyRef{LayerId::defaultLayer, HandSide::Right, Row::Thumb, Column::Index},
                 Finger::Thumb,
                 false,
             };
@@ -50,11 +67,12 @@ SCENARIO("The KeyPressCalculator creates a sequence of key presses to output the
 
     GIVEN("A key on a non-default layout") {
         Key  key{"€"};
-        auto expected = LayoutKeyRef{2, HandSide::Left, Row::Top, Column::Middle};
+        auto expected = LayoutKeyRef{
+            LayerId::defaultLayer.withAlt(), HandSide::Left, Row::Top, Column::Middle};
 
         WHEN("Starting from the same layout") {
-            std::uint8_t layer    = 2;
-            auto         sequence = keyPressCalculator.sequenceForKey(layer, key);
+            LayerId layer    = LayerId::defaultLayer.withAlt();
+            auto    sequence = keyPressCalculator.sequenceForKey(layer, key);
 
             THEN("There is only the key press found") {
                 REQUIRE(sequence.size() == 1);
@@ -62,14 +80,14 @@ SCENARIO("The KeyPressCalculator creates a sequence of key presses to output the
             }
         }
         auto transitionFromDefault = KeyPress{
-            /*.keyRef   = */ LayoutKeyRef{0, HandSide::Right, Row::Thumb, Column::Index},
-            /*.finger   = */ Finger::Thumb,
-            /*.isPress  = */ true,
+            LayoutKeyRef{LayerId::defaultLayer, HandSide::Right, Row::Thumb, Column::Index},
+            Finger::Thumb,
+            true,
         };
 
         WHEN("Starting from the default layout") {
-            std::uint8_t layer    = 0;
-            auto         sequence = keyPressCalculator.sequenceForKey(layer, key);
+            LayerId layer    = LayerId::defaultLayer;
+            auto    sequence = keyPressCalculator.sequenceForKey(layer, key);
 
             THEN("We have a key press and then the normal key press") {
                 REQUIRE(sequence.size() == 2);
@@ -80,12 +98,12 @@ SCENARIO("The KeyPressCalculator creates a sequence of key presses to output the
         }
 
         WHEN("Starting from another non-default layout") {
-            std::uint8_t layer               = 1;
-            auto         sequence            = keyPressCalculator.sequenceForKey(layer, key);
-            auto         transitionToDefault = KeyPress{
-                /*.keyRef =*/LayoutKeyRef{0, HandSide::Right, Row::Home, Column::Middle},
-                /*.finger   =*/Finger::Middle,
-                /*.isPress  =*/false,
+            LayerId layer               = LayerId::defaultLayer.withShift();
+            auto    sequence            = keyPressCalculator.sequenceForKey(layer, key);
+            auto    transitionToDefault = KeyPress{
+                LayoutKeyRef{LayerId::defaultLayer, HandSide::Left, Row::Home, Column::Middle},
+                Finger::Middle,
+                false,
             };
 
             THEN("We have a key release, a key press and finally the normal key press") {

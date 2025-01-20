@@ -13,14 +13,17 @@ public:
     KeyboardLayout<N>& m_layout;
     void               swapKeys(LayoutKeyRef lhs, LayoutKeyRef rhs) {
         auto const& shape = m_layout.m_shape;
-        std::swap(m_layout.m_layers[lhs.layer].keys[shape.indexInLayer(lhs)],
-                                m_layout.m_layers[rhs.layer].keys[shape.indexInLayer(rhs)]);
+        std::swap(m_layout.m_layers[lhs.layer.layer].keys[shape.indexInLayer(lhs)],
+                                m_layout.m_layers[rhs.layer.layer].keys[shape.indexInLayer(rhs)]);
     }
     void copyKeyTo(LayoutKeyRef src, LayoutKeyRef dst) {
-        m_layout.m_layers[dst.layer].keys[m_layout.m_shape.indexInLayer(dst)] = m_layout.keyAt(src);
+        m_layout.m_layers[dst.layer.layer].keys[m_layout.m_shape.indexInLayer(dst)]
+            = m_layout.keyAt(src);
     }
 
-    bool isWritable(LayoutKeyRef src) const { return !m_layout.isLockedAt(src); }
+    bool isWritable(LayoutKeyRef src) const {
+        return !src.layer.isModified() && !m_layout.isLockedAt(src);
+    }
     bool canCopyTo(LayoutKeyRef dst) const {
         if (!isWritable(dst))
             return false;
@@ -29,7 +32,10 @@ public:
         if (dstKey.isEmpty())
             return true;
 
-        auto occurrences   = ranges::count(m_layout.m_layers | ranges::views::transform(&KeyboardLayer<N>::keys) | ranges::views::join, dstKey);
+        auto occurrences
+            = ranges::count(m_layout.m_layers | ranges::views::transform(&KeyboardLayer<N>::keys)
+                                | ranges::views::join,
+                            dstKey);
         return occurrences > 1;
     }
     bool canSwapKeys(LayoutKeyRef lhs, LayoutKeyRef rhs) const {

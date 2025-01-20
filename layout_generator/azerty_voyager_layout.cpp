@@ -26,20 +26,6 @@ TargetKeyboardLayout azertyVoyagerLayout() {
         "", "",  "",  "",  "",  "",      "",  "", "",  "",  "",  "",
                            "",  "",      "", "RAlt"
     };
-    auto upperKeys = std::array<Key, 52>{
-        "",  "1", "2", "3",  "4", "5",     "6", "7", "8", "9", "0",  "°",
-        "",  "A", "Z", "E",  "R", "T",     "Y", "U", "I", "O", "P",  "¨",
-        ">", "Q", "S", "D",  "F", "G",     "H", "J", "K", "L", "M",  "%",
-        "",  "W", "X", "C",  "V", "B",     "N", "?", ".", "/", "§",  "",
-                              "",  "",     "", ""
-    };
-    auto altKeys = std::array<Key, 52>{
-        "", "",  "~", "#", "{", "[",     "|", "`", "\\", "^", "@", "]",
-        "", "",  "",  "€", "",  "",      "",  "",   "",  "",  "",  "*",
-        "", "",  "",  "",  "",  "",      "",  "",   "",  "",  "$",  "",
-        "", "",  "",  "",  "",  "",      "",  "",   "",  "",  "=",  "}",
-                           "",  "",      "", ""
-    };
     auto sysKeys = std::array<Key, 52>{
         "", "",  "", "", "", "",         "",   "",     "",     "",   "", "",
         "", "",  "",  "", "",  "",       "",   "",   "UArr",   "",   "", "",
@@ -49,7 +35,7 @@ TargetKeyboardLayout azertyVoyagerLayout() {
     };
     auto numpadSymbolsKeys = std::array<Key, 52>{
       "F1", "F2", "F3", "F4", "F5", "F6",    "F7", "F8",  "F9", "F10", "F11", "F12",
-        "²", "",  "#",  "+",  "{",  "}",     "*",  "7",  "8",   "9",   "-",   "",
+        "²", "$", "#",  "+",  "{",  "}",     "*",  "7",  "8",   "9",   "-",   "",
         "",  "",  "-",  ">",  "(",  ")",     "/",  "4",  "5",   "6",   "+",   "",
         "",  "",  "",   "",   "[",  "]",     "0",  "1",  "2",   "3",   "=",   "",
                                 "",  "",     "",   ""
@@ -69,9 +55,7 @@ TargetKeyboardLayout azertyVoyagerLayout() {
     std::fill_n(fullyUnlockedMask.begin(), fullyUnlockedMask.size(), false);
 
     std::vector<TargetKeyboardLayout::layer_type> layers{
-        {lowerKeys, layer0Mask, lowerHeldKeys, {uint8_t{1}, uint8_t{2}}},
-        {upperKeys, fullyLockedMask},
-        {altKeys, fullyLockedMask},
+        {lowerKeys, layer0Mask, lowerHeldKeys},
         {sysKeys, fullyLockedMask},
         {numpadSymbolsKeys, fullyLockedMask},
         {extraLayerKeys, fullyUnlockedMask},
@@ -81,11 +65,9 @@ TargetKeyboardLayout azertyVoyagerLayout() {
         voyagerShape(),
         std::move(layers),
         {
-            LayerJumpKey{Key{"LSft"}, 1},
-            LayerJumpKey{Key{"RAlt"}, 2},
-            LayerJumpKey{Key{" "}, 3},
-            LayerJumpKey{Key{"Tab"}, 4},
-            LayerJumpKey{Key{"Lay3"}, 5},
+            LayerJumpKey{Key{" "}, 1},
+            LayerJumpKey{Key{"Tab"}, 2},
+            LayerJumpKey{Key{"Lay3"}, 3},
         }};
 }
 } // namespace finger_tracking

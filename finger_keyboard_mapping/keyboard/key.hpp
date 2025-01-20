@@ -13,6 +13,11 @@ struct Key {
     [[nodiscard]] bool isEmpty() const { return name.empty(); }
 
     static Key invalid;
+
+    template <typename H>
+    friend H AbslHashValue(H h, Key const& key) {
+        return H::combine(std::move(h), key.name);
+    }
 };
 
 inline Key Key::invalid{};

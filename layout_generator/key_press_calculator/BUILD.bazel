@@ -4,13 +4,17 @@ package(default_visibility = ["//:layout_generator"])
 
 cc_library(
     name = "key_press_calculator",
-    srcs = ["key_press_calculator.cpp"],
+    srcs = [
+        "key_press_calculator.cpp",
+        "to_shifted_keys.hpp",
+    ],
     hdrs = ["key_press_calculator.hpp"],
     deps = [
         "//finger_keyboard_mapping:static_vector",
         "//finger_keyboard_mapping/keyboard:key_print_helpers",
         "//layout_generator:key_press",
         "//layout_generator:keyboard_layout",
+        "@abseil-cpp//absl/container:flat_hash_map",
         "@range-v3",
     ],
 )

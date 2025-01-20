@@ -15,10 +15,8 @@ SCENARIO("Keyboard layouts can be mutated") {
     LayoutMutator mutator{layout};
 
     GIVEN("Keys on the same layer") {
-        REQUIRE_FALSE(layout.areRelatedLayers(0, 3));
-
-        LayoutKeyRef lhs{0, HandSide::Left, Row::Fn, Column::Pinky};
-        LayoutKeyRef rhs{0, HandSide::Right, Row::Fn, Column::Pinky};
+        LayoutKeyRef lhs{LayerId::defaultLayer, HandSide::Left, Row::Fn, Column::Pinky};
+        LayoutKeyRef rhs{LayerId::defaultLayer, HandSide::Right, Row::Fn, Column::Pinky};
 
         THEN("The keys are swapped") {
             auto oldValueLhs = layout.keyAt(lhs);
@@ -32,9 +30,10 @@ SCENARIO("Keyboard layouts can be mutated") {
     }
 
     GIVEN("A key on the Shift layer") {
-        LayoutKeyRef lhs{1, HandSide::Left, Row::Fn, Column::Middle};
-        THEN("It can be moved to layer 5") {
-            LayoutKeyRef rhs{5, HandSide::Left, Row::Home, Column::Middle};
+        LayoutKeyRef lhs{LayerId::defaultLayer.withShift(), HandSide::Left, Row::Fn,
+                         Column::Middle};
+        THEN("It can be moved to layer 3") {
+            LayoutKeyRef rhs{{3}, HandSide::Left, Row::Home, Column::Middle};
             CHECK_FALSE(mutator.canSwapKeys(lhs, rhs));
             CHECK(mutator.canCopyTo(rhs));
             CHECK_FALSE(mutator.canCopyTo(lhs));
@@ -46,7 +45,7 @@ SCENARIO("Keyboard layouts can be mutated") {
         }
 
         THEN("It can be moved to layer 0 on a repeated key") {
-            LayoutKeyRef rhs{0, HandSide::Right, Row::Fn, Column::IndexExt};
+            LayoutKeyRef rhs{LayerId::defaultLayer, HandSide::Right, Row::Fn, Column::IndexExt};
             CHECK_FALSE(mutator.canSwapKeys(lhs, rhs));
             CHECK(mutator.canCopyTo(rhs));
             CHECK_FALSE(mutator.canCopyTo(lhs));
