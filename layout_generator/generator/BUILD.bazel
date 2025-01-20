@@ -8,7 +8,9 @@ cc_library(
     hdrs = ["generator.hpp"],
     deps = [
         "//layout_generator/key_press_calculator",
+        "//layout_generator/mutation:layout_mutator",
         "//layout_generator/penalties:penalty_calculator",
         "@fmt",
+        "@range-v3",
     ],
 )

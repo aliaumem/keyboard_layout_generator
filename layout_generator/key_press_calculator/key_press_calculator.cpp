@@ -1,6 +1,6 @@
 #include "key_press_calculator.hpp"
 
-#include "to_shifted_keys.hpp"
+#include "layout_generator/to_shifted_keys.hpp"
 
 #include "layout_generator/keyboard_layout.hpp"
 #include "finger_keyboard_mapping/keyboard/key_print_helpers.hpp"

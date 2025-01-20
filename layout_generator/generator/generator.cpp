@@ -1,12 +1,38 @@
 #include "generator.hpp"
 
+#include "layout_generator/mutation/layout_mutator.hpp"
+
 #include <fmt/format.h>
 #include <fmt/chrono.h>
 
+#include "range/v3/view/iota.hpp"
+#include <random>
+
 namespace finger_tracking {
 auto Generator::run(TargetKeyboardLayout const& initialLayout) -> TargetKeyboardLayout {
-    computeLayoutPenalty(initialLayout);
-    return initialLayout;
+    float currentPenalty = computeLayoutPenalty(initialLayout);
+
+    std::vector<TargetKeyboardLayout> bestLayouts;
+
+    TargetKeyboardLayout acceptedLayout  = initialLayout;
+    float                acceptedPenalty = currentPenalty;
+
+    std::mt19937_64 generator{std::random_device{}()};
+
+    for (auto i : ranges::views::ints(0, 15)) {
+        auto                                         currentLayout{acceptedLayout};
+        LayoutMutator                                mutator{currentLayout};
+        std::uniform_int_distribution<std::uint16_t> numSwapsDistribution{1, 4};
+        mutator.performNSwapsOrCopies(numSwapsDistribution(generator), generator);
+        currentPenalty = computeLayoutPenalty(currentLayout);
+        /*if (currentPenalty - acceptedPenalty < 0)*/ {
+            acceptedLayout  = currentLayout;
+            acceptedPenalty = currentPenalty;
+            // bestLayouts.emplace_back(acceptedLayout);
+        }
+    }
+
+    return acceptedLayout;
 }
 
 float Generator::computeLayoutPenalty(TargetKeyboardLayout const& layout) {

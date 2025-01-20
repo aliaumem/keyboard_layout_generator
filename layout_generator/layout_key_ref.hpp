@@ -27,7 +27,7 @@ struct LayerId {
     [[nodiscard]] LayerId withShift() const { return {layer, true, false, false}; }
     [[nodiscard]] LayerId withAlt() const { return {layer, false, true, false}; }
     [[nodiscard]] LayerId withHeld() const { return {layer, false, false, true}; }
-    [[nodiscard]] bool    isModified() const { return isShift || isAlt || isHeld; }
+    [[nodiscard]] bool    isVirtual() const { return isShift || isAlt || isHeld; }
 
     // operator uint8_t() const { return layer; }
     bool operator==(LayerId const& other) const = default;
@@ -42,6 +42,12 @@ struct LayoutKeyRef {
         , side(side)
         , row(row)
         , column(col) {}
+
+    LayoutKeyRef(LayerId layer, KeyRef keyRef)
+        : layer{layer}
+        , side{keyRef.side}
+        , row{static_cast<Row>(keyRef.row)}
+        , column{static_cast<Column>(keyRef.col)} {}
 
     LayerId  layer;
     HandSide side;

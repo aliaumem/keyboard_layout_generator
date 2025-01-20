@@ -19,13 +19,17 @@ SCENARIO("Keyboard layouts can be mutated") {
         LayoutKeyRef rhs{LayerId::defaultLayer, HandSide::Right, Row::Fn, Column::Pinky};
 
         THEN("The keys are swapped") {
-            auto oldValueLhs = layout.keyAt(lhs);
-            auto oldValueRhs = layout.keyAt(rhs);
+            auto oldValueLhs        = layout.keyAt(lhs);
+            auto oldShiftedValueLhs = layout.keyAt(lhs.withShift());
+            auto oldValueRhs        = layout.keyAt(rhs);
+            auto oldShiftedValueRhs = layout.keyAt(rhs.withShift());
 
             mutator.swapKeys(lhs, rhs);
 
             CHECK(oldValueLhs == layout.keyAt(rhs));
+            CHECK(oldShiftedValueLhs == layout.keyAt(rhs.withShift()));
             CHECK(oldValueRhs == layout.keyAt(lhs));
+            CHECK(oldShiftedValueRhs == layout.keyAt(lhs.withShift()));
         }
     }
 

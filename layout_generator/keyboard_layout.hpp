@@ -6,6 +6,7 @@
 #include "layout_generator/row_col.hpp"
 #include "layout_generator/layout_key_ref.hpp"
 #include "layout_generator/keyboard_shape.hpp"
+#include "layout_generator/to_shifted_keys.hpp"
 
 #include "finger_keyboard_mapping/keyboard/key.hpp"
 
@@ -47,8 +48,11 @@ struct KeyboardLayout {
         auto layerIndex = m_shape.indexInLayer(keyRef);
         if (keyRef.layer.isHeld)
             return m_layers[keyRef.layer.layer].keysHeld[layerIndex];
-        else
-            return m_layers[keyRef.layer.layer].keys[layerIndex];
+        else if (keyRef.layer.isShift)
+            return toShiftedKey(m_layers[keyRef.layer.layer].keys[layerIndex]);
+        else if (keyRef.layer.isAlt)
+            return toAltKey(m_layers[keyRef.layer.layer].keys[layerIndex]);
+        return m_layers[keyRef.layer.layer].keys[layerIndex];
     }
 
     [[nodiscard]] bool isLockedAt(LayoutKeyRef keyRef) const {
@@ -83,12 +87,7 @@ struct KeyboardLayout {
 
     LayoutKeyRef toKeyRef(iterator it) const {
         KeyRef keyRef = m_shape.atIndex(it.index % N);
-        return LayoutKeyRef{
-            LayerId{static_cast<std::uint8_t>(it.index / N)},
-            keyRef.side,
-            static_cast<Row>(keyRef.row),
-            static_cast<Column>(keyRef.col),
-        };
+        return LayoutKeyRef{LayerId{static_cast<std::uint8_t>(it.index / N)}, keyRef};
     }
 
 private:
