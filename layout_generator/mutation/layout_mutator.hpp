@@ -79,6 +79,9 @@ public:
                                                 : "none"),
                          m_layout.keyAt(lhs), lhs, m_layout.keyAt(rhs), rhs);
 
+            if (m_layout.keyAt(lhs).isEmpty() && m_layout.keyAt(rhs).isEmpty())
+                continue;
+
             if (canSwapKeys(lhs, rhs))
                 swapKeys(lhs, rhs);
             else if (canCopyTo(rhs))

@@ -37,7 +37,7 @@ int main(int argc, char* argv[]) {
             {Key{"LCtl"}, Key{"Z"}},
             {Key{"LCtl"}, Key{"LSft"}, Key{"Z"}},
             // Directional arrows
-            {Key{"LArr"}},
+            /*{Key{"LArr"}},
             {Key{"RArr"}},
             {Key{"UArr"}},
             {Key{"DArr"}},
@@ -47,7 +47,7 @@ int main(int argc, char* argv[]) {
             {Key{"LSft"}, Key{"LArr"}},
             {Key{"LSft"}, Key{"RArr"}},
             {Key{"LSft"}, Key{"UArr"}},
-            {Key{"LSft"}, Key{"DArr"}},
+            {Key{"LSft"}, Key{"DArr"}},*/
         };
 
         auto      layout = azertyVoyagerLayout();

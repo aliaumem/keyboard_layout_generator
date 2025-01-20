@@ -1,5 +1,6 @@
 #include "generator.hpp"
 
+#include "annealing.hpp"
 #include "layout_generator/mutation/layout_mutator.hpp"
 
 #include <fmt/format.h>
@@ -18,14 +19,16 @@ auto Generator::run(TargetKeyboardLayout const& initialLayout) -> TargetKeyboard
     float                acceptedPenalty = currentPenalty;
 
     std::mt19937_64 generator{std::random_device{}()};
+    Annealing       annealing{};
 
-    for (auto i : ranges::views::ints(0, 15)) {
+    for (auto i : ranges::views::ints(0ull, 150 /*Annealing::N*/ + 1ull)) {
         auto                                         currentLayout{acceptedLayout};
         LayoutMutator                                mutator{currentLayout};
-        std::uniform_int_distribution<std::uint16_t> numSwapsDistribution{1, 4};
+        std::uniform_int_distribution<std::uint16_t> numSwapsDistribution{1, 5};
         mutator.performNSwapsOrCopies(numSwapsDistribution(generator), generator);
         currentPenalty = computeLayoutPenalty(currentLayout);
-        /*if (currentPenalty - acceptedPenalty < 0)*/ {
+        if (annealing.accept_transition(currentPenalty - acceptedPenalty, i, generator)) {
+            std::cout << " ======== ACCEPTED =======" << std::endl;
             acceptedLayout  = currentLayout;
             acceptedPenalty = currentPenalty;
             // bestLayouts.emplace_back(acceptedLayout);
@@ -51,7 +54,7 @@ float Generator::computeLayoutPenalty(TargetKeyboardLayout const& layout) {
     auto p1 = penaltiesForKeys(corpus.size(), totalKeys);
     auto p2 = penaltiesForKeys(shortcuts.size(), shortcutKeys);
 
-    return std::midpoint(p1, p2);
+    return (p1 * 3.f + p2) * 0.25f;
 }
 
 float Generator::penaltiesForKeys(std::size_t size, std::vector<KeyPress> const& totalKeys) {

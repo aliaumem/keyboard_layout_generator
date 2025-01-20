@@ -4,7 +4,10 @@ package(default_visibility = ["//:layout_generator"])
 
 cc_library(
     name = "generator",
-    srcs = ["generator.cpp"],
+    srcs = [
+        "annealing.hpp",
+        "generator.cpp",
+    ],
     hdrs = ["generator.hpp"],
     deps = [
         "//layout_generator/key_press_calculator",

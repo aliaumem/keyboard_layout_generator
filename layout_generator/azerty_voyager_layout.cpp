@@ -56,7 +56,6 @@ TargetKeyboardLayout azertyVoyagerLayout() {
 
     std::vector<TargetKeyboardLayout::layer_type> layers{
         {lowerKeys, layer0Mask, lowerHeldKeys},
-        {sysKeys, fullyLockedMask},
         {numpadSymbolsKeys, fullyLockedMask},
         {extraLayerKeys, fullyUnlockedMask},
     };
@@ -65,9 +64,8 @@ TargetKeyboardLayout azertyVoyagerLayout() {
         voyagerShape(),
         std::move(layers),
         {
-            LayerJumpKey{Key{" "}, 1},
-            LayerJumpKey{Key{"Tab"}, 2},
-            LayerJumpKey{Key{"Lay3"}, 3},
+            LayerJumpKey{Key{"Tab"}, 1},
+            LayerJumpKey{Key{"Lay3"}, 2},
         }};
 }
 } // namespace finger_tracking
