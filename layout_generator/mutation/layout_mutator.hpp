@@ -72,12 +72,12 @@ public:
             LayoutKeyRef rhs{rhsLayer,
                              m_layout.m_shape.atIndex(indexInLayerDistribution(generator))};
 
-            fmt::println("{} {} -  '{}' {}   \t\t\tto\t\t\t '{}' {}", i,
+            /*fmt::println("{} {} -  '{}' {}   \t\t\tto\t\t\t '{}' {}", i,
                          (canSwapKeys(lhs, rhs) ? "swap"
                           : canCopyTo(rhs)      ? "cpLR"
                           : canCopyTo(lhs)      ? "cpRL"
                                                 : "none"),
-                         m_layout.keyAt(lhs), lhs, m_layout.keyAt(rhs), rhs);
+                         m_layout.keyAt(lhs), lhs, m_layout.keyAt(rhs), rhs);*/
 
             if (m_layout.keyAt(lhs).isEmpty() && m_layout.keyAt(rhs).isEmpty())
                 continue;

@@ -9,29 +9,36 @@
 namespace finger_tracking {
 using namespace penalties;
 
+namespace {
+int64_t processAllDigraphPenalties(KeyPress current, KeyPress previous) {
+    return penalizeBaseCost(current, previous) * 1 + penalizeSameFingerTwice(current, previous) * 32
+         + penalizeLongJumpSameHand(current, previous) * 8
+         + penalizeLongJumpSameFinger(current, previous) * 80
+         + penalizeLongJumpConsecutiveFingers(current, previous) * 40
+         + penalizeFingerTwist(current, previous) * 48 + penalizeRollOut(current, previous) * 1
+         + penalizeRollIn(current, previous) * -1 + penalizeLayerChange(current, previous) * 40;
+}
+
+int64_t processAllTrigraphPenalties(KeyPress current, KeyPress previous1, KeyPress previous2) {
+    return penalizeExteriorRollReversal(current, previous1, previous2) * 160
+         + penalizeThreeFingerTwist(current, previous1, previous2) * 80
+         + penalizeLongJumpSandwich(current, previous1, previous2) * 24;
+}
+int64_t processAllQuartadPenalties(KeyPress current, KeyPress previous1, KeyPress previous2,
+                                   KeyPress previous3) {
+    return penalizeFourTimeSameHand(current, previous1, previous2, previous3) * 4
+         + penalizeFourAlternatingHands(current, previous1, previous2, previous3) * 4;
+}
+} // namespace
+
 PenaltyCalculator PenaltyCalculator::defaultPenalties() {
     PenaltyCalculator result;
-    result.m_digraphPenalties = {
-        {penalizeBaseCost, 1},
-        {penalizeSameFingerTwice, 32},
-        {penalizeLongJumpSameHand, 8},
-        {penalizeLongJumpSameFinger, 80},
-        {penalizeLongJumpConsecutiveFingers, 40},
-        {penalizeFingerTwist, 48},
-        {penalizeRollOut, 1},
-        {penalizeRollIn, -1},
-    };
 
-    result.m_trigraphPenalties = {
-        {penalizeExteriorRollReversal, 160},
-        {penalizeThreeFingerTwist, 80},
-        {penalizeLongJumpSandwich, 24},
-    };
+    result.m_digraphPenalties = processAllDigraphPenalties;
 
-    result.m_quartadPenalties = {
-        {penalizeFourTimeSameHand, 4},
-        {penalizeFourAlternatingHands, 4},
-    };
+    result.m_trigraphPenalties = processAllTrigraphPenalties;
+
+    result.m_quartadPenalties = processAllQuartadPenalties;
     return result;
 }
 } // namespace finger_tracking

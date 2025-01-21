@@ -14,14 +14,13 @@ public:
     std::int64_t             computePenalties(NGraphSet const& ngraphSet) const;
 
 private:
-    using digraph_fn  = int64_t (*)(KeyPress const&, KeyPress const&);
-    using trigraph_fn = int64_t (*)(KeyPress const&, KeyPress const&, KeyPress const&);
-    using quartad_fn
-        = int64_t (*)(KeyPress const&, KeyPress const&, KeyPress const&, KeyPress const&);
+    using digraph_fn  = int64_t (*)(KeyPress, KeyPress);
+    using trigraph_fn = int64_t (*)(KeyPress, KeyPress, KeyPress);
+    using quartad_fn  = int64_t (*)(KeyPress, KeyPress, KeyPress, KeyPress);
 
-    std::vector<std::pair<digraph_fn, int64_t>>  m_digraphPenalties;
-    std::vector<std::pair<trigraph_fn, int64_t>> m_trigraphPenalties;
-    std::vector<std::pair<quartad_fn, int64_t>>  m_quartadPenalties;
+    digraph_fn  m_digraphPenalties;
+    trigraph_fn m_trigraphPenalties;
+    quartad_fn  m_quartadPenalties;
 };
 } // namespace finger_tracking
 
