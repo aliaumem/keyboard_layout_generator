@@ -1,6 +1,7 @@
 #include "generator.hpp"
 
 #include "annealing.hpp"
+#include "worker.hpp"
 #include "layout_generator/mutation/layout_mutator.hpp"
 
 #include <fmt/format.h>
@@ -13,6 +14,7 @@
 #include <random>
 #include <thread>
 #include <range/v3/action/sort.hpp>
+#include <range/v3/view/zip.hpp>
 
 namespace finger_tracking {
 auto Generator::run(TargetKeyboardLayout const& initialLayout) const -> TargetKeyboardLayout {
@@ -26,6 +28,14 @@ auto Generator::run(TargetKeyboardLayout const& initialLayout) const -> TargetKe
         N, LayoutPenaltyPair{initialLayout, computeLayoutPenalty(initialLayout)}};
     currentLayouts.reserve(N * 3);
     std::vector<std::thread> threads{};
+    threads.reserve(N * 2);
+    auto updatePenalty = [this](LayoutPenaltyPair& currentLayout) {
+        currentLayout.penalty = computeLayoutPenalty(currentLayout.layout);
+    };
+    std::vector workers{N * 2, Worker<decltype(updatePenalty), LayoutPenaltyPair>{updatePenalty}};
+    for (auto& worker : workers) {
+        threads.emplace_back([&] { worker.run(); });
+    }
 
     // std::mutex   layoutsMutex;
     std::mt19937_64 generator{std::random_device{}()};
@@ -42,23 +52,19 @@ auto Generator::run(TargetKeyboardLayout const& initialLayout) const -> TargetKe
             LayoutMutator                                mutator{currentLayout.layout};
             mutator.performNSwapsOrCopies(numSwapsDistribution(generator), generator);
         }
+        auto rng_end = std::chrono::high_resolution_clock::now();
 
-        for (auto& currentLayout : currentLayouts | ranges::views::drop(N)) {
-            threads.emplace_back([&currentLayout, this] {
-                currentLayout.penalty = computeLayoutPenalty(currentLayout.layout);
-            });
+        for (auto&& [worker, currentLayout] :
+             ranges::views::zip(workers, currentLayouts | ranges::views::drop(N))) {
+            worker.post(currentLayout);
         }
 
         using std::chrono::duration_cast;
         using std::chrono::milliseconds;
 
-        auto threadWaitStart = std::chrono::high_resolution_clock::now();
-        for (auto& thread : threads)
-            thread.join();
-        auto threadWaitEnd = std::chrono::high_resolution_clock::now();
-        fmt::println("Waited for threads for {}",
-                     duration_cast<milliseconds>(threadWaitEnd - threadWaitStart));
-        threads.clear();
+
+        for (auto& worker : workers)
+            worker.blockWhileWaiting();
 
         auto sortStart = std::chrono::high_resolution_clock::now();
         ranges::actions::sort(currentLayouts, std::less{}, &LayoutPenaltyPair::penalty);
@@ -69,6 +75,8 @@ auto Generator::run(TargetKeyboardLayout const& initialLayout) const -> TargetKe
         currentLayouts.erase(currentLayouts.begin() + N, currentLayouts.end());
 
         auto iterationEnd = std::chrono::high_resolution_clock::now();
+
+        fmt::println("RNG during {}", duration_cast<milliseconds>(rng_end - iterationStart));
 
         if (currentLayouts.front().penalty == lastBestPenalty) {
             ++countSameLayout;
