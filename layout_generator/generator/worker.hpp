@@ -42,8 +42,11 @@ struct Worker {
     }
 
     void blockWhileWaiting() {
+        using namespace std::chrono_literals;
+
         std::unique_lock lock(m_mutex);
-        m_processingDone.wait(lock, [this] {
+        while (m_isProcessing.load(std::memory_order_acquire))
+        m_processingDone.wait_for(lock, 300ms, [this] {
             return !m_isProcessing.load(std::memory_order_acquire);
         });
     }

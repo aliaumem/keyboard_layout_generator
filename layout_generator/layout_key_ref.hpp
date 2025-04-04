@@ -49,10 +49,11 @@ struct LayoutKeyRef {
         , row{static_cast<Row>(keyRef.row)}
         , column{static_cast<Column>(keyRef.col)} {}
 
-    LayerId  layer;
-    HandSide side;
-    Row      row;
-    Column   column;
+    LayerId layer;
+
+    HandSide side : 1;
+    Row      row : 3;
+    Column   column : 3;
 
     [[nodiscard]] operator KeyRef() const {
         return {side, static_cast<uint8_t>(row), static_cast<uint8_t>(column)};
@@ -65,6 +66,6 @@ struct LayoutKeyRef {
     bool operator==(LayoutKeyRef const& other) const = default;
 };
 
-static_assert(sizeof(LayoutKeyRef) == sizeof(int));
+static_assert(sizeof(LayoutKeyRef) == sizeof(uint16_t));
 } // namespace finger_tracking
 #endif // LAYOUT_KEY_REF_HPP

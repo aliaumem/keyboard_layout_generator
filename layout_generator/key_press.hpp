@@ -16,8 +16,8 @@ struct KeyPress {
         , isPress{isPress} {}
 
     LayoutKeyRef keyRef;
-    Finger       finger;
-    bool         isPress = true;
+    Finger       finger : 3;
+    bool         isPress : 1 = true;
 
     [[nodiscard]] HandSide   side() const { return keyRef.side; }
     [[nodiscard]] Row        row() const { return keyRef.row; }
@@ -30,6 +30,6 @@ struct KeyPress {
     }
 };
 
-static_assert(sizeof(KeyPress) == 6);
+static_assert(sizeof(KeyPress) == 3);
 } // namespace finger_tracking
 #endif // KEY_PRESS_HPP

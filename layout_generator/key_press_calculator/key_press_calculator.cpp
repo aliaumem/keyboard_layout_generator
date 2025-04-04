@@ -21,19 +21,15 @@ KeyPressCalculator::KeyPressCalculator(TargetKeyboardLayout const& layout)
     m_reverseLookup.reserve(m_layout.size());
     for (auto const& keyRef : m_layout) {
         if (auto key = m_layout.keyAt(keyRef); key.isValid()) {
-            m_reverseLookup.emplace_back(key, keyRef, false);
+            m_reverseLookup.try_emplace(key, keyRef);
             if (auto shiftKey = toShiftedKey(key); shiftKey.isValid())
-                m_reverseLookup.emplace_back(shiftKey, keyRef.withShift(), false);
+                m_reverseLookup.try_emplace(shiftKey, keyRef.withShift());
             if (auto altKey = toAltKey(key); altKey.isValid())
-                m_reverseLookup.emplace_back(altKey, keyRef.withAlt(), false);
+                m_reverseLookup.try_emplace(altKey, keyRef.withAlt());
         }
         if (auto key = m_layout.keyAt(keyRef.withHeld()); key.isValid())
-            m_reverseLookup.emplace_back(key, keyRef, true);
+            m_reverseLookup.try_emplace(key, keyRef);
     }
-
-    ranges::actions::sort(m_reverseLookup, std::less{}, [](auto const& lookupInfo) {
-        return lookupInfo.key;
-    });
 }
 
 void KeyPressCalculator::emplaceKeyRefInSequence(KeyLayoutSequence& sequence, LayoutKeyRef keyRef,
@@ -120,12 +116,11 @@ std::vector<KeyPress> KeyPressCalculator::simulateShortcuts(
 }
 
 auto KeyPressCalculator::lookupKey(Key const& key) const -> LayoutKeyRef {
-    auto it = ranges::lower_bound(m_reverseLookup, key, std::less{}, [](auto const& lookupInfo) {
-        return lookupInfo.key;
-    });
-    if (it == m_reverseLookup.end() || it->key != key)
+
+    auto it = m_reverseLookup.find(key);
+    if (it == m_reverseLookup.end())
         throw std::invalid_argument{fmt::format("Key '{}' does not exist in layout", key)};
 
-    return it->index;
+    return it->second;
 }
 } // namespace finger_tracking

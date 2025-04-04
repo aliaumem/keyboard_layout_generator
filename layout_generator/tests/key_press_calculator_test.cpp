@@ -34,7 +34,7 @@ SCENARIO("The KeyPressCalculator creates a sequence of key presses to output the
             LayerId layer{2};
             auto    sequence            = keyPressCalculator.sequenceForKey(layer, key);
             auto    transitionToDefault = KeyPress{
-                LayoutKeyRef{LayerId::defaultLayer, HandSide::Left, Row::Thumb, Column::IndexExt},
+                LayoutKeyRef{LayerId::defaultLayer, HandSide::Left, Row::Thumb, Column::Index},
                 Finger::Thumb,
                 false,
             };

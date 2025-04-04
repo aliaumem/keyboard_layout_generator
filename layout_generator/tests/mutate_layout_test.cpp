@@ -36,8 +36,8 @@ SCENARIO("Keyboard layouts can be mutated") {
     GIVEN("A key on the Shift layer") {
         LayoutKeyRef lhs{LayerId::defaultLayer.withShift(), HandSide::Left, Row::Fn,
                          Column::Middle};
-        THEN("It can be moved to layer 3") {
-            LayoutKeyRef rhs{{3}, HandSide::Left, Row::Home, Column::Middle};
+        THEN("It can be moved to layer 2") {
+            LayoutKeyRef rhs{{2}, HandSide::Left, Row::Home, Column::Middle};
             CHECK_FALSE(mutator.canSwapKeys(lhs, rhs));
             CHECK(mutator.canCopyTo(rhs));
             CHECK_FALSE(mutator.canCopyTo(lhs));

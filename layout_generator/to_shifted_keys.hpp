@@ -35,7 +35,8 @@ constexpr std::string_view upperCaseLetters{"ABCDEFGHIJKLMNOPQRSTUVWXYZ"};
 } // namespace
 
 inline Key toShiftedKey(Key key) {
-    if (!key.isValid()) return Key::invalid;
+    if (!key.isValid())
+        return Key::invalid;
 
     char value = key.name.front();
     if (value >= 'a' && value <= 'z')

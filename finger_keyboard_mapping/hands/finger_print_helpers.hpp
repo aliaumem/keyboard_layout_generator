@@ -33,7 +33,7 @@ struct fmt::formatter<finger_tracking::Finger> : fmt::formatter<char> {
 template <>
 struct fmt::formatter<finger_tracking::HandSide> : fmt::formatter<char> {
     template <typename FmtContext>
-    auto format(finger_tracking::FingerDesc::Side side, FmtContext& ctx) const {
+    auto format(finger_tracking::HandSide side, FmtContext& ctx) const {
         return fmt::format_to(ctx.out(), "{}",
                               side == finger_tracking::HandSide::Left ? "Left" : "Right");
     }

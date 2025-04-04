@@ -43,12 +43,8 @@ private:
     void insertLayoutChangeSequence(LayerId fromLayer, KeyLayoutSequence& sequence,
                                     LayoutKeyRef keyRef) const;
     TargetKeyboardLayout const& m_layout;
-    struct ReverseLookupInfo {
-        Key          key;
-        LayoutKeyRef index;
-        bool         isHeldKey;
-    };
-    std::vector<ReverseLookupInfo> m_reverseLookup;
+
+    absl::flat_hash_map<Key, LayoutKeyRef> m_reverseLookup;
 };
 } // namespace finger_tracking
 

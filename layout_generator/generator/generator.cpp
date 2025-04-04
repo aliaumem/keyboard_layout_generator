@@ -42,7 +42,7 @@ auto Generator::run(TargetKeyboardLayout const& initialLayout) const -> TargetKe
     size_t          countSameLayout = 0;
     float           lastBestPenalty = currentLayouts.front().penalty;
 
-    for (auto i : ranges::views::ints(0ull, 15000ull)) {
+    for (auto i : ranges::views::ints(0ull, 30000ull)) {
         auto iterationStart = std::chrono::high_resolution_clock::now();
         for (auto const& startingLayout : currentLayouts) {
             LayoutPenaltyPair& currentLayout
@@ -62,7 +62,6 @@ auto Generator::run(TargetKeyboardLayout const& initialLayout) const -> TargetKe
         using std::chrono::duration_cast;
         using std::chrono::milliseconds;
 
-
         for (auto& worker : workers)
             worker.blockWhileWaiting();
 
@@ -76,7 +75,7 @@ auto Generator::run(TargetKeyboardLayout const& initialLayout) const -> TargetKe
 
         auto iterationEnd = std::chrono::high_resolution_clock::now();
 
-        fmt::println("RNG during {}", duration_cast<milliseconds>(rng_end - iterationStart));
+        // fmt::println("RNG during {}", duration_cast<milliseconds>(rng_end - iterationStart));
 
         if (currentLayouts.front().penalty == lastBestPenalty) {
             ++countSameLayout;
@@ -88,8 +87,9 @@ auto Generator::run(TargetKeyboardLayout const& initialLayout) const -> TargetKe
         fmt::println(" = Iteration  {}\t{}\tbest penalty: {}", i,
                      std::chrono::duration_cast<milliseconds>(iterationEnd - iterationStart),
                      currentLayouts.front().penalty);
+        std::fflush(stdout);
 
-        if (countSameLayout > 500)
+        if (countSameLayout > 2000)
             break;
     }
 
@@ -107,12 +107,13 @@ float Generator::computeLayoutPenalty(TargetKeyboardLayout const& layout) const 
               << std::chrono::duration_cast<std::chrono::milliseconds>(endSim - startSim)
               << std::endl;*/
 
-    auto shortcutKeys = sim.simulateShortcuts(shortcuts);
+    // auto shortcutKeys = sim.simulateShortcuts(shortcuts);
 
     auto p1 = penaltiesForKeys(corpus.size(), totalKeys);
-    auto p2 = penaltiesForKeys(shortcuts.size(), shortcutKeys);
+    // auto p2 = penaltiesForKeys(shortcuts.size(), shortcutKeys);
 
-    return std::max(p1, p2);
+    return p1;
+    // return std::max(p1, p2);
 }
 
 float Generator::penaltiesForKeys(std::size_t size, std::vector<KeyPress> const& totalKeys) {

@@ -65,7 +65,7 @@ TargetKeyboardLayout azertyVoyagerLayout() {
         std::move(layers),
         {
             LayerJumpKey{Key{"Tab"}, 1},
-            LayerJumpKey{Key{"Lay3"}, 2},
+            LayerJumpKey{Key{" "}, 2},
         }};
 }
 } // namespace finger_tracking

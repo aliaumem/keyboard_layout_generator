@@ -57,8 +57,12 @@ template <>
 struct fmt::formatter<finger_tracking::LayoutKeyRef> : fmt::formatter<char> {
     template <typename FmtContext>
     auto format(finger_tracking::LayoutKeyRef value, FmtContext& ctx) const {
-        return fmt::format_to(ctx.out(), "{}. {} {}:{}", value.layer, value.side, value.row,
-                              value.column);
+
+        auto handSide = value.side;
+        auto row      = value.row;
+        auto column   = value.column;
+
+        return fmt::format_to(ctx.out(), "{}. {} {}:{}", value.layer, handSide, row, column);
     }
 };
 
