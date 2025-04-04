@@ -17,3 +17,8 @@ cc_library(
         "@range-v3",
     ],
 )
+
+cc_library(
+    name = "worker",
+    hdrs = ["worker.hpp"],
+)
