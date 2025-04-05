@@ -4,9 +4,17 @@
 
 using namespace finger_tracking;
 
+namespace finger_tracking {
 bool operator==(MaybeFinger const& lhs, std::optional<FingerRef> const& rhs) {
     return lhs.maybeFinger == rhs;
 }
+bool operator==(MaybeFinger const& lhs, std::nullopt_t rhs) {
+    return lhs.maybeFinger == rhs;
+}
+bool operator==(MaybeFinger const& lhs, FingerRef const& rhs) {
+    return lhs.maybeFinger == rhs;
+}
+} // namespace finger_tracking
 
 SCENARIO("A keyboard shape can map a finger to a key") {
     using namespace geo_literals;

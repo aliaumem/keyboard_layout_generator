@@ -3,10 +3,9 @@
 
 #include "layout_generator/build_corpus.hpp"
 
+#include "layout_generator/keyboard_layout_print_helper.hpp"
+
 #include <fmt/format.h>
-#include <fmt/ranges.h>
-#include "range/v3/view/chunk.hpp"
-#include "range/v3/view/transform.hpp"
 #include <iostream>
 
 using namespace finger_tracking;
@@ -53,18 +52,9 @@ int main(int argc, char* argv[]) {
         auto      layout = azertyVoyagerLayout();
         Generator generator{corpus, std::move(shortcuts)};
         auto      resultLayout = generator.run(layout);
-        for (auto layer : layout | ranges::views::chunk(52)) {
+        fmt::println("in main");
 
-            for (auto row : layer | ranges::views::chunk(12)) {
-                auto keys = row
-                          | ranges::views::transform(
-                                [&resultLayout](LayoutKeyRef keyRef) -> std::string_view {
-                                    return resultLayout.keyAt(keyRef).name;
-                                });
-                fmt::print("'{}'\n", fmt::join(keys, "' '"));
-            }
-            fmt::print("\n-----------------\n");
-        }
+        printLayout(resultLayout);
     } catch (std::exception const& e) {
         std::cerr << e.what() << std::endl;
     }

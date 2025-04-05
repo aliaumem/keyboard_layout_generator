@@ -84,9 +84,9 @@ public:
 
             if (canSwapKeys(lhs, rhs))
                 swapKeys(lhs, rhs);
-            else if (canCopyTo(rhs))
+            else if (!m_layout.keyAt(lhs).isUpperCaseLetter() && canCopyTo(rhs))
                 copyKeyTo(lhs, rhs);
-            else if (canCopyTo(lhs))
+            else if (!m_layout.keyAt(rhs).isUpperCaseLetter() && canCopyTo(lhs))
                 copyKeyTo(rhs, lhs);
             else
                 continue;

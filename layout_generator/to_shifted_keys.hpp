@@ -1,6 +1,8 @@
 #ifndef TO_SHIFTED_KEYS_HPP
 #define TO_SHIFTED_KEYS_HPP
 
+#include "absl/hash/hash.h"
+
 #include "finger_keyboard_mapping/keyboard/key.hpp"
 
 #include "absl/container/flat_hash_map.h"

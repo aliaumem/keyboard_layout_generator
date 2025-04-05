@@ -38,6 +38,7 @@ cc_library(
     deps = [
         ":key",
         "//finger_keyboard_mapping:static_vector",
+        "@fmt",
     ],
 )
 

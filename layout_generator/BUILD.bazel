@@ -8,8 +8,7 @@ cc_binary(
     deps = [
         ":azerty_voyager_layout",
         ":corpus_builder",
-        "//finger_keyboard_mapping/hands:finger_print_helpers",
-        "//finger_keyboard_mapping/keyboard:key_print_helpers",
+        ":keyboard_layout_print_helpers",
         "//finger_keyboard_mapping/keyboard:keyboard_shape_to_proto",
         "//layout_generator/generator",
     ],
@@ -29,6 +28,16 @@ cc_library(
         "//finger_keyboard_mapping:static_vector",
         "//finger_keyboard_mapping/keyboard:key",
         "@abseil-cpp//absl/container:flat_hash_map",
+    ],
+)
+
+cc_library(
+    name = "keyboard_layout_print_helpers",
+    hdrs = ["keyboard_layout_print_helper.hpp"],
+    deps = [
+        ":keyboard_layout",
+        "//finger_keyboard_mapping/hands:finger_print_helpers",
+        "//finger_keyboard_mapping/keyboard:key_print_helpers",
     ],
 )
 

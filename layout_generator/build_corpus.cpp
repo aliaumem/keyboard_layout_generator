@@ -12,9 +12,9 @@ std::string sanitize(std::string file) {
             start_pos += to.length(); // Handles case where 'to' is a substring of 'from'
         }
     };
-    replaceAll("À", "A");
-    replaceAll("É", "E");
-    replaceAll("Ç", "C");
+    replaceAll("À", "à");
+    replaceAll("É", "é");
+    replaceAll("Ç", "ç");
     replaceAll("’", "'");
     replaceAll("â", "^a");
     replaceAll("û", "^u");
@@ -27,6 +27,9 @@ std::string sanitize(std::string file) {
     replaceAll("»", "\"");
     replaceAll("…", "...");
     replaceAll("–", "-");
+    replaceAll("}", "");
+    replaceAll(")", "");
+    replaceAll("]", "");
 
     return file;
 }

@@ -20,7 +20,7 @@ inline int operator-(Finger lhs, Finger rhs) {
 struct FingerDesc {
 
     using Side   = HandSide;
-    using Finger = Finger;
+    using Finger = finger_tracking::Finger;
 
     Side   side;
     Finger finger;

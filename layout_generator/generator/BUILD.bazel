@@ -11,6 +11,7 @@ cc_library(
     hdrs = ["generator.hpp"],
     deps = [
         ":worker",
+        "//layout_generator:keyboard_layout_print_helpers",
         "//layout_generator/key_press_calculator",
         "//layout_generator/mutation:layout_mutator",
         "//layout_generator/penalties:penalty_calculator",

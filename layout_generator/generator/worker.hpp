@@ -31,24 +31,25 @@ struct Worker {
                 return;
 
             T* value = std::exchange(m_value, nullptr);
+
             lock.unlock();
 
-            m_isProcessing.store(true, std::memory_order_release);
+            m_isProcessing.store(true, std::memory_order_seq_cst);
             m_task(*value);
-            m_isProcessing.store(false, std::memory_order_release);
+            m_isProcessing.store(false, std::memory_order_seq_cst);
 
             m_processingDone.notify_one();
         } while (true);
     }
 
-    void blockWhileWaiting() {
-        using namespace std::chrono_literals;
-
+    void blockWhileWaiting(std::chrono::milliseconds timeout = std::chrono::milliseconds{300}) {
         std::unique_lock lock(m_mutex);
-        while (m_isProcessing.load(std::memory_order_acquire))
-        m_processingDone.wait_for(lock, 300ms, [this] {
-            return !m_isProcessing.load(std::memory_order_acquire);
-        });
+        auto             hasFinishedProcessing = [this] {
+            return m_value == nullptr && !m_isProcessing.load(std::memory_order_seq_cst);
+        };
+
+        if (!m_processingDone.wait_for(lock, timeout, hasFinishedProcessing))
+            throw std::runtime_error("WTF");
     }
 
     void post(T& value) {

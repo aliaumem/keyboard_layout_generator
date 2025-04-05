@@ -27,8 +27,10 @@ KeyPressCalculator::KeyPressCalculator(TargetKeyboardLayout const& layout)
             if (auto altKey = toAltKey(key); altKey.isValid())
                 m_reverseLookup.try_emplace(altKey, keyRef.withAlt());
         }
-        if (auto key = m_layout.keyAt(keyRef.withHeld()); key.isValid())
+        if (auto key = m_layout.keyAt(keyRef.withHeld()); key.isValid()) {
+            // fmt::println("Adding held key {}", key.name);
             m_reverseLookup.try_emplace(key, keyRef);
+        }
     }
 }
 

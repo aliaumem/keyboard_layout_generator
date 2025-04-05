@@ -4,6 +4,8 @@
 #include "worker.hpp"
 #include "layout_generator/mutation/layout_mutator.hpp"
 
+#include "layout_generator/keyboard_layout_print_helper.hpp"
+
 #include <fmt/format.h>
 #include <fmt/chrono.h>
 
@@ -14,6 +16,7 @@
 #include <random>
 #include <thread>
 #include <range/v3/action/sort.hpp>
+#include <range/v3/view/enumerate.hpp>
 #include <range/v3/view/zip.hpp>
 
 namespace finger_tracking {
@@ -26,13 +29,14 @@ auto Generator::run(TargetKeyboardLayout const& initialLayout) const -> TargetKe
     constexpr size_t N = 20;
     std::vector      currentLayouts{
         N, LayoutPenaltyPair{initialLayout, computeLayoutPenalty(initialLayout)}};
-    currentLayouts.reserve(N * 3);
-    std::vector<std::thread> threads{};
-    threads.reserve(N * 2);
+    currentLayouts.reserve(N * 5);
     auto updatePenalty = [this](LayoutPenaltyPair& currentLayout) {
         currentLayout.penalty = computeLayoutPenalty(currentLayout.layout);
     };
-    std::vector workers{N * 2, Worker<decltype(updatePenalty), LayoutPenaltyPair>{updatePenalty}};
+    std::vector workers{N * 4, Worker<decltype(updatePenalty), LayoutPenaltyPair>{updatePenalty}};
+
+    std::vector<std::thread> threads{};
+    threads.reserve(N * 4);
     for (auto& worker : workers) {
         threads.emplace_back([&] { worker.run(); });
     }
@@ -43,15 +47,27 @@ auto Generator::run(TargetKeyboardLayout const& initialLayout) const -> TargetKe
     float           lastBestPenalty = currentLayouts.front().penalty;
 
     for (auto i : ranges::views::ints(0ull, 30000ull)) {
+        // for (auto i : ranges::views::ints(0ull, 50ull)) {
         auto iterationStart = std::chrono::high_resolution_clock::now();
-        for (auto const& startingLayout : currentLayouts) {
+        for (auto const& [index, startingLayout] : currentLayouts | ranges::views::enumerate) {
+
+            std::uniform_int_distribution<std::uint16_t> numSwapsDistribution{1, 5};
+            for (int n = 0; n < std::max(1, 10 - static_cast<int>(index)); ++n) {
+                LayoutPenaltyPair& currentLayout
+                    = currentLayouts.emplace_back(startingLayout.layout, 0);
+                LayoutMutator mutator{currentLayout.layout};
+                mutator.performNSwapsOrCopies(numSwapsDistribution(generator), generator);
+            }
+        }
+
+        /*for (auto const& startingLayout : currentLayouts) {
             LayoutPenaltyPair& currentLayout
                 = currentLayouts.emplace_back(startingLayout.layout, 0);
 
             std::uniform_int_distribution<std::uint16_t> numSwapsDistribution{1, 5};
             LayoutMutator                                mutator{currentLayout.layout};
             mutator.performNSwapsOrCopies(numSwapsDistribution(generator), generator);
-        }
+        }*/
         auto rng_end = std::chrono::high_resolution_clock::now();
 
         for (auto&& [worker, currentLayout] :
@@ -68,6 +84,12 @@ auto Generator::run(TargetKeyboardLayout const& initialLayout) const -> TargetKe
         auto sortStart = std::chrono::high_resolution_clock::now();
         ranges::actions::sort(currentLayouts, std::less{}, &LayoutPenaltyPair::penalty);
         auto sortEnd = std::chrono::high_resolution_clock::now();
+
+        if (currentLayouts.front().penalty == 0.f) {
+            printLayout(currentLayouts.front().layout);
+            fflush(stdout);
+            throw std::runtime_error("Penalty is null");
+        }
         // fmt::println("Sorted layouts for {}", duration_cast<milliseconds>(sortEnd - sortStart));
 
         // Keep only the N best
@@ -89,10 +111,18 @@ auto Generator::run(TargetKeyboardLayout const& initialLayout) const -> TargetKe
                      currentLayouts.front().penalty);
         std::fflush(stdout);
 
-        if (countSameLayout > 2000)
+        if (countSameLayout > 2000) {
+            // if (countSameLayout > 5) {
+            for (auto& worker : workers)
+                worker.stop();
+
+            for (auto& thread : threads)
+                thread.join();
             break;
+        }
     }
 
+    fmt::println("Out of the loop");
     return std::move(currentLayouts.front().layout);
 }
 

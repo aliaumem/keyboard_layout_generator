@@ -31,6 +31,17 @@ cc_test(
 )
 
 cc_test(
+    name = "key_hash_test",
+    srcs = ["key_hash_test.cpp"],
+    deps = [
+        "//finger_keyboard_mapping/keyboard:key",
+        "@abseil-cpp//absl/container:flat_hash_map",
+        "@abseil-cpp//absl/hash:hash_testing",
+        "@catch2//:catch2_main",
+    ],
+)
+
+cc_test(
     name = "keyboard_timeline_test",
     srcs = ["keyboard_timeline_test.cpp"],
     deps = [

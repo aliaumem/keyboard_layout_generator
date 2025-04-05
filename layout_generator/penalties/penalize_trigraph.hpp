@@ -10,7 +10,7 @@ inline int64_t penalizeExteriorRollReversal(KeyPress const& current, KeyPress co
 
     bool isSameHand = current.side() == previous1.side() && current.side() == previous2.side();
 
-    auto seq = std::tie(current.finger, previous1.finger, previous2.finger);
+    auto seq = std::tuple(current.finger, previous1.finger, previous2.finger);
     bool isReverseExteriorRoll
         = seq == std::tuple{Middle, Pinky, Ring} || seq == std::tuple{Ring, Pinky, Middle};
 

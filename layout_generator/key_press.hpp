@@ -12,12 +12,14 @@ struct KeyPress {
     KeyPress() = default;
     KeyPress(LayoutKeyRef keyRef, Finger finger, bool isPress = true)
         : keyRef{keyRef}
-        , finger{finger}
-        , isPress{isPress} {}
+        , isPress{isPress} //
+        , finger{finger}   //
+    {}
 
     LayoutKeyRef keyRef;
-    Finger       finger : 3;
     bool         isPress : 1 = true;
+    Finger       finger : 3;
+    std::uint8_t unused : 4;
 
     [[nodiscard]] HandSide   side() const { return keyRef.side; }
     [[nodiscard]] Row        row() const { return keyRef.row; }

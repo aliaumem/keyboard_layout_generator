@@ -11,16 +11,22 @@ struct Key {
 
     [[nodiscard]] bool isValid() const { return !name.empty(); }
     [[nodiscard]] bool isEmpty() const { return name.empty(); }
+    [[nodiscard]] bool isUpperCaseLetter() const {
+        return name.size() == 1 && 'A' <= name.front() && name.front() <= 'Z';
+    }
 
     static Key invalid;
 
     template <typename H>
-    friend H AbslHashValue(H h, Key const& key) {
-        return H::combine(std::move(h), key.name);
-    }
+    friend H AbslHashValue(H h, Key const& key);
 };
 
 inline Key Key::invalid{};
+
+template <typename H>
+H AbslHashValue(H h, Key const& key) {
+    return H::combine(std::move(h), key.name);
+}
 } // namespace finger_tracking
 
 #endif // KEY_HPP

@@ -26,3 +26,12 @@ build:asan --copt -O0
 build:asan --copt -g
 build:asan --copt -fno-omit-frame-pointer
 build:asan --linkopt -fsanitize=address
+
+build:ubsan --strip=never
+build:ubsan --copt -fsanitize=undefined
+build:ubsan --copt -D_FORTIFY_SOURCE
+#build:ubsan --copt -DADDRESS_SANITIZER
+build:ubsan --copt -O0
+build:ubsan --copt -g
+build:ubsan --copt -fno-omit-frame-pointer
+build:ubsan --linkopt -fsanitize=undefined

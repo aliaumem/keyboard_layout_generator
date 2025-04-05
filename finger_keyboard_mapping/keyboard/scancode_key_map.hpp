@@ -4,6 +4,8 @@
 #include "finger_keyboard_mapping/static_vector.hpp"
 #include "finger_keyboard_mapping/keyboard/key.hpp"
 
+#include "fmt/format.h"
+
 #include <chrono>
 
 namespace finger_tracking {
